@@ -1,0 +1,234 @@
+import { FederationError } from '../types'
+
+export const SWISS_API_BASE = 'https://api.volleyball.ch'
+
+/** Shapes are trimmed to the fields the scoresheet needs. */
+export interface SwissSeasonDto {
+  year: string
+  displayname: string
+  active: boolean
+  defaultForPublicAPI: boolean
+}
+
+export interface SwissTranslations {
+  d?: string
+  shortD?: string
+  f?: string
+  shortF?: string
+  i?: string
+  shortI?: string
+  D?: string
+  F?: string
+  I?: string
+}
+
+export interface SwissLeagueDto {
+  leagueId: number
+  caption: string
+  gender?: string
+  leagueCategory?: string
+  translations?: SwissTranslations
+}
+
+export interface SwissPhaseDto {
+  phaseId: number
+  caption: string
+  translations?: SwissTranslations
+}
+
+export interface SwissGroupDto {
+  groupId: number
+  caption: string
+  translations?: SwissTranslations
+}
+
+export interface SwissTeamInGameDto {
+  teamId: number
+  caption: string
+  clubId?: number
+  clubCaption?: string
+}
+
+export interface SwissGameDto {
+  gameId: number
+  playDate?: string
+  playDateUtc?: string
+  gender?: string
+  status?: number
+  teams: { home: SwissTeamInGameDto; away: SwissTeamInGameDto }
+  league?: { leagueId: number; caption?: string; numberOfWinSets?: string; translations?: SwissTranslations }
+  phase?: { phaseId: number; caption?: string; translations?: SwissTranslations }
+  group?: { groupId: number; caption?: string; translations?: SwissTranslations }
+  hall?: {
+    hallId?: number
+    caption?: string
+    street?: string
+    number?: string
+    zip?: number | string
+    city?: string
+  }
+  referees?: Record<string, { refereeId?: number; firstName?: string; lastName?: string }>
+  setResults?: Record<string, { home: number; away: number }>
+}
+
+export interface SwissPlayerDto {
+  firstName?: string
+  lastName?: string
+  number?: number | null
+  position?: string | null
+  isCaptain?: boolean
+  birthday?: string | null
+}
+
+export interface SwissStaffDto {
+  firstName?: string
+  lastName?: string
+  function?: { id?: number; translations?: Record<string, { title?: string }> }
+}
+
+export interface SwissTeamDto {
+  teamId: number
+  caption: string
+  gender?: string
+  club?: { clubId?: number; clubCaption?: string }
+  players?: SwissPlayerDto[]
+  staff?: SwissStaffDto[]
+}
+
+export interface SwissTeamListEntryDto {
+  teamId: number
+  caption: string
+  gender?: string
+  club?: { clubId?: number; clubCaption?: string }
+}
+
+type QueryValue = string | number | boolean | undefined
+
+export class SwissVolleyApi {
+  constructor(private readonly getToken: () => string) {}
+
+  hasToken(): boolean {
+    return this.getToken().trim().length > 0
+  }
+
+  private async get<T>(path: string, query: Record<string, QueryValue> = {}): Promise<T> {
+    const token = this.getToken().trim()
+    if (!token) {
+      throw new FederationError('No Swiss Volley API token configured. Add one in Settings, or keep using manual entry.')
+    }
+
+    const url = new URL(SWISS_API_BASE + path)
+    for (const [key, value] of Object.entries(query)) {
+      if (value !== undefined && value !== '') url.searchParams.set(key, String(value))
+    }
+
+    let response: Response
+    try {
+      // The API sends Access-Control-Allow-Origin: *, so the browser may call it directly.
+      response = await fetch(url, { headers: { Authorization: token }, redirect: 'follow' })
+    } catch (cause) {
+      throw new FederationError(`Could not reach ${SWISS_API_BASE}: ${(cause as Error).message}`)
+    }
+
+    if (!response.ok) {
+      throw new FederationError(await describeFailure(response), response.status)
+    }
+
+    const body = (await response.json()) as unknown
+    // An invalid token is answered with a 302 to the login page carrying an errors array.
+    if (body && typeof body === 'object' && 'errors' in body) {
+      const errors = (body as { errors: Array<{ message?: string }> }).errors
+      throw new FederationError(errors.map((e) => e.message ?? 'Unknown error').join('; '), response.status)
+    }
+    return body as T
+  }
+
+  listSeasons(): Promise<SwissSeasonDto[]> {
+    return this.get('/indoor/indoorseasons')
+  }
+
+  listRegions(): Promise<string[]> {
+    return this.get('/indoor/regions')
+  }
+
+  listLeagues(region: string, gender?: string, includeCup = true): Promise<SwissLeagueDto[]> {
+    return this.get(`/indoor/leagues/${encodeURIComponent(region)}`, { gender, includeCup: includeCup ? 1 : 0 })
+  }
+
+  listPhases(leagueId: string): Promise<SwissPhaseDto[]> {
+    return this.get(`/indoor/phases/${encodeURIComponent(leagueId)}`)
+  }
+
+  listGroups(phaseId: string): Promise<SwissGroupDto[]> {
+    return this.get(`/indoor/groups/${encodeURIComponent(phaseId)}`)
+  }
+
+  listGames(query: {
+    region?: string
+    gender?: string
+    leagueId?: string
+    phaseId?: string
+    groupId?: string
+    teamId?: string
+    clubId?: string
+    dateStart?: string
+    dateEnd?: string
+    includeCup?: boolean
+  }): Promise<SwissGameDto[]> {
+    return this.get('/indoor/games', {
+      region: query.region,
+      gender: query.gender,
+      leagueId: query.leagueId,
+      phaseId: query.phaseId,
+      groupId: query.groupId,
+      teamId: query.teamId,
+      clubId: query.clubId,
+      dateStart: query.dateStart,
+      dateEnd: query.dateEnd,
+      includeCup: query.includeCup === false ? 0 : 1,
+    })
+  }
+
+  listUpcomingGames(query: {
+    region?: string
+    gender?: string
+    leagueId?: string
+    phaseId?: string
+    groupId?: string
+    teamId?: string
+    clubId?: string
+  }): Promise<SwissGameDto[]> {
+    return this.get('/indoor/upcomingGames', { ...query })
+  }
+
+  getGame(gameId: string): Promise<SwissGameDto> {
+    return this.get(`/indoor/game/${encodeURIComponent(gameId)}`)
+  }
+
+  getTeam(teamId: string): Promise<SwissTeamDto> {
+    return this.get(`/indoor/teams/${encodeURIComponent(teamId)}`)
+  }
+
+  listTeams(query: {
+    region?: string
+    clubId?: string
+    gender?: string
+    leagueId?: string
+    phaseId?: string
+    groupId?: string
+    season?: string
+  }): Promise<SwissTeamListEntryDto[]> {
+    return this.get('/indoor/teams', { ...query })
+  }
+}
+
+async function describeFailure(response: Response): Promise<string> {
+  const fallback = `Swiss Volley API returned ${response.status} ${response.statusText}`
+  try {
+    const body = (await response.json()) as { errors?: Array<{ message?: string }> }
+    const message = body.errors?.map((e) => e.message).filter(Boolean).join('; ')
+    return message ? `${message} (HTTP ${response.status})` : fallback
+  } catch {
+    return fallback
+  }
+}
