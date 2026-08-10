@@ -5,6 +5,7 @@ const SHEETS_KEY = 'vbs.sheets.v1'
 const SETTINGS_KEY = 'vbs.settings.v1'
 
 export interface Settings {
+  /** Empty until the user picks one; callers resolve it through the provider registry. */
   providerId: string
   /** Last used browsing filters, so the game list opens where you left it. */
   regionId?: string
@@ -50,7 +51,7 @@ export const sheetStore = {
 
 export const settingsStore = {
   read(): Settings {
-    return readJson<Settings>(SETTINGS_KEY, { providerId: 'manual' })
+    return readJson<Settings>(SETTINGS_KEY, { providerId: '' })
   },
   write(settings: Settings): void {
     writeJson(SETTINGS_KEY, settings)

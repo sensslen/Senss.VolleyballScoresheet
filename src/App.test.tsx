@@ -46,11 +46,22 @@ describe('app walkthrough', () => {
   beforeEach(() => window.localStorage.clear())
   afterEach(cleanup)
 
-  it('opens on the fixture step with manual entry available', () => {
+  it('opens on the fixture step and says what a token would add', () => {
     render(<App />)
 
     expect(screen.getByRole('heading', { name: /volleyball scoresheet assistant/i })).toBeTruthy()
     expect(screen.getByRole('button', { name: 'Blank sheet' })).toBeTruthy()
+    expect(screen.getByText(/needs volley manager api token/i)).toBeTruthy()
+  })
+
+  it('falls back to manual entry when the federation is switched off', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(screen.getByRole('button', { name: 'Settings' }))
+    await user.selectOptions(screen.getByLabelText('Country / federation'), 'manual')
+    await user.click(screen.getByRole('button', { name: '1. Match' }))
+
     expect(screen.getByText(/does not offer fixture browsing/i)).toBeTruthy()
   })
 

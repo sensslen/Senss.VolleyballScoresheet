@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
-import { providerById } from './federation/registry'
+import { defaultProviderId, providerById } from './federation/registry'
 import type { GameSummary } from './federation/types'
 import { computeMatchState } from './scoresheet/engine'
 import { createScoresheet, scoresheetFromGame } from './scoresheet/factory'
@@ -33,7 +33,7 @@ export default function App() {
   const [activeSetIndex, setActiveSetIndex] = useState(0)
   const [savedSheets, setSavedSheets] = useState<Scoresheet[]>(() => sheetStore.all())
 
-  const provider = useMemo(() => providerById(settings.providerId), [settings.providerId])
+  const provider = useMemo(() => providerById(settings.providerId || defaultProviderId()), [settings.providerId])
 
   useEffect(() => settingsStore.write(settings), [settings])
 

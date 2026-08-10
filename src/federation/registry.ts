@@ -1,5 +1,5 @@
 import { manualProvider } from './manualProvider'
-import { createSwissVolleyProvider } from './swiss/provider'
+import { createSwissVolleyProvider, SWISS_PROVIDER_ID } from './swiss/provider'
 import type { FederationProvider } from './types'
 
 /**
@@ -19,6 +19,7 @@ export function providerById(id: string): FederationProvider {
   return providers.find((provider) => provider.id === id) ?? manualProvider
 }
 
+/** First run lands on Swiss Volley; it explains what a token unlocks and works without one. */
 export function defaultProviderId(): string {
-  return manualProvider.id
+  return SWISS_PROVIDER_ID
 }
