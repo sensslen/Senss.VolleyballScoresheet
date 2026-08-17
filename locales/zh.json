@@ -59,6 +59,7 @@
     "title": "浏览赛程",
     "unsupported": "{{name}} 不提供赛程浏览。请新建空白记录表并手动输入比赛信息。",
     "needCredential": "{{name}} 需要{{credential}}才能列出比赛。请在设置中添加，或新建空白记录表全部手工填写。",
+    "openSettings": "打开设置",
     "credentialFallback": "凭据",
     "region": "地区",
     "competition": "联赛",
@@ -392,7 +393,8 @@
       "title": "语言",
       "subtitle": "对整个应用生效，并记忆在本浏览器中。",
       "label": "语言",
-      "system": "跟随浏览器"
+      "system": "跟随浏览器",
+      "detected": "跟随浏览器，当前为{{language}}。"
     }
   },
   "provider": {

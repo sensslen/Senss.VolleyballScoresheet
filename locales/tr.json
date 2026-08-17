@@ -59,6 +59,7 @@
     "title": "Maçlara göz at",
     "unsupported": "{{name}} maç araması sunmuyor. Boş bir cetvel başlatıp maç bilgilerini yazın.",
     "needCredential": "{{name}} maçları listeleyebilmek için {{credential}} istiyor. Ayarlar'dan ekleyin ya da boş bir cetvel başlatıp her şeyi elle doldurun.",
+    "openSettings": "Ayarları aç",
     "credentialFallback": "bir kimlik bilgisi",
     "region": "Bölge",
     "competition": "Lig",
@@ -392,7 +393,8 @@
       "title": "Dil",
       "subtitle": "Tüm uygulamada geçerlidir ve bu tarayıcıda hatırlanır.",
       "label": "Dil",
-      "system": "Tarayıcıyı takip et"
+      "system": "Tarayıcıyı takip et",
+      "detected": "Tarayıcıyı takip ediyor, şu an {{language}}."
     }
   },
   "provider": {

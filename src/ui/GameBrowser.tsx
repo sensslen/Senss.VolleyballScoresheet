@@ -83,11 +83,13 @@ export function GameBrowser({
   provider,
   settings,
   onSettingsChange,
+  onOpenSettings,
   onPick,
 }: {
   provider: FederationProvider
   settings: Settings
   onSettingsChange: (settings: Settings) => void
+  onOpenSettings: () => void
   onPick: (game: GameSummary) => void
 }) {
   const { t } = useTranslation()
@@ -197,6 +199,11 @@ export function GameBrowser({
             credential: provider.auth ? t(provider.auth.labelKey) : t('browser.credentialFallback'),
           })}
         </Banner>
+        <div className="button-row">
+          <button type="button" className="primary" onClick={onOpenSettings}>
+            {t('browser.openSettings')}
+          </button>
+        </div>
       </Card>
     )
   }

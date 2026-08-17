@@ -83,12 +83,12 @@ export function MatchStep({ sheet, update }: { sheet: Scoresheet; update: SheetU
                     ...known,
                   ]
             }
+            required
             onChange={(value) =>
               update((draft) => {
                 if (value) draft.rules = ruleSetById(value)
               })
             }
-            placeholder={ruleSetName(sheet.rules, t)}
           />
           <p className="muted">
             {t('match.rules.summary', {

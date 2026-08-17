@@ -59,6 +59,7 @@
     "title": "Sfoglia le gare",
     "unsupported": "{{name}} non offre la ricerca delle gare. Avvia un referto vuoto e digita i dati della partita.",
     "needCredential": "{{name}} ha bisogno di {{credential}} per elencare le gare. Inseriscilo nelle Impostazioni, oppure avvia un referto vuoto e compila tutto a mano.",
+    "openSettings": "Apri le impostazioni",
     "credentialFallback": "una credenziale",
     "region": "Regione",
     "competition": "Campionato",
@@ -392,7 +393,8 @@
       "title": "Lingua",
       "subtitle": "Vale per tutta l'app e viene ricordata in questo browser.",
       "label": "Lingua",
-      "system": "Segui il browser"
+      "system": "Segui il browser",
+      "detected": "Segue il browser, che dà {{language}}."
     }
   },
   "provider": {

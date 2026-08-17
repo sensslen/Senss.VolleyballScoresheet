@@ -56,6 +56,15 @@ describe('app walkthrough', () => {
     expect(screen.getByText(/needs volley manager api token/i)).toBeTruthy()
   })
 
+  it('sends you to settings from where the missing token is noticed', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(within(cardFor('Browse fixtures')).getByRole('button', { name: 'Open settings' }))
+
+    expect(within(cardFor('Federation')).getByLabelText('Country / federation')).toBeTruthy()
+  })
+
   it('falls back to manual entry when the federation is switched off', async () => {
     const user = userEvent.setup()
     render(<App />)
@@ -135,6 +144,23 @@ describe('app walkthrough', () => {
     expect(screen.getByRole('heading', { name: /matchblatt-assistent/i })).toBeTruthy()
 
     await user.selectOptions(within(cardFor('Sprache')).getByLabelText('Sprache'), 'en')
+  })
+
+  it('keeps following the browser once that is chosen', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(screen.getByRole('button', { name: 'Settings' }))
+    const picker = () => within(cardFor('Language')).getByLabelText('Language') as HTMLSelectElement
+
+    await user.selectOptions(picker(), 'de')
+    expect(window.localStorage.getItem('vbs.language.v1')).toBe('de')
+
+    await user.selectOptions(within(cardFor('Sprache')).getByLabelText('Sprache'), '')
+
+    expect(picker().value).toBe('')
+    expect(screen.getByText(/following your browser/i)).toBeTruthy()
+    expect(window.localStorage.getItem('vbs.language.v1')).toBeNull()
   })
 })
 

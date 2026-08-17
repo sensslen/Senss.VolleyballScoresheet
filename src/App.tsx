@@ -140,6 +140,7 @@ export default function App() {
               provider={provider}
               settings={settings}
               onSettingsChange={setSettings}
+              onOpenSettings={() => showTab('settings')}
               onPick={(game) => void startFromGame(game)}
             />
 

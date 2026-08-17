@@ -59,6 +59,7 @@
     "title": "Procurar jogos",
     "unsupported": "{{name}} não oferece busca de jogos. Comece uma súmula em branco e digite os dados da partida.",
     "needCredential": "{{name}} precisa de {{credential}} para listar jogos. Cadastre em Configurações, ou comece uma súmula em branco e preencha tudo à mão.",
+    "openSettings": "Abrir configurações",
     "credentialFallback": "uma credencial",
     "region": "Região",
     "competition": "Competição",
@@ -392,7 +393,8 @@
       "title": "Idioma",
       "subtitle": "Vale para todo o app e fica lembrado neste navegador.",
       "label": "Idioma",
-      "system": "Seguir o navegador"
+      "system": "Seguir o navegador",
+      "detected": "Seguindo o navegador, o que dá {{language}}."
     }
   },
   "provider": {

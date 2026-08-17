@@ -59,6 +59,7 @@
     "title": "Przeglądaj mecze",
     "unsupported": "{{name}} nie udostępnia przeglądania meczów. Rozpocznij pusty protokół i wpisz dane meczu.",
     "needCredential": "{{name}} potrzebuje {{credential}}, aby wyświetlić mecze. Dodaj go w Ustawieniach albo rozpocznij pusty protokół i wypełnij wszystko ręcznie.",
+    "openSettings": "Otwórz ustawienia",
     "credentialFallback": "poświadczenia",
     "region": "Region",
     "competition": "Liga",
@@ -392,7 +393,8 @@
       "title": "Język",
       "subtitle": "Dotyczy całej aplikacji i jest zapamiętywany w tej przeglądarce.",
       "label": "Język",
-      "system": "Zgodnie z przeglądarką"
+      "system": "Zgodnie z przeglądarką",
+      "detected": "Zgodnie z przeglądarką, czyli {{language}}."
     }
   },
   "provider": {

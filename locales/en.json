@@ -59,6 +59,7 @@
     "title": "Browse fixtures",
     "unsupported": "{{name}} does not offer fixture browsing. Start a blank sheet and type the match details in.",
     "needCredential": "{{name}} needs {{credential}} before it can list games. Add it under Settings, or start a blank sheet and fill everything in by hand.",
+    "openSettings": "Open settings",
     "credentialFallback": "a credential",
     "region": "Region",
     "competition": "Competition",
@@ -392,7 +393,8 @@
       "title": "Language",
       "subtitle": "Applies to the whole app and is remembered in this browser.",
       "label": "Language",
-      "system": "Match my browser"
+      "system": "Match my browser",
+      "detected": "Following your browser, which gives {{language}}."
     }
   },
   "provider": {

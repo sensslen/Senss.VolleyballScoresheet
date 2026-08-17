@@ -59,6 +59,7 @@
     "title": "試合を探す",
     "unsupported": "{{name}} は試合検索に対応していません。白紙の記録用紙を作成し、試合情報を入力してください。",
     "needCredential": "{{name}} で試合一覧を表示するには{{credential}}が必要です。設定から追加するか、白紙の記録用紙を作成してすべて手入力してください。",
+    "openSettings": "設定を開く",
     "credentialFallback": "認証情報",
     "region": "地域",
     "competition": "リーグ",
@@ -392,7 +393,8 @@
       "title": "言語",
       "subtitle": "アプリ全体に適用され、このブラウザに記憶されます。",
       "label": "言語",
-      "system": "ブラウザに合わせる"
+      "system": "ブラウザに合わせる",
+      "detected": "ブラウザに合わせています。現在は{{language}}です。"
     }
   },
   "provider": {

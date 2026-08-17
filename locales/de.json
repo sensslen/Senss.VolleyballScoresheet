@@ -59,6 +59,7 @@
     "title": "Spiele durchsuchen",
     "unsupported": "{{name}} bietet keine Spielsuche an. Starte ein leeres Matchblatt und tippe die Spielangaben ein.",
     "needCredential": "{{name}} braucht {{credential}}, um Spiele aufzulisten. Trage ihn unter Einstellungen ein, oder starte ein leeres Matchblatt und fülle alles von Hand aus.",
+    "openSettings": "Einstellungen öffnen",
     "credentialFallback": "eine Zugangsberechtigung",
     "region": "Region",
     "competition": "Liga",
@@ -392,7 +393,8 @@
       "title": "Sprache",
       "subtitle": "Gilt für die ganze App und wird in diesem Browser gemerkt.",
       "label": "Sprache",
-      "system": "Browsersprache übernehmen"
+      "system": "Browsersprache übernehmen",
+      "detected": "Folgt dem Browser, das ergibt {{language}}."
     }
   },
   "provider": {

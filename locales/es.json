@@ -59,6 +59,7 @@
     "title": "Buscar encuentros",
     "unsupported": "{{name}} no ofrece búsqueda de encuentros. Empieza un acta en blanco y escribe los datos del partido.",
     "needCredential": "{{name}} necesita {{credential}} para listar partidos. Añádelo en Ajustes, o empieza un acta en blanco y rellénalo todo a mano.",
+    "openSettings": "Abrir ajustes",
     "credentialFallback": "una credencial",
     "region": "Región",
     "competition": "Competición",
@@ -392,7 +393,8 @@
       "title": "Idioma",
       "subtitle": "Se aplica a toda la aplicación y se recuerda en este navegador.",
       "label": "Idioma",
-      "system": "Seguir al navegador"
+      "system": "Seguir al navegador",
+      "detected": "Sigue al navegador, lo que da {{language}}."
     }
   },
   "provider": {

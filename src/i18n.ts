@@ -2,6 +2,8 @@ import i18n from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import { initReactI18next } from 'react-i18next'
 
+import { browserStorage } from './browserStorage'
+
 import localizationsDe from '../locales/de.json'
 import localizationsEn from '../locales/en.json'
 import localizationsEs from '../locales/es.json'
@@ -62,7 +64,10 @@ void i18n
     load: 'languageOnly',
     detection: {
       order: ['localStorage', 'navigator'],
-      caches: ['localStorage'],
+      // Nothing is cached: the stored key means "the user picked this language",
+      // and its absence means "follow the browser". Letting the detector write
+      // back would collapse those two into one.
+      caches: [],
       lookupLocalStorage: LANGUAGE_STORAGE_KEY,
     },
     interpolation: {
@@ -73,5 +78,23 @@ void i18n
 i18n.on('languageChanged', (language) => {
   if (typeof document !== 'undefined') document.documentElement.lang = language
 })
+
+/** The language the user pinned, or empty while the app follows the browser. */
+export function languagePreference(): LanguageCode | '' {
+  const stored = browserStorage()?.getItem(LANGUAGE_STORAGE_KEY) ?? ''
+  return SUPPORTED_LANGUAGES.some((language) => language.code === stored) ? (stored as LanguageCode) : ''
+}
+
+export function setLanguagePreference(code: LanguageCode | ''): void {
+  const storage = browserStorage()
+  if (code) {
+    storage?.setItem(LANGUAGE_STORAGE_KEY, code)
+    void i18n.changeLanguage(code)
+    return
+  }
+  storage?.removeItem(LANGUAGE_STORAGE_KEY)
+  // With the stored key gone, detection falls through to the browser again.
+  void i18n.changeLanguage()
+}
 
 export default i18n

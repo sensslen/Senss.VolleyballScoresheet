@@ -59,6 +59,7 @@
     "title": "Parcourir les rencontres",
     "unsupported": "{{name}} ne propose pas de recherche de rencontres. Commencez une feuille vierge et saisissez les données du match.",
     "needCredential": "{{name}} a besoin de {{credential}} pour lister les matchs. Ajoutez-le dans les Réglages, ou commencez une feuille vierge et remplissez tout à la main.",
+    "openSettings": "Ouvrir les réglages",
     "credentialFallback": "un identifiant",
     "region": "Région",
     "competition": "Championnat",
@@ -392,7 +393,8 @@
       "title": "Langue",
       "subtitle": "S'applique à toute l'application et est mémorisée dans ce navigateur.",
       "label": "Langue",
-      "system": "Suivre le navigateur"
+      "system": "Suivre le navigateur",
+      "detected": "Suit le navigateur, ce qui donne {{language}}."
     }
   },
   "provider": {

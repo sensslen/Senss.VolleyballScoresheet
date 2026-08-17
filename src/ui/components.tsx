@@ -36,12 +36,16 @@ export function Field({
   hint?: string
   children: ReactNode
 }) {
+  // The hint sits outside the label: inside it, it would become part of the
+  // control's accessible name.
   return (
-    <label className="field">
-      <span className="field-label">{label}</span>
-      {children}
+    <div className="field">
+      <label className="flex flex-col gap-1.5">
+        <span className="field-label">{label}</span>
+        {children}
+      </label>
       {hint && <span className="text-xs text-slate-500 dark:text-slate-400">{hint}</span>}
-    </label>
+    </div>
   )
 }
 
@@ -79,6 +83,7 @@ export function SelectField<T extends string>({
   options,
   onChange,
   placeholder = '--',
+  required,
   disabled,
   hint,
 }: {
@@ -87,6 +92,8 @@ export function SelectField<T extends string>({
   options: Array<{ value: T; label: string }>
   onChange: (value: T | '') => void
   placeholder?: string
+  /** Set where something is always chosen, so there is no empty row to fall back to. */
+  required?: boolean
   disabled?: boolean
   hint?: string
 }) {
@@ -97,7 +104,7 @@ export function SelectField<T extends string>({
         disabled={disabled || options.length === 0}
         onChange={(event) => onChange(event.target.value as T | '')}
       >
-        <option value="">{placeholder}</option>
+        {!required && <option value="">{placeholder}</option>}
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
