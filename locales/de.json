@@ -1,0 +1,414 @@
+{
+  "language": {
+    "name": "Deutsch"
+  },
+  "common": {
+    "teamSide": "Team {{side}}",
+    "unnamed": "(ohne Namen)",
+    "blank": "--",
+    "vs": "gegen",
+    "open": "Öffnen",
+    "delete": "Löschen",
+    "remove": "Entfernen",
+    "back": "Zurück",
+    "next": "Weiter",
+    "print": "Drucken",
+    "copy": "Als Text kopieren",
+    "copied": "Kopiert",
+    "date": "Datum",
+    "score": "Resultat",
+    "match": "Spiel",
+    "set": "Satz",
+    "team": "Team",
+    "position": "Position",
+    "name": "Name",
+    "number": "Nr.",
+    "venue": "Halle",
+    "competition": "Wettbewerb",
+    "empty": "leer",
+    "notDecided": "noch offen"
+  },
+  "app": {
+    "title": "Volleyball-Matchblatt-Assistent",
+    "tagline": "Führt dich durch ein internationales Matchblatt und danach Feld für Feld, damit du alles auf das Papier übertragen kannst.",
+    "footer": "Alles bleibt in diesem Browser. Das Papier-Matchblatt bleibt das offizielle Dokument; diese App hilft nur, es ohne Rechenfehler auszufüllen.",
+    "needSheet": "Starte oder öffne zuerst ein Matchblatt.",
+    "version": "Version {{version}}",
+    "loading": "Wird geladen..."
+  },
+  "tabs": {
+    "start": { "label": "Spiel", "hint": "Spiel auswählen oder leer beginnen" },
+    "match": { "label": "Kopf", "hint": "Wettbewerb, Halle, Offizielle" },
+    "teams": { "label": "Teams", "hint": "Aufgebote, Captain, Liberos" },
+    "play": { "label": "Punkte", "hint": "Seitenwahl, Aufstellungen, Ballwechsel" },
+    "sheet": { "label": "Übertragen", "hint": "Geführt auf das Papier-Matchblatt" },
+    "settings": { "label": "Einstellungen", "hint": "Verband, Token und Sprache" }
+  },
+  "start": {
+    "title": "Matchblatt starten",
+    "subtitle": "Importiere ein Spiel, um Kopf, Teams und Offizielle vorauszufüllen, oder beginne mit einem leeren Matchblatt.",
+    "blank": "Leeres Matchblatt",
+    "body": "Mit einem Verbands-Token kommen Kopfzeile, beide Aufgebote und die Schiedsrichter bereits ausgefüllt. Ohne Token funktioniert dasselbe Matchblatt, du tippst die Angaben einfach selbst ein.",
+    "saved": {
+      "title": "Gespeicherte Matchblätter",
+      "subtitle": "In diesem Browser abgelegt.",
+      "empty": "Noch nichts gespeichert."
+    }
+  },
+  "browser": {
+    "title": "Spiele durchsuchen",
+    "unsupported": "{{name}} bietet keine Spielsuche an. Starte ein leeres Matchblatt und tippe die Spielangaben ein.",
+    "needCredential": "{{name}} braucht {{credential}}, um Spiele aufzulisten. Trage ihn unter Einstellungen ein, oder starte ein leeres Matchblatt und fülle alles von Hand aus.",
+    "credentialFallback": "eine Zugangsberechtigung",
+    "region": "Region",
+    "competition": "Liga",
+    "stage": "Phase",
+    "pool": "Gruppe",
+    "from": "Von",
+    "to": "Bis",
+    "filter": "Liste filtern",
+    "filterPlaceholder": "Team, Halle, Spielnummer",
+    "load": "Spiele laden",
+    "upcoming": "Nur kommende",
+    "use": "Dieses Spiel übernehmen",
+    "empty": "Wähle eine Liga und lade die Spielliste.",
+    "women": "F",
+    "men": "M",
+    "loading": {
+      "regions": "Regionen werden geladen...",
+      "competitions": "Ligen werden geladen...",
+      "stages": "Phasen werden geladen...",
+      "pools": "Gruppen werden geladen...",
+      "games": "Spiele werden geladen..."
+    }
+  },
+  "match": {
+    "header": {
+      "title": "Spielkopf",
+      "subtitle": "Das obere Band des Matchblatts."
+    },
+    "field": {
+      "competition": "Wettbewerb",
+      "stage": "Phase / Runde",
+      "pool": "Gruppe",
+      "matchNumber": "Spielnummer",
+      "category": "Kategorie",
+      "categoryPlaceholder": "Frauen / Männer / U19",
+      "date": "Datum",
+      "time": "Spielbeginn",
+      "hall": "Halle",
+      "city": "Ort"
+    },
+    "rules": {
+      "title": "Regelwerk",
+      "subtitle": "Bestimmt Satzziele sowie Wechsel- und Auszeitlimiten.",
+      "ruleSet": "Regelwerk",
+      "fromFederation": "{{name}} (vom Verband)",
+      "summary": "Best of {{best}}, Sätze bis {{points}}, Entscheidungssatz bis {{deciding}}, {{substitutions}} Wechsel und {{timeouts}} Auszeiten pro Satz."
+    },
+    "officials": {
+      "title": "Offizielle",
+      "first": "1. Schiedsrichter",
+      "second": "2. Schiedsrichter",
+      "scorer": "Anschreiber",
+      "assistantScorer": "Hilfsanschreiber",
+      "lineJudges": "Linienrichter"
+    }
+  },
+  "rules": {
+    "fivb-best-of-5": "International, Best of 5 (FIVB)",
+    "fivb-best-of-3": "International, Best of 3",
+    "ncaa-best-of-5": "NCAA, Best of 5 (Libero darf aufschlagen)",
+    "bestOf": "Best of {{count}}"
+  },
+  "teams": {
+    "cardTitle": "Team {{side}} - {{name}}",
+    "home": "Heimteam gemäss Spielliste.",
+    "away": "Gastteam gemäss Spielliste.",
+    "import": "Aufgebot importieren",
+    "addPlayer": "Spieler hinzufügen",
+    "field": {
+      "name": "Teamname",
+      "club": "Verein",
+      "coach": "Trainer",
+      "assistantCoach": "Assistenztrainer",
+      "physiotherapist": "Physiotherapeut",
+      "doctor": "Arzt"
+    },
+    "loadingRoster": "Aufgebot wird geladen...",
+    "imported": "{{count}} Spieler importiert.",
+    "notImported": "Dieses Team wurde nicht von {{name}} importiert, deshalb gibt es kein Aufgebot zum Abrufen. Tippe die Spieler ein.",
+    "noCaptain": "Kein Captain markiert. Auf dem Matchblatt muss der Captain eingekreist sein.",
+    "tooManyCaptains": "Mehr als ein Captain markiert.",
+    "tooManyLiberos": "Mehr als zwei Liberos markiert.",
+    "tooManyPlayers": "{{count}} Spieler aufgeführt; das Regelwerk erlaubt {{allowed}}.",
+    "col": {
+      "lastName": "Nachname",
+      "firstName": "Vorname",
+      "licence": "Lizenz",
+      "captainShort": "C",
+      "liberoShort": "L"
+    }
+  },
+  "play": {
+    "toss": {
+      "title": "Seitenwahl",
+      "subtitle": "Wird im Kopfband vor dem 1. Satz eingetragen.",
+      "firstServe": "Erster Aufschlag im 1. Satz",
+      "leftSide": "Beginnt auf der linken Seite"
+    },
+    "sets": {
+      "title": "Sätze",
+      "subtitle": "Spielstand {{a}} : {{b}}",
+      "wins": "Spielstand {{a}} : {{b}} - Team {{side}} gewinnt",
+      "start": "Satz {{number}} starten",
+      "tab": "Satz {{number}}"
+    },
+    "setNotStarted": "Dieser Satz wurde noch nicht gestartet.",
+    "lineups": {
+      "title": "Aufstellungen Satz {{number}}",
+      "subtitle": "Die Positionen I bis VI sind zugleich die Aufschlagreihenfolge.",
+      "firstServe": "Erster Aufschlag in diesem Satz",
+      "decidingHint": "Der Entscheidungssatz beginnt mit einer neuen Seitenwahl.",
+      "locked": "Der Satz läuft bereits; ändere die Aufstellung nur, um einen Übertragungsfehler zu korrigieren.",
+      "position": "Position {{label}}",
+      "libero": "Libero auf dem Matchblatt",
+      "addLibero": "Libero hinzufügen"
+    },
+    "scoring": {
+      "title": "Punkte Satz {{number}}",
+      "serving": "Aufschlag",
+      "nextServer": "nächster Aufschlag Nr. {{number}}",
+      "point": "Punkt Team {{side}}",
+      "undoRally": "Letzten Ballwechsel rückgängig",
+      "timeout": "Auszeit {{side}} ({{used}}/{{max}})",
+      "undoTimeout": "Auszeit rückgängig",
+      "setFinished": "Satz {{number}} endet {{a}}:{{b}} für Team {{side}}. Trage die Spieldauer im Resultatfeld ein."
+    },
+    "subs": {
+      "title": "Auswechslungen",
+      "heading": "Team {{side}} ({{used}}/{{max}} verwendet)",
+      "leaving": "Position, die verlässt",
+      "entering": "Spieler, der kommt",
+      "record": "Wechsel eintragen",
+      "undo": "Letzten rückgängig",
+      "entry": "{{position}}: Nr. {{in}} für Nr. {{out}} bei {{a}}:{{b}}"
+    },
+    "sanctions": {
+      "title": "Sanktionen",
+      "subtitle": "Team, Person, Satz und Spielstand kommen ins Sanktionsfeld.",
+      "kind": "Sanktion",
+      "member": "Person",
+      "memberPlaceholder": "Spielernummer oder Funktion",
+      "atScore": "Bei Spielstand",
+      "atScoreValue": "{{a}}:{{b}} im Satz {{number}}",
+      "add": "Sanktion hinzufügen"
+    }
+  },
+  "sanction": {
+    "warning": "Verwarnung (gelbe Karte)",
+    "penalty": "Bestrafung (rote Karte)",
+    "expulsion": "Hinausstellung (beide Karten zusammen)",
+    "disqualification": "Disqualifikation (beide Karten getrennt)"
+  },
+  "engine": {
+    "tooManySubstitutions": "Team {{side}} hat mehr Wechsel als die {{allowed}} erlaubten.",
+    "tooManyTimeouts": "Team {{side}} hat mehr Auszeiten als die {{allowed}} erlaubten.",
+    "incompleteLineup": "Bei Team {{side}} sind für Satz {{number}} erst {{filled}} von 6 Positionen besetzt.",
+    "noFirstServe": "Für Satz {{number}} ist noch kein erster Aufschlag eingetragen.",
+    "liberoServing": "Bei Team {{side}} steht ein Libero auf der Aufschlagposition, was dieses Regelwerk nicht erlaubt.",
+    "blocker": {
+      "noSet": "Dieser Satz wurde noch nicht gestartet.",
+      "noFirstServe": "Trage ein, welches Team in diesem Satz zuerst aufschlägt.",
+      "lineup": "Team {{side}} braucht alle sechs Positionen vor dem ersten Ballwechsel.",
+      "setFinished": "Dieser Satz ist beendet."
+    },
+    "sub": {
+      "noSet": "Diesen Satz gibt es nicht.",
+      "setFinished": "Der Satz ist bereits beendet.",
+      "emptySlot": "Auf dieser Position steht noch kein Spieler auf dem Feld.",
+      "samePlayer": "Dieser Spieler steht auf dieser Position bereits auf dem Feld.",
+      "alreadyOnCourt": "Dieser Spieler steht bereits auf dem Feld.",
+      "allUsed": "Team {{side}} hat in diesem Satz bereits alle {{allowed}} Wechsel verbraucht.",
+      "unknownPlayer": "Unbekannter Spieler.",
+      "libero": "Libero-Ersatz zählt nicht als Wechsel und wird hier nicht eingetragen.",
+      "starterNotOut": "Dieser Startspieler hat das Feld nicht verlassen, es gibt also nichts zurückzuwechseln.",
+      "starterReturned": "Ein Startspieler darf pro Satz nur einmal zurückkehren.",
+      "starterPairing": "Ein Startspieler darf nur für den Spieler zurückkehren, der ihn ersetzt hat.",
+      "substituteReturned": "Ein Ersatzspieler darf pro Satz nur einmal eingewechselt werden."
+    }
+  },
+  "transfer": {
+    "title": "Auf das Papier-Matchblatt übertragen",
+    "subtitle": "Ein Feld nach dem anderen, in der Reihenfolge, in der ein Anschreiber das Blatt ausfüllt.",
+    "step": "Schritt {{current}} von {{total}}",
+    "progress": "{{done}} von {{total}} Feldern erledigt",
+    "markDone": "Als übertragen markieren",
+    "markNotDone": "Markierung aufheben",
+    "doneAndNext": "Übertragen, nächstes Feld",
+    "finish": "Abschliessen",
+    "restart": "Wieder beim ersten Feld beginnen",
+    "overview": "Alle Felder",
+    "allDone": "Alle Felder sind als übertragen markiert. Prüfe die Summen gegen das Papier-Matchblatt, bevor unterschrieben wird.",
+    "whatToWrite": "Was einzutragen ist",
+    "printSection": "Dieses Feld drucken",
+    "copySection": "Dieses Feld als Text kopieren",
+    "notStarted": "Satz nicht gestartet.",
+    "noPlayers": "Für Team {{side}} sind noch keine Spieler erfasst.",
+    "noRallies": "In diesem Satz sind noch keine Ballwechsel erfasst.",
+    "noRounds": "Noch keine Aufschlagfolgen.",
+    "noSubstitutions": "Keine Auswechslungen.",
+    "noSanctions": "Keine Sanktionen erfasst."
+  },
+  "section": {
+    "header": {
+      "title": "Kopf und Offizielle",
+      "help": "Das obere Band des Blatts. Übertrage Wettbewerb, Spielnummer, Datum, Zeit und Halle, danach beide Teamnamen und die Offiziellen. Schreibe die Namen genau so, wie sie auf den Lizenzen stehen."
+    },
+    "toss": {
+      "title": "Seitenwahl und Seiten",
+      "help": "Trage ein, welches Team aufschlägt und welches im 1. Satz links steht. Die Teams wechseln nach jedem Satz die Seiten; der Entscheidungssatz hat eine eigene Seitenwahl und einen Seitenwechsel bei 8."
+    },
+    "roster": {
+      "title": "Aufgebot Team {{side}}",
+      "help": "Fülle die Teamspalte nach Trikotnummern aus, kreise den Captain ein und markiere jeden Libero mit einem L. Trainer und Assistenztrainer kommen darunter."
+    },
+    "lineup": {
+      "title": "Satz {{number}}: Startaufstellungen",
+      "help": "Trage jede Startsechs in die Positionen I bis VI ein. Diese Reihenfolge ist zugleich die Aufschlagreihenfolge und muss dem Aufstellungszettel des Trainers entsprechen."
+    },
+    "score": {
+      "title": "Satz {{number}}: Punkteverlauf",
+      "help": "Arbeite die Aufschlagfolgen ab: zuerst die Nummer des Aufschlagenden eintragen, danach jeden auf diesen Aufschlag gewonnenen Punkt durchstreichen. Die Liste darunter zeigt den Spielstand nach jedem Punkt."
+    },
+    "changes": {
+      "title": "Satz {{number}}: Wechsel und Auszeiten",
+      "help": "Trage jeden Wechsel in der Position ein, in der er stattfand: die eingewechselte Nummer über die ausgewechselte, den Spielstand daneben. Auszeiten kommen als Spielstand in die kleinen Felder."
+    },
+    "results": {
+      "title": "Resultattabelle",
+      "help": "Eine Zeile pro Satz: Dauer, beide Resultate, Wechsel, Auszeiten und Sieger. Ergänze die Satzdauern ab Uhr und addiere danach Punkte und Spieldauer."
+    },
+    "sanctions": {
+      "title": "Sanktionen",
+      "help": "Eine Zeile pro Sanktion mit Team, Person, Satz und dem Spielstand, bei dem sie ausgesprochen wurde."
+    },
+    "remarks": {
+      "title": "Bemerkungen und Unterschriften",
+      "help": "Trage allfällige Bemerkungen ein und hole danach die Unterschriften: zuerst die Captains, dann die Trainer, der Anschreiber und zuletzt beide Schiedsrichter."
+    },
+    "submit": {
+      "title": "Resultat melden",
+      "help": "Das Papier-Matchblatt bleibt beim Schiedsrichter. Das Resultat muss trotzdem zum Verband gelangen, übertrage darum die Zusammenfassung unten ins Verbandssystem."
+    }
+  },
+  "sheet": {
+    "row": {
+      "competition": "Wettbewerb",
+      "stage": "Phase / Runde",
+      "pool": "Gruppe",
+      "matchNumber": "Spielnummer",
+      "category": "Kategorie",
+      "date": "Datum",
+      "time": "Spielbeginn",
+      "hall": "Halle",
+      "city": "Ort",
+      "teamA": "Team A",
+      "teamB": "Team B",
+      "rules": "Regelwerk",
+      "servesFirst": "Erster Aufschlag (1. Satz)",
+      "receivesFirst": "Erste Annahme (1. Satz)",
+      "leftSide": "Linke Seite (1. Satz)",
+      "rightSide": "Rechte Seite (1. Satz)",
+      "team": "Team",
+      "coach": "Trainer",
+      "assistantCoach": "Assistenztrainer",
+      "liberos": "Liberos",
+      "servesFirstSet": "Erster Aufschlag",
+      "setsWon": "Gewonnene Sätze",
+      "totalPoints": "Punkte total",
+      "matchWinner": "Sieger",
+      "remarks": "Bemerkungen",
+      "scorer": "Anschreiber",
+      "captain": "Captain {{side}}",
+      "coachSide": "Trainer {{side}}",
+      "firstReferee": "1. Schiedsrichter"
+    },
+    "serviceRounds": "Aufschlagfolgen Team {{side}} - {{name}}",
+    "rallyByRally": "Ballwechsel für Ballwechsel",
+    "col": {
+      "round": "Folge",
+      "serverNumber": "Aufschlag Nr.",
+      "pointsOnService": "Punkte auf diesen Aufschlag",
+      "fromScore": "(ab {{own}}:{{opponent}})",
+      "pointTo": "Punkt für",
+      "scoreA": "Punkte A",
+      "scoreB": "Punkte B",
+      "playerNumber": "Spieler Nr.",
+      "in": "Ein",
+      "out": "Aus",
+      "duration": "Dauer",
+      "subsA": "Wechsel A",
+      "subsB": "Wechsel B",
+      "timeoutsA": "A-Z A",
+      "timeoutsB": "A-Z B",
+      "winner": "Sieger",
+      "member": "Person"
+    },
+    "timeouts": "Auszeiten",
+    "signatureNote": "Unterschrieben wird auf Papier: zuerst die Captains nach dem Spiel, danach Trainer und Schiedsrichter."
+  },
+  "submit": {
+    "title": "Resultat melden",
+    "noApi": {
+      "title": "Keine direkte Übermittlung",
+      "body": "{{name}} veröffentlicht Spiele, Teams und Aufgebote, nimmt über die Schnittstelle aber kein Matchblatt entgegen. Das Resultat lässt sich von hier aus also nicht melden. Übertrage die Zusammenfassung unten ins Verbandssystem und gib das Papier-Matchblatt wie gewohnt dem Schiedsrichter."
+    },
+    "manualBody": "Es ist kein Verband ausgewählt, es gibt also keine Stelle, an die das Resultat gemeldet werden könnte. Die Zusammenfassung unten bleibt trotzdem der kürzeste Weg, es auf dem für euren Wettbewerb üblichen Kanal zu melden.",
+    "summary": "Resultat-Zusammenfassung",
+    "copySummary": "Zusammenfassung kopieren",
+    "openPortal": "{{name}} öffnen",
+    "checklist": "Bevor du das Blatt abgibst",
+    "check": {
+      "totals": "Die Punktzahl pro Satz stimmt mit dem Punkteverlauf überein.",
+      "signatures": "Beide Captains, beide Trainer und beide Schiedsrichter haben unterschrieben.",
+      "durations": "Jede Satzdauer und die Spieldauer sind eingetragen.",
+      "sanctions": "Jede Sanktion steht mit ihrem Spielstand im Sanktionsfeld."
+    }
+  },
+  "settings": {
+    "title": "Verband",
+    "subtitle": "Welche Datenquelle das Matchblatt für dich vorausfüllt.",
+    "country": "Land / Verband",
+    "apiDocs": "API-Dokumentation",
+    "tokenPlaceholder": "Token einfügen",
+    "save": "Token speichern",
+    "forget": "Token vergessen",
+    "whereToGet": "Wo es einen gibt",
+    "stored": "Nur in diesem Browser gespeichert.",
+    "privacy": "Der Token liegt im Local Storage dieses Browsers und geht nur über HTTPS an die Schnittstelle des Verbands. Sonst wird nichts hochgeladen, und die App hat kein Backend. Ohne Token funktioniert alles weiterhin, du tippst die Spielangaben einfach selbst ein.",
+    "noCredential": "{{name}} braucht keine Zugangsberechtigung.",
+    "language": {
+      "title": "Sprache",
+      "subtitle": "Gilt für die ganze App und wird in diesem Browser gemerkt.",
+      "label": "Sprache",
+      "system": "Browsersprache übernehmen"
+    }
+  },
+  "provider": {
+    "manual": {
+      "name": "Manuelle Eingabe (kein Verband)",
+      "country": "Beliebiges Land"
+    },
+    "swiss": {
+      "tokenLabel": "Volley-Manager-API-Token",
+      "tokenHelp": "Ein Vereinsadministrator erzeugt ihn im Volley Manager unter Administration > Verein > Webservice/API. Er wird als Authorization-Header gesendet und nur in diesem Browser gespeichert.",
+      "country": "Schweiz"
+    }
+  },
+  "federation": {
+    "noToken": "Kein Token für {{name}} hinterlegt. Trage einen in den Einstellungen ein oder bleibe bei der manuellen Eingabe.",
+    "unreachable": "{{url}} nicht erreichbar: {{reason}}",
+    "httpError": "{{name}} antwortete mit {{status}} {{statusText}}"
+  }
+}

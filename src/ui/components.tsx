@@ -15,11 +15,11 @@ export function Card({
     <section className="card" aria-label={title}>
       {(title || actions) && (
         <header className="card-head">
-          <div>
+          <div className="min-w-0">
             {title && <h2>{title}</h2>}
-            {subtitle && <p className="muted">{subtitle}</p>}
+            {subtitle && <p className="muted mt-1">{subtitle}</p>}
           </div>
-          {actions && <div className="card-actions">{actions}</div>}
+          {actions && <div className="card-actions flex flex-wrap gap-2">{actions}</div>}
         </header>
       )}
       {children}
@@ -40,7 +40,7 @@ export function Field({
     <label className="field">
       <span className="field-label">{label}</span>
       {children}
-      {hint && <span className="field-hint">{hint}</span>}
+      {hint && <span className="text-xs text-slate-500 dark:text-slate-400">{hint}</span>}
     </label>
   )
 }
@@ -114,7 +114,11 @@ export function Banner({ kind, children }: { kind: 'info' | 'warn' | 'error' | '
 
 export function Spinner({ label }: { label: string }) {
   return (
-    <p className="muted" role="status">
+    <p className="muted flex items-center gap-2" role="status">
+      <span
+        aria-hidden
+        className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-slate-300 border-t-indigo-500"
+      />
       {label}
     </p>
   )

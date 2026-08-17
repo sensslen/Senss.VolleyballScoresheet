@@ -1,6 +1,9 @@
+import type { LocalizedMessage } from '../../localizedMessage'
 import { FederationError } from '../types'
 
 export const SWISS_API_BASE = 'https://api.volleyball.ch'
+
+export const SWISS_VOLLEY_NAME = 'Swiss Volley'
 
 /** Shapes are trimmed to the fields the scoresheet needs. */
 export interface SwissSeasonDto {
@@ -114,7 +117,10 @@ export class SwissVolleyApi {
   private async get<T>(path: string, query: Record<string, QueryValue> = {}): Promise<T> {
     const token = this.getToken().trim()
     if (!token) {
-      throw new FederationError('No Swiss Volley API token configured. Add one in Settings, or keep using manual entry.')
+      throw new FederationError('No Swiss Volley API token configured.', {
+        key: 'federation.noToken',
+        params: { name: SWISS_VOLLEY_NAME },
+      })
     }
 
     const url = new URL(SWISS_API_BASE + path)
@@ -127,18 +133,27 @@ export class SwissVolleyApi {
       // The API sends Access-Control-Allow-Origin: *, so the browser may call it directly.
       response = await fetch(url, { headers: { Authorization: token }, redirect: 'follow' })
     } catch (cause) {
-      throw new FederationError(`Could not reach ${SWISS_API_BASE}: ${(cause as Error).message}`)
+      const reason = (cause as Error).message
+      throw new FederationError(`Could not reach ${SWISS_API_BASE}: ${reason}`, {
+        key: 'federation.unreachable',
+        params: { url: SWISS_API_BASE, reason },
+      })
     }
 
     if (!response.ok) {
-      throw new FederationError(await describeFailure(response), response.status)
+      const failure = await describeFailure(response)
+      throw new FederationError(failure.text, failure.localized, response.status)
     }
 
     const body = (await response.json()) as unknown
     // An invalid token is answered with a 302 to the login page carrying an errors array.
     if (body && typeof body === 'object' && 'errors' in body) {
       const errors = (body as { errors: Array<{ message?: string }> }).errors
-      throw new FederationError(errors.map((e) => e.message ?? 'Unknown error').join('; '), response.status)
+      throw new FederationError(
+        errors.map((e) => e.message ?? 'Unknown error').join('; '),
+        undefined,
+        response.status,
+      )
     }
     return body as T
   }
@@ -222,12 +237,24 @@ export class SwissVolleyApi {
   }
 }
 
-async function describeFailure(response: Response): Promise<string> {
-  const fallback = `Swiss Volley API returned ${response.status} ${response.statusText}`
+interface Failure {
+  text: string
+  /** Absent when the text came from the API and so cannot be translated. */
+  localized?: LocalizedMessage
+}
+
+async function describeFailure(response: Response): Promise<Failure> {
+  const fallback: Failure = {
+    text: `${SWISS_VOLLEY_NAME} returned ${response.status} ${response.statusText}`,
+    localized: {
+      key: 'federation.httpError',
+      params: { name: SWISS_VOLLEY_NAME, status: response.status, statusText: response.statusText },
+    },
+  }
   try {
     const body = (await response.json()) as { errors?: Array<{ message?: string }> }
     const message = body.errors?.map((e) => e.message).filter(Boolean).join('; ')
-    return message ? `${message} (HTTP ${response.status})` : fallback
+    return message ? { text: `${message} (HTTP ${response.status})` } : fallback
   } catch {
     return fallback
   }

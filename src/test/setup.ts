@@ -1,3 +1,5 @@
+export {}
+
 /**
  * Node exposes an experimental global `localStorage` that is unavailable unless the
  * process was started with --localstorage-file, and it shadows the jsdom one. Tests
@@ -37,10 +39,15 @@ function install(): void {
   Object.defineProperty(globalThis, 'localStorage', { value: storage, configurable: true, writable: true })
 }
 
-let usable = false
+let usable: boolean
 try {
   usable = typeof window.localStorage?.setItem === 'function'
 } catch {
   usable = false
 }
 if (!usable) install()
+
+// Assertions read English strings, so pin the language rather than letting the
+// detector pick up whatever locale the machine running the tests reports.
+const { default: i18n } = await import('../i18n')
+await i18n.changeLanguage('en')

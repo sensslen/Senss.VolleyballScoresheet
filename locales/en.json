@@ -1,0 +1,414 @@
+{
+  "language": {
+    "name": "English"
+  },
+  "common": {
+    "teamSide": "Team {{side}}",
+    "unnamed": "(unnamed)",
+    "blank": "--",
+    "vs": "vs",
+    "open": "Open",
+    "delete": "Delete",
+    "remove": "Remove",
+    "back": "Back",
+    "next": "Next",
+    "print": "Print",
+    "copy": "Copy as text",
+    "copied": "Copied",
+    "date": "Date",
+    "score": "Score",
+    "match": "Match",
+    "set": "Set",
+    "team": "Team",
+    "position": "Position",
+    "name": "Name",
+    "number": "No.",
+    "venue": "Venue",
+    "competition": "Competition",
+    "empty": "empty",
+    "notDecided": "not decided"
+  },
+  "app": {
+    "title": "Volleyball Scoresheet Assistant",
+    "tagline": "Guides you through an international scoresheet, then walks you box by box so you can copy it onto the paper sheet.",
+    "footer": "Everything stays in this browser. The paper sheet remains the official record; this only helps you fill it in without arithmetic mistakes.",
+    "needSheet": "Start or open a sheet first.",
+    "version": "Version {{version}}",
+    "loading": "Loading..."
+  },
+  "tabs": {
+    "start": { "label": "Match", "hint": "Pick a fixture or start blank" },
+    "match": { "label": "Header", "hint": "Competition, venue, officials" },
+    "teams": { "label": "Teams", "hint": "Rosters, captain, liberos" },
+    "play": { "label": "Score", "hint": "Toss, lineups, rallies" },
+    "sheet": { "label": "Transfer", "hint": "Guided copy onto the paper sheet" },
+    "settings": { "label": "Settings", "hint": "Federation, token and language" }
+  },
+  "start": {
+    "title": "Start a sheet",
+    "subtitle": "Import a fixture to prefill the header, teams and officials, or start from a blank sheet.",
+    "blank": "Blank sheet",
+    "body": "With a federation token the header, both squads and the referees arrive filled in. Without one, the same sheet works, you just type the details yourself.",
+    "saved": {
+      "title": "Saved sheets",
+      "subtitle": "Kept in this browser.",
+      "empty": "Nothing saved yet."
+    }
+  },
+  "browser": {
+    "title": "Browse fixtures",
+    "unsupported": "{{name}} does not offer fixture browsing. Start a blank sheet and type the match details in.",
+    "needCredential": "{{name}} needs {{credential}} before it can list games. Add it under Settings, or start a blank sheet and fill everything in by hand.",
+    "credentialFallback": "a credential",
+    "region": "Region",
+    "competition": "Competition",
+    "stage": "Stage",
+    "pool": "Pool",
+    "from": "From",
+    "to": "To",
+    "filter": "Filter list",
+    "filterPlaceholder": "Team, hall, match no.",
+    "load": "Load games",
+    "upcoming": "Upcoming only",
+    "use": "Use this match",
+    "empty": "Pick a competition and load the fixture list.",
+    "women": "W",
+    "men": "M",
+    "loading": {
+      "regions": "Loading regions...",
+      "competitions": "Loading competitions...",
+      "stages": "Loading stages...",
+      "pools": "Loading pools...",
+      "games": "Loading games..."
+    }
+  },
+  "match": {
+    "header": {
+      "title": "Match header",
+      "subtitle": "The top band of the scoresheet."
+    },
+    "field": {
+      "competition": "Competition",
+      "stage": "Stage / round",
+      "pool": "Pool / group",
+      "matchNumber": "Match number",
+      "category": "Category",
+      "categoryPlaceholder": "Women / Men / U19",
+      "date": "Date",
+      "time": "Start time",
+      "hall": "Hall",
+      "city": "City"
+    },
+    "rules": {
+      "title": "Rules",
+      "subtitle": "Drives set targets, substitution and time-out limits.",
+      "ruleSet": "Rule set",
+      "fromFederation": "{{name}} (from federation)",
+      "summary": "Best of {{best}}, sets to {{points}}, deciding set to {{deciding}}, {{substitutions}} substitutions and {{timeouts}} time-outs per set."
+    },
+    "officials": {
+      "title": "Officials",
+      "first": "1st referee",
+      "second": "2nd referee",
+      "scorer": "Scorer",
+      "assistantScorer": "Assistant scorer",
+      "lineJudges": "Line judges"
+    }
+  },
+  "rules": {
+    "fivb-best-of-5": "International, best of 5 (FIVB)",
+    "fivb-best-of-3": "International, best of 3",
+    "ncaa-best-of-5": "NCAA, best of 5 (libero may serve)",
+    "bestOf": "Best of {{count}}"
+  },
+  "teams": {
+    "cardTitle": "Team {{side}} - {{name}}",
+    "home": "Home team on the fixture list.",
+    "away": "Visiting team on the fixture list.",
+    "import": "Import roster",
+    "addPlayer": "Add player",
+    "field": {
+      "name": "Team name",
+      "club": "Club",
+      "coach": "Coach",
+      "assistantCoach": "Assistant coach",
+      "physiotherapist": "Physiotherapist",
+      "doctor": "Doctor"
+    },
+    "loadingRoster": "Loading roster...",
+    "imported": "Imported {{count}} players.",
+    "notImported": "This team was not imported from {{name}}, so there is no roster to pull. Type the players in.",
+    "noCaptain": "No captain marked. The sheet needs the captain circled.",
+    "tooManyCaptains": "More than one captain marked.",
+    "tooManyLiberos": "More than two liberos marked.",
+    "tooManyPlayers": "{{count}} players listed; the rules allow {{allowed}}.",
+    "col": {
+      "lastName": "Last name",
+      "firstName": "First name",
+      "licence": "Licence",
+      "captainShort": "C",
+      "liberoShort": "L"
+    }
+  },
+  "play": {
+    "toss": {
+      "title": "Toss",
+      "subtitle": "Recorded in the header band before set 1.",
+      "firstServe": "Serves first in set 1",
+      "leftSide": "Starts on the left side"
+    },
+    "sets": {
+      "title": "Sets",
+      "subtitle": "Match score {{a}} : {{b}}",
+      "wins": "Match score {{a}} : {{b}} - team {{side}} wins",
+      "start": "Start set {{number}}",
+      "tab": "Set {{number}}"
+    },
+    "setNotStarted": "That set has not been started.",
+    "lineups": {
+      "title": "Set {{number}} lineups",
+      "subtitle": "Positions I to VI double as the service order.",
+      "firstServe": "Serves first in this set",
+      "decidingHint": "The deciding set starts with a new toss.",
+      "locked": "The set has started; change the lineup only to fix a transcription error.",
+      "position": "Position {{label}}",
+      "libero": "Libero on the sheet",
+      "addLibero": "Add libero"
+    },
+    "scoring": {
+      "title": "Set {{number}} scoring",
+      "serving": "serving",
+      "nextServer": "next server no. {{number}}",
+      "point": "Point Team {{side}}",
+      "undoRally": "Undo last rally",
+      "timeout": "Time-out {{side}} ({{used}}/{{max}})",
+      "undoTimeout": "Undo time-out",
+      "setFinished": "Set {{number}} finished {{a}}:{{b}} to team {{side}}. Write the duration in the results box."
+    },
+    "subs": {
+      "title": "Substitutions",
+      "heading": "Team {{side}} ({{used}}/{{max}} used)",
+      "leaving": "Position leaving",
+      "entering": "Player entering",
+      "record": "Record substitution",
+      "undo": "Undo last",
+      "entry": "{{position}}: no. {{in}} for no. {{out}} at {{a}}:{{b}}"
+    },
+    "sanctions": {
+      "title": "Sanctions",
+      "subtitle": "Team, member, set and score go in the sanctions box.",
+      "kind": "Sanction",
+      "member": "Member",
+      "memberPlaceholder": "Player no. or role",
+      "atScore": "At score",
+      "atScoreValue": "{{a}}:{{b}} in set {{number}}",
+      "add": "Add sanction"
+    }
+  },
+  "sanction": {
+    "warning": "Warning (yellow card)",
+    "penalty": "Penalty (red card)",
+    "expulsion": "Expulsion (both cards together)",
+    "disqualification": "Disqualification (both cards apart)"
+  },
+  "engine": {
+    "tooManySubstitutions": "Team {{side}} has more substitutions than the {{allowed}} the rules allow.",
+    "tooManyTimeouts": "Team {{side}} has more time-outs than the {{allowed}} the rules allow.",
+    "incompleteLineup": "Team {{side}} has only {{filled}} of 6 starting positions filled for set {{number}}.",
+    "noFirstServe": "Set {{number}} has no first service recorded yet.",
+    "liberoServing": "Team {{side}} has a libero in the service position, which these rules do not allow.",
+    "blocker": {
+      "noSet": "This set has not been started.",
+      "noFirstServe": "Record which team serves first in this set.",
+      "lineup": "Team {{side}} needs all six starting positions before the first rally.",
+      "setFinished": "This set is finished."
+    },
+    "sub": {
+      "noSet": "That set does not exist.",
+      "setFinished": "The set is already finished.",
+      "emptySlot": "That position has no player on court yet.",
+      "samePlayer": "That player is already on court in this position.",
+      "alreadyOnCourt": "That player is already on court.",
+      "allUsed": "Team {{side}} has already used all {{allowed}} substitutions in this set.",
+      "unknownPlayer": "Unknown player.",
+      "libero": "Libero replacements are not substitutions and are not recorded here.",
+      "starterNotOut": "That starter has not left the court, so there is nothing to re-enter.",
+      "starterReturned": "A starter may only re-enter once per set.",
+      "starterPairing": "A starter may only re-enter for the player who replaced them.",
+      "substituteReturned": "A substitute may only enter once per set."
+    }
+  },
+  "transfer": {
+    "title": "Transfer to the paper sheet",
+    "subtitle": "One box at a time, in the order a scorer fills the sheet in.",
+    "step": "Step {{current}} of {{total}}",
+    "progress": "{{done}} of {{total}} boxes marked done",
+    "markDone": "Mark copied",
+    "markNotDone": "Mark not copied",
+    "doneAndNext": "Copied, next box",
+    "finish": "Finish",
+    "restart": "Start again from the first box",
+    "overview": "All boxes",
+    "allDone": "Every box is marked copied. Check the totals against the paper sheet before signing.",
+    "whatToWrite": "What to write",
+    "printSection": "Print this box",
+    "copySection": "Copy this box as text",
+    "notStarted": "Set not started.",
+    "noPlayers": "No players entered for team {{side}} yet.",
+    "noRallies": "No rallies recorded in this set yet.",
+    "noRounds": "No service rounds yet.",
+    "noSubstitutions": "No substitutions.",
+    "noSanctions": "No sanctions recorded."
+  },
+  "section": {
+    "header": {
+      "title": "Header and officials",
+      "help": "Top band of the sheet. Copy competition, match number, date, time and venue, then both team names and the officials. Write the names exactly as they appear on the licences."
+    },
+    "toss": {
+      "title": "Toss and sides",
+      "help": "Mark which team serves and which team is on the left for set 1. Teams change ends every set; the deciding set has its own toss and a change of ends at 8."
+    },
+    "roster": {
+      "title": "Team {{side}} roster",
+      "help": "Fill the team column in shirt-number order, circle the captain and mark each libero with an L. Add the coach and assistant coach underneath."
+    },
+    "lineup": {
+      "title": "Set {{number}}: starting lineups",
+      "help": "Write each starting six into positions I to VI. That order is also the service order, so it must match what the coach handed in on the lineup slip."
+    },
+    "score": {
+      "title": "Set {{number}}: running score",
+      "help": "Work down the service rounds: enter the serving player number, then strike out every point won on that service. The rally list underneath shows the running score after each point."
+    },
+    "changes": {
+      "title": "Set {{number}}: substitutions and time-outs",
+      "help": "Enter each substitution in the position it happened in, with the incoming number above the outgoing one and the score alongside. Time-outs go in the small boxes as the score at which they were taken."
+    },
+    "results": {
+      "title": "Results table",
+      "help": "One row per set: duration, both scores, substitutions, time-outs and the winner. Add the set durations from the clock, then total the points and the match duration."
+    },
+    "sanctions": {
+      "title": "Sanctions",
+      "help": "One line per sanction with the team, the member, the set and the score at which it was given."
+    },
+    "remarks": {
+      "title": "Remarks and signatures",
+      "help": "Write any remarks, then collect the signatures: captains first, then the coaches, the scorer and finally both referees."
+    },
+    "submit": {
+      "title": "Report the result",
+      "help": "The paper sheet stays with the referee. The result still has to reach the federation, so copy the summary below into the federation system."
+    }
+  },
+  "sheet": {
+    "row": {
+      "competition": "Competition",
+      "stage": "Stage / round",
+      "pool": "Pool / group",
+      "matchNumber": "Match number",
+      "category": "Category",
+      "date": "Date",
+      "time": "Start time",
+      "hall": "Hall",
+      "city": "City",
+      "teamA": "Team A",
+      "teamB": "Team B",
+      "rules": "Rules",
+      "servesFirst": "Serves first (set 1)",
+      "receivesFirst": "Receives first (set 1)",
+      "leftSide": "Left side (set 1)",
+      "rightSide": "Right side (set 1)",
+      "team": "Team",
+      "coach": "Coach",
+      "assistantCoach": "Assistant coach",
+      "liberos": "Liberos",
+      "servesFirstSet": "Serves first",
+      "setsWon": "Sets won",
+      "totalPoints": "Total points",
+      "matchWinner": "Match winner",
+      "remarks": "Remarks",
+      "scorer": "Scorer",
+      "captain": "Captain {{side}}",
+      "coachSide": "Coach {{side}}",
+      "firstReferee": "1st referee"
+    },
+    "serviceRounds": "Team {{side}} service rounds - {{name}}",
+    "rallyByRally": "Rally by rally",
+    "col": {
+      "round": "Round",
+      "serverNumber": "Server no.",
+      "pointsOnService": "Points scored on this service",
+      "fromScore": "(from {{own}}:{{opponent}})",
+      "pointTo": "Point to",
+      "scoreA": "Score A",
+      "scoreB": "Score B",
+      "playerNumber": "Player no.",
+      "in": "In",
+      "out": "Out",
+      "duration": "Duration",
+      "subsA": "Subs A",
+      "subsB": "Subs B",
+      "timeoutsA": "T-O A",
+      "timeoutsB": "T-O B",
+      "winner": "Winner",
+      "member": "Member"
+    },
+    "timeouts": "Time-outs",
+    "signatureNote": "Signatures go on paper: captains sign after the match, then the coaches and referees."
+  },
+  "submit": {
+    "title": "Report the result",
+    "noApi": {
+      "title": "No direct submission",
+      "body": "{{name}} publishes fixtures, teams and squads but accepts no scoresheet over its API, so the result cannot be filed from here. Copy the summary below into the federation system, and hand the paper sheet to the referee as usual."
+    },
+    "manualBody": "No federation is selected, so there is nothing to file the result with. The summary below is still the shortest way to report it by whatever route your competition uses.",
+    "summary": "Result summary",
+    "copySummary": "Copy the summary",
+    "openPortal": "Open {{name}}",
+    "checklist": "Before you hand the sheet over",
+    "check": {
+      "totals": "The points total per set matches the running score.",
+      "signatures": "Both captains, both coaches and both referees have signed.",
+      "durations": "Every set duration and the match duration are written in.",
+      "sanctions": "Every sanction is in the sanctions box with its score."
+    }
+  },
+  "settings": {
+    "title": "Federation",
+    "subtitle": "Which country's data source fills the sheet in for you.",
+    "country": "Country / federation",
+    "apiDocs": "API documentation",
+    "tokenPlaceholder": "Paste token",
+    "save": "Save token",
+    "forget": "Forget token",
+    "whereToGet": "Where to get one",
+    "stored": "Stored in this browser only.",
+    "privacy": "The token is kept in this browser's local storage and sent only to the federation's API over HTTPS. Nothing is uploaded anywhere else, and the app has no backend. Without a token everything still works, you just type the match details in yourself.",
+    "noCredential": "{{name}} needs no credential.",
+    "language": {
+      "title": "Language",
+      "subtitle": "Applies to the whole app and is remembered in this browser.",
+      "label": "Language",
+      "system": "Match my browser"
+    }
+  },
+  "provider": {
+    "manual": {
+      "name": "Manual entry (no federation)",
+      "country": "Any country"
+    },
+    "swiss": {
+      "tokenLabel": "Volley Manager API token",
+      "tokenHelp": "A club administrator generates one in Volley Manager under Administration > Club > Webservice/API. It is sent as the Authorization header and is stored only in this browser.",
+      "country": "Switzerland"
+    }
+  },
+  "federation": {
+    "noToken": "No {{name}} token configured. Add one in Settings, or keep using manual entry.",
+    "unreachable": "Could not reach {{url}}: {{reason}}",
+    "httpError": "{{name}} returned {{status}} {{statusText}}"
+  }
+}

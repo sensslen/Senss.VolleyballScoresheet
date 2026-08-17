@@ -1,0 +1,414 @@
+{
+  "language": {
+    "name": "Polski"
+  },
+  "common": {
+    "teamSide": "Drużyna {{side}}",
+    "unnamed": "(bez nazwy)",
+    "blank": "--",
+    "vs": "vs",
+    "open": "Otwórz",
+    "delete": "Usuń",
+    "remove": "Usuń",
+    "back": "Wstecz",
+    "next": "Dalej",
+    "print": "Drukuj",
+    "copy": "Kopiuj jako tekst",
+    "copied": "Skopiowano",
+    "date": "Data",
+    "score": "Wynik",
+    "match": "Mecz",
+    "set": "Set",
+    "team": "Drużyna",
+    "position": "Pozycja",
+    "name": "Nazwa",
+    "number": "Nr",
+    "venue": "Hala",
+    "competition": "Rozgrywki",
+    "empty": "puste",
+    "notDecided": "nierozstrzygnięty"
+  },
+  "app": {
+    "title": "Asystent protokołu meczowego siatkówki",
+    "tagline": "Prowadzi Cię przez międzynarodowy protokół, a potem pole po polu, żebyś mógł przepisać wszystko na papierowy protokół.",
+    "footer": "Wszystko zostaje w tej przeglądarce. Papierowy protokół pozostaje dokumentem oficjalnym; ta aplikacja tylko pomaga wypełnić go bez błędów rachunkowych.",
+    "needSheet": "Najpierw rozpocznij lub otwórz protokół.",
+    "version": "Wersja {{version}}",
+    "loading": "Wczytywanie..."
+  },
+  "tabs": {
+    "start": { "label": "Mecz", "hint": "Wybierz mecz lub zacznij od pustego" },
+    "match": { "label": "Nagłówek", "hint": "Rozgrywki, hala, sędziowie" },
+    "teams": { "label": "Drużyny", "hint": "Składy, kapitan, libero" },
+    "play": { "label": "Punkty", "hint": "Losowanie, ustawienia, akcje" },
+    "sheet": { "label": "Przepisz", "hint": "Prowadzone przepisywanie na papier" },
+    "settings": { "label": "Ustawienia", "hint": "Związek, token i język" }
+  },
+  "start": {
+    "title": "Rozpocznij protokół",
+    "subtitle": "Zaimportuj mecz, aby wypełnić nagłówek, drużyny i sędziów, albo zacznij od pustego protokołu.",
+    "blank": "Pusty protokół",
+    "body": "Z tokenem związku nagłówek, oba składy i sędziowie przychodzą już wypełnione. Bez tokena ten sam protokół działa tak samo, po prostu wpisujesz dane sam.",
+    "saved": {
+      "title": "Zapisane protokoły",
+      "subtitle": "Przechowywane w tej przeglądarce.",
+      "empty": "Nic jeszcze nie zapisano."
+    }
+  },
+  "browser": {
+    "title": "Przeglądaj mecze",
+    "unsupported": "{{name}} nie udostępnia przeglądania meczów. Rozpocznij pusty protokół i wpisz dane meczu.",
+    "needCredential": "{{name}} potrzebuje {{credential}}, aby wyświetlić mecze. Dodaj go w Ustawieniach albo rozpocznij pusty protokół i wypełnij wszystko ręcznie.",
+    "credentialFallback": "poświadczenia",
+    "region": "Region",
+    "competition": "Liga",
+    "stage": "Faza",
+    "pool": "Grupa",
+    "from": "Od",
+    "to": "Do",
+    "filter": "Filtruj listę",
+    "filterPlaceholder": "Drużyna, hala, nr meczu",
+    "load": "Wczytaj mecze",
+    "upcoming": "Tylko nadchodzące",
+    "use": "Użyj tego meczu",
+    "empty": "Wybierz ligę i wczytaj terminarz.",
+    "women": "K",
+    "men": "M",
+    "loading": {
+      "regions": "Wczytywanie regionów...",
+      "competitions": "Wczytywanie lig...",
+      "stages": "Wczytywanie faz...",
+      "pools": "Wczytywanie grup...",
+      "games": "Wczytywanie meczów..."
+    }
+  },
+  "match": {
+    "header": {
+      "title": "Nagłówek meczu",
+      "subtitle": "Górny pas protokołu."
+    },
+    "field": {
+      "competition": "Rozgrywki",
+      "stage": "Faza / runda",
+      "pool": "Grupa",
+      "matchNumber": "Numer meczu",
+      "category": "Kategoria",
+      "categoryPlaceholder": "Kobiety / Mężczyźni / U19",
+      "date": "Data",
+      "time": "Godzina rozpoczęcia",
+      "hall": "Hala",
+      "city": "Miasto"
+    },
+    "rules": {
+      "title": "Przepisy",
+      "subtitle": "Określają limity punktów w secie, zmian i czasów.",
+      "ruleSet": "Zestaw przepisów",
+      "fromFederation": "{{name}} (od związku)",
+      "summary": "Do {{best}} setów, sety do {{points}}, tie-break do {{deciding}}, {{substitutions}} zmian i {{timeouts}} czasy na set."
+    },
+    "officials": {
+      "title": "Sędziowie i osoby funkcyjne",
+      "first": "Sędzia I",
+      "second": "Sędzia II",
+      "scorer": "Sekretarz",
+      "assistantScorer": "Asystent sekretarza",
+      "lineJudges": "Sędziowie liniowi"
+    }
+  },
+  "rules": {
+    "fivb-best-of-5": "Międzynarodowe, do 3 wygranych setów (FIVB)",
+    "fivb-best-of-3": "Międzynarodowe, do 2 wygranych setów",
+    "ncaa-best-of-5": "NCAA, do 3 wygranych setów (libero może zagrywać)",
+    "bestOf": "Do {{count}} setów"
+  },
+  "teams": {
+    "cardTitle": "Drużyna {{side}} - {{name}}",
+    "home": "Gospodarz według terminarza.",
+    "away": "Gość według terminarza.",
+    "import": "Importuj skład",
+    "addPlayer": "Dodaj zawodnika",
+    "field": {
+      "name": "Nazwa drużyny",
+      "club": "Klub",
+      "coach": "Trener",
+      "assistantCoach": "Asystent trenera",
+      "physiotherapist": "Fizjoterapeuta",
+      "doctor": "Lekarz"
+    },
+    "loadingRoster": "Wczytywanie składu...",
+    "imported": "Zaimportowano {{count}} zawodników.",
+    "notImported": "Ta drużyna nie została zaimportowana z {{name}}, więc nie ma składu do pobrania. Wpisz zawodników ręcznie.",
+    "noCaptain": "Nie zaznaczono kapitana. W protokole kapitan musi być zakreślony.",
+    "tooManyCaptains": "Zaznaczono więcej niż jednego kapitana.",
+    "tooManyLiberos": "Zaznaczono więcej niż dwóch libero.",
+    "tooManyPlayers": "Wpisano {{count}} zawodników; przepisy dopuszczają {{allowed}}.",
+    "col": {
+      "lastName": "Nazwisko",
+      "firstName": "Imię",
+      "licence": "Licencja",
+      "captainShort": "K",
+      "liberoShort": "L"
+    }
+  },
+  "play": {
+    "toss": {
+      "title": "Losowanie",
+      "subtitle": "Zapisywane w pasie nagłówka przed 1. setem.",
+      "firstServe": "Zagrywa jako pierwsza w 1. secie",
+      "leftSide": "Zaczyna po lewej stronie"
+    },
+    "sets": {
+      "title": "Sety",
+      "subtitle": "Wynik meczu {{a}} : {{b}}",
+      "wins": "Wynik meczu {{a}} : {{b}} - wygrywa drużyna {{side}}",
+      "start": "Rozpocznij set {{number}}",
+      "tab": "Set {{number}}"
+    },
+    "setNotStarted": "Ten set nie został rozpoczęty.",
+    "lineups": {
+      "title": "Ustawienia w secie {{number}}",
+      "subtitle": "Pozycje I do VI są zarazem kolejnością zagrywki.",
+      "firstServe": "Zagrywa jako pierwsza w tym secie",
+      "decidingHint": "Set decydujący zaczyna się od nowego losowania.",
+      "locked": "Set już trwa; zmieniaj ustawienie tylko po to, by poprawić błąd zapisu.",
+      "position": "Pozycja {{label}}",
+      "libero": "Libero w protokole",
+      "addLibero": "Dodaj libero"
+    },
+    "scoring": {
+      "title": "Punktacja setu {{number}}",
+      "serving": "zagrywa",
+      "nextServer": "następny zagrywający nr {{number}}",
+      "point": "Punkt dla drużyny {{side}}",
+      "undoRally": "Cofnij ostatnią akcję",
+      "timeout": "Czas {{side}} ({{used}}/{{max}})",
+      "undoTimeout": "Cofnij czas",
+      "setFinished": "Set {{number}} zakończony {{a}}:{{b}} dla drużyny {{side}}. Wpisz czas trwania w tabeli wyników."
+    },
+    "subs": {
+      "title": "Zmiany",
+      "heading": "Drużyna {{side}} (wykorzystano {{used}}/{{max}})",
+      "leaving": "Pozycja schodząca",
+      "entering": "Zawodnik wchodzący",
+      "record": "Zapisz zmianę",
+      "undo": "Cofnij ostatnią",
+      "entry": "{{position}}: nr {{in}} za nr {{out}} przy {{a}}:{{b}}"
+    },
+    "sanctions": {
+      "title": "Sankcje",
+      "subtitle": "Drużyna, osoba, set i wynik trafiają do rubryki sankcji.",
+      "kind": "Sankcja",
+      "member": "Osoba",
+      "memberPlaceholder": "Nr zawodnika lub funkcja",
+      "atScore": "Przy wyniku",
+      "atScoreValue": "{{a}}:{{b}} w secie {{number}}",
+      "add": "Dodaj sankcję"
+    }
+  },
+  "sanction": {
+    "warning": "Upomnienie (żółta kartka)",
+    "penalty": "Kara (czerwona kartka)",
+    "expulsion": "Wykluczenie (obie kartki razem)",
+    "disqualification": "Dyskwalifikacja (obie kartki osobno)"
+  },
+  "engine": {
+    "tooManySubstitutions": "Drużyna {{side}} ma więcej zmian niż dozwolone {{allowed}}.",
+    "tooManyTimeouts": "Drużyna {{side}} ma więcej czasów niż dozwolone {{allowed}}.",
+    "incompleteLineup": "Drużyna {{side}} ma tylko {{filled}} z 6 pozycji wyjściowych w secie {{number}}.",
+    "noFirstServe": "Dla setu {{number}} nie zapisano jeszcze pierwszej zagrywki.",
+    "liberoServing": "Drużyna {{side}} ma libero na pozycji zagrywki, czego te przepisy nie dopuszczają.",
+    "blocker": {
+      "noSet": "Ten set nie został rozpoczęty.",
+      "noFirstServe": "Zapisz, która drużyna zagrywa pierwsza w tym secie.",
+      "lineup": "Drużyna {{side}} potrzebuje wszystkich sześciu pozycji przed pierwszą akcją.",
+      "setFinished": "Ten set jest zakończony."
+    },
+    "sub": {
+      "noSet": "Taki set nie istnieje.",
+      "setFinished": "Set jest już zakończony.",
+      "emptySlot": "Na tej pozycji nie ma jeszcze zawodnika na boisku.",
+      "samePlayer": "Ten zawodnik jest już na boisku na tej pozycji.",
+      "alreadyOnCourt": "Ten zawodnik jest już na boisku.",
+      "allUsed": "Drużyna {{side}} wykorzystała już wszystkie {{allowed}} zmiany w tym secie.",
+      "unknownPlayer": "Nieznany zawodnik.",
+      "libero": "Wymiany libero nie są zmianami i nie zapisuje się ich tutaj.",
+      "starterNotOut": "Ten zawodnik wyjściowy nie zszedł z boiska, więc nie ma go jak wprowadzić ponownie.",
+      "starterReturned": "Zawodnik wyjściowy może wrócić tylko raz w secie.",
+      "starterPairing": "Zawodnik wyjściowy może wrócić tylko za tego, kto go zmienił.",
+      "substituteReturned": "Rezerwowy może wejść tylko raz w secie."
+    }
+  },
+  "transfer": {
+    "title": "Przepisz na papierowy protokół",
+    "subtitle": "Jedno pole naraz, w kolejności, w jakiej sekretarz wypełnia protokół.",
+    "step": "Krok {{current}} z {{total}}",
+    "progress": "{{done}} z {{total}} pól oznaczonych",
+    "markDone": "Oznacz jako przepisane",
+    "markNotDone": "Cofnij oznaczenie",
+    "doneAndNext": "Przepisane, następne pole",
+    "finish": "Zakończ",
+    "restart": "Zacznij od pierwszego pola",
+    "overview": "Wszystkie pola",
+    "allDone": "Wszystkie pola są oznaczone jako przepisane. Sprawdź sumy na papierowym protokole przed podpisami.",
+    "whatToWrite": "Co wpisać",
+    "printSection": "Drukuj to pole",
+    "copySection": "Kopiuj to pole jako tekst",
+    "notStarted": "Set nierozpoczęty.",
+    "noPlayers": "Nie wpisano jeszcze zawodników drużyny {{side}}.",
+    "noRallies": "W tym secie nie zapisano jeszcze żadnej akcji.",
+    "noRounds": "Brak serii zagrywek.",
+    "noSubstitutions": "Brak zmian.",
+    "noSanctions": "Nie zapisano sankcji."
+  },
+  "section": {
+    "header": {
+      "title": "Nagłówek i osoby funkcyjne",
+      "help": "Górny pas protokołu. Przepisz rozgrywki, numer meczu, datę, godzinę i halę, potem nazwy obu drużyn i osoby funkcyjne. Nazwiska zapisuj dokładnie tak, jak widnieją na licencjach."
+    },
+    "toss": {
+      "title": "Losowanie i strony",
+      "help": "Zaznacz, która drużyna zagrywa i która jest po lewej w 1. secie. Drużyny zmieniają strony po każdym secie; set decydujący ma własne losowanie i zmianę stron przy 8 punktach."
+    },
+    "roster": {
+      "title": "Skład drużyny {{side}}",
+      "help": "Wypełnij kolumnę drużyny według numerów, zakreśl kapitana i oznacz każdego libero literą L. Trenera i asystenta wpisz poniżej."
+    },
+    "lineup": {
+      "title": "Set {{number}}: ustawienia wyjściowe",
+      "help": "Wpisz szóstkę wyjściową na pozycjach I do VI. Ta kolejność jest zarazem kolejnością zagrywki, więc musi się zgadzać z kartką oddaną przez trenera."
+    },
+    "score": {
+      "title": "Set {{number}}: przebieg punktowy",
+      "help": "Przechodź po seriach zagrywek: wpisz numer zagrywającego, a potem skreślaj każdy punkt zdobyty przy tej zagrywce. Lista poniżej pokazuje wynik po każdym punkcie."
+    },
+    "changes": {
+      "title": "Set {{number}}: zmiany i czasy",
+      "help": "Każdą zmianę zapisz na pozycji, na której nastąpiła: numer wchodzącego nad numerem schodzącego, wynik obok. Czasy wpisz w małe pola jako wynik, przy którym je wzięto."
+    },
+    "results": {
+      "title": "Tabela wyników",
+      "help": "Jeden wiersz na set: czas, oba wyniki, zmiany, czasy i zwycięzca. Dopisz czasy setów, a potem zsumuj punkty i czas meczu."
+    },
+    "sanctions": {
+      "title": "Sankcje",
+      "help": "Jeden wiersz na sankcję z drużyną, osobą, setem i wynikiem, przy którym została udzielona."
+    },
+    "remarks": {
+      "title": "Uwagi i podpisy",
+      "help": "Wpisz ewentualne uwagi, a potem zbierz podpisy: najpierw kapitanowie, potem trenerzy, sekretarz i na końcu obaj sędziowie."
+    },
+    "submit": {
+      "title": "Zgłoś wynik",
+      "help": "Papierowy protokół zostaje u sędziego. Wynik i tak musi trafić do związku, więc przepisz poniższe podsumowanie do systemu związkowego."
+    }
+  },
+  "sheet": {
+    "row": {
+      "competition": "Rozgrywki",
+      "stage": "Faza / runda",
+      "pool": "Grupa",
+      "matchNumber": "Numer meczu",
+      "category": "Kategoria",
+      "date": "Data",
+      "time": "Godzina rozpoczęcia",
+      "hall": "Hala",
+      "city": "Miasto",
+      "teamA": "Drużyna A",
+      "teamB": "Drużyna B",
+      "rules": "Przepisy",
+      "servesFirst": "Zagrywa pierwsza (1. set)",
+      "receivesFirst": "Przyjmuje pierwsza (1. set)",
+      "leftSide": "Lewa strona (1. set)",
+      "rightSide": "Prawa strona (1. set)",
+      "team": "Drużyna",
+      "coach": "Trener",
+      "assistantCoach": "Asystent trenera",
+      "liberos": "Libero",
+      "servesFirstSet": "Zagrywa pierwsza",
+      "setsWon": "Wygrane sety",
+      "totalPoints": "Punkty łącznie",
+      "matchWinner": "Zwycięzca meczu",
+      "remarks": "Uwagi",
+      "scorer": "Sekretarz",
+      "captain": "Kapitan {{side}}",
+      "coachSide": "Trener {{side}}",
+      "firstReferee": "Sędzia I"
+    },
+    "serviceRounds": "Serie zagrywek drużyny {{side}} - {{name}}",
+    "rallyByRally": "Akcja po akcji",
+    "col": {
+      "round": "Seria",
+      "serverNumber": "Zagrywający nr",
+      "pointsOnService": "Punkty przy tej zagrywce",
+      "fromScore": "(od {{own}}:{{opponent}})",
+      "pointTo": "Punkt dla",
+      "scoreA": "Punkty A",
+      "scoreB": "Punkty B",
+      "playerNumber": "Zawodnik nr",
+      "in": "Wchodzi",
+      "out": "Schodzi",
+      "duration": "Czas",
+      "subsA": "Zmiany A",
+      "subsB": "Zmiany B",
+      "timeoutsA": "Czasy A",
+      "timeoutsB": "Czasy B",
+      "winner": "Zwycięzca",
+      "member": "Osoba"
+    },
+    "timeouts": "Czasy",
+    "signatureNote": "Podpisy składa się na papierze: najpierw kapitanowie po meczu, potem trenerzy i sędziowie."
+  },
+  "submit": {
+    "title": "Zgłoś wynik",
+    "noApi": {
+      "title": "Brak bezpośredniego przesyłania",
+      "body": "{{name}} publikuje terminarz, drużyny i składy, ale nie przyjmuje protokołu przez swoje API, więc wyniku nie da się zgłosić stąd. Przepisz poniższe podsumowanie do systemu związkowego, a papierowy protokół oddaj sędziemu jak zwykle."
+    },
+    "manualBody": "Nie wybrano żadnego związku, więc nie ma dokąd zgłosić wyniku. Poniższe podsumowanie i tak jest najkrótszą drogą, by przekazać go kanałem obowiązującym w Twoich rozgrywkach.",
+    "summary": "Podsumowanie wyniku",
+    "copySummary": "Kopiuj podsumowanie",
+    "openPortal": "Otwórz {{name}}",
+    "checklist": "Zanim oddasz protokół",
+    "check": {
+      "totals": "Suma punktów w każdym secie zgadza się z przebiegiem punktowym.",
+      "signatures": "Podpisali się obaj kapitanowie, obaj trenerzy i obaj sędziowie.",
+      "durations": "Wpisano czas każdego setu i całego meczu.",
+      "sanctions": "Każda sankcja jest w rubryce sankcji wraz z wynikiem."
+    }
+  },
+  "settings": {
+    "title": "Związek",
+    "subtitle": "Które źródło danych wypełnia protokół za Ciebie.",
+    "country": "Kraj / związek",
+    "apiDocs": "Dokumentacja API",
+    "tokenPlaceholder": "Wklej token",
+    "save": "Zapisz token",
+    "forget": "Zapomnij token",
+    "whereToGet": "Skąd go wziąć",
+    "stored": "Zapisany tylko w tej przeglądarce.",
+    "privacy": "Token leży w pamięci lokalnej tej przeglądarki i trafia wyłącznie do API związku przez HTTPS. Nic nie jest wysyłane gdzie indziej, a aplikacja nie ma backendu. Bez tokena wszystko działa tak samo, po prostu wpisujesz dane meczu sam.",
+    "noCredential": "{{name}} nie wymaga poświadczeń.",
+    "language": {
+      "title": "Język",
+      "subtitle": "Dotyczy całej aplikacji i jest zapamiętywany w tej przeglądarce.",
+      "label": "Język",
+      "system": "Zgodnie z przeglądarką"
+    }
+  },
+  "provider": {
+    "manual": {
+      "name": "Wpis ręczny (bez związku)",
+      "country": "Dowolny kraj"
+    },
+    "swiss": {
+      "tokenLabel": "Token API Volley Manager",
+      "tokenHelp": "Administrator klubu generuje go w Volley Manager w Administracja > Klub > Webservice/API. Jest wysyłany w nagłówku Authorization i zapisywany tylko w tej przeglądarce.",
+      "country": "Szwajcaria"
+    }
+  },
+  "federation": {
+    "noToken": "Nie skonfigurowano tokena {{name}}. Dodaj go w Ustawieniach albo pozostań przy wpisie ręcznym.",
+    "unreachable": "Nie udało się połączyć z {{url}}: {{reason}}",
+    "httpError": "{{name}} zwrócił {{status}} {{statusText}}"
+  }
+}

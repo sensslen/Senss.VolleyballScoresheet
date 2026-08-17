@@ -123,8 +123,11 @@ export function createSwissVolleyProvider(): FederationProvider {
   return {
     id: SWISS_PROVIDER_ID,
     name: 'Swiss Volley (Volley Manager)',
-    country: { code: 'CH', name: 'Switzerland', flag: '🇨🇭' },
+    country: { code: 'CH', nameKey: 'provider.swiss.country', flag: '🇨🇭' },
     infoUrl: 'https://swissvolley.docs.apiary.io/',
+    // Swiss Volley publishes fixtures, teams and squads but accepts no scoresheet,
+    // so the result is reported by hand in Volley Manager.
+    resultPortalUrl: 'https://volleymanager.volleyball.ch/',
     capabilities: {
       browseCompetitions: true,
       browseGames: true,
@@ -133,12 +136,12 @@ export function createSwissVolleyProvider(): FederationProvider {
       officials: true,
       regions: true,
       seasons: true,
+      submitResult: false,
     },
     auth: {
-      label: 'Volley Manager API token',
+      labelKey: 'provider.swiss.tokenLabel',
       required: true,
-      helpText:
-        'A club administrator generates one in Volley Manager under Administration > Club > Webservice/API. It is sent as the Authorization header and is stored only in this browser.',
+      helpTextKey: 'provider.swiss.tokenHelp',
       helpUrl: 'https://volleymanager.volleyball.ch/sportmanager.indoorvolleyball/clubdata/index',
     },
 

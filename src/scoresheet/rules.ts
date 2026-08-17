@@ -7,7 +7,7 @@ import type { RuleSet } from './model'
 export const RULE_SETS: RuleSet[] = [
   {
     id: 'fivb-best-of-5',
-    name: 'International, best of 5 (FIVB)',
+    nameKey: 'rules.fivb-best-of-5',
     setsToWin: 3,
     pointsPerSet: 25,
     pointsDecidingSet: 15,
@@ -19,7 +19,7 @@ export const RULE_SETS: RuleSet[] = [
   },
   {
     id: 'fivb-best-of-3',
-    name: 'International, best of 3',
+    nameKey: 'rules.fivb-best-of-3',
     setsToWin: 2,
     pointsPerSet: 25,
     pointsDecidingSet: 15,
@@ -31,7 +31,7 @@ export const RULE_SETS: RuleSet[] = [
   },
   {
     id: 'ncaa-best-of-5',
-    name: 'NCAA, best of 5 (libero may serve)',
+    nameKey: 'rules.ncaa-best-of-5',
     setsToWin: 3,
     pointsPerSet: 25,
     pointsDecidingSet: 15,
@@ -54,7 +54,19 @@ export function ruleSetForSetsToWin(setsToWin: number | undefined): RuleSet {
   if (setsToWin === undefined) return DEFAULT_RULE_SET
   const match = RULE_SETS.find((rules) => rules.setsToWin === setsToWin)
   if (match) return match
-  return { ...DEFAULT_RULE_SET, id: `custom-${setsToWin}`, name: `Best of ${setsToWin * 2 - 1}`, setsToWin }
+  return {
+    ...DEFAULT_RULE_SET,
+    id: `custom-${setsToWin}`,
+    nameKey: 'rules.bestOf',
+    setsToWin,
+  }
+}
+
+export function ruleSetName(
+  rules: RuleSet,
+  t: (key: string, params?: Record<string, string | number>) => string,
+): string {
+  return t(rules.nameKey, { count: rules.setsToWin * 2 - 1 })
 }
 
 /** Total sets a match can run to. */

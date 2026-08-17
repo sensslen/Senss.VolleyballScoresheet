@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { defaultProviderId, providerById } from './federation/registry'
-import type { GameSummary } from './federation/types'
+import { providerName, type GameSummary } from './federation/types'
 import { computeMatchState } from './scoresheet/engine'
 import { createScoresheet, scoresheetFromGame } from './scoresheet/factory'
 import type { Scoresheet } from './scoresheet/model'
@@ -11,22 +12,17 @@ import { GameBrowser } from './ui/GameBrowser'
 import { MatchStep } from './ui/MatchStep'
 import { PlayStep } from './ui/PlayStep'
 import { SettingsPanel } from './ui/SettingsPanel'
-import { SheetView } from './ui/SheetView'
 import { TeamsStep } from './ui/TeamsStep'
+import { TransferWizard } from './ui/TransferWizard'
 import type { SheetUpdater } from './ui/updater'
+import { APP_VERSION } from './utils/version'
 
 type Tab = 'start' | 'match' | 'teams' | 'play' | 'sheet' | 'settings'
 
-const TABS: Array<{ id: Tab; label: string; hint: string }> = [
-  { id: 'start', label: '1. Match', hint: 'Pick a fixture or start blank' },
-  { id: 'match', label: '2. Header', hint: 'Competition, venue, officials' },
-  { id: 'teams', label: '3. Teams', hint: 'Rosters, captain, liberos' },
-  { id: 'play', label: '4. Score', hint: 'Toss, lineups, rallies' },
-  { id: 'sheet', label: '5. Copy', hint: 'Any box, ready to write' },
-  { id: 'settings', label: 'Settings', hint: 'Federation and token' },
-]
+const STEPS: Tab[] = ['start', 'match', 'teams', 'play', 'sheet']
 
 export default function App() {
+  const { t } = useTranslation()
   const [settings, setSettings] = useState<Settings>(() => settingsStore.read())
   const [sheet, setSheet] = useState<Scoresheet | null>(null)
   const [tab, setTab] = useState<Tab>('start')
@@ -37,20 +33,29 @@ export default function App() {
 
   useEffect(() => settingsStore.write(settings), [settings])
 
-  useEffect(() => {
-    if (!sheet) return
-    sheetStore.save(sheet)
-    setSavedSheets(sheetStore.all())
-  }, [sheet])
-
+  // Every edit persists as it happens, so the saved list only has to be re-read
+  // when the start tab is about to show it.
   const update = useCallback<SheetUpdater>((mutate) => {
     setSheet((previous) => {
       if (!previous) return previous
       const draft = structuredClone(previous)
       mutate(draft)
+      sheetStore.save(draft)
       return draft
     })
   }, [])
+
+  const openSheet = (next: Scoresheet, target: Tab) => {
+    sheetStore.save(next)
+    setSheet(next)
+    setActiveSetIndex(0)
+    setTab(target)
+  }
+
+  const showTab = (next: Tab) => {
+    if (next === 'start') setSavedSheets(sheetStore.all())
+    setTab(next)
+  }
 
   const startFromGame = async (game: GameSummary) => {
     let created = scoresheetFromGame(game, provider.id)
@@ -61,69 +66,74 @@ export default function App() {
         // The summary already carries teams, date and competition; detail is a bonus.
       }
     }
-    setSheet(created)
-    setActiveSetIndex(0)
-    setTab('teams')
+    openSheet(created, 'teams')
   }
 
-  const startBlank = () => {
-    setSheet(createScoresheet())
-    setActiveSetIndex(0)
-    setTab('match')
-  }
+  const startBlank = () => openSheet(createScoresheet(), 'match')
 
   return (
-    <div className="app">
-      <header className="app-head no-print">
-        <div>
-          <h1>Volleyball Scoresheet Assistant</h1>
-          <p className="muted">
-            Guides you through an international scoresheet, then shows each box so you can copy it onto the paper sheet.
-          </p>
+    <div className="mx-auto max-w-6xl px-4 pt-5 pb-12">
+      <header className="no-print mb-5 flex flex-wrap items-start justify-between gap-4">
+        <div className="min-w-0">
+          <h1 className="bg-gradient-to-r from-indigo-600 to-sky-500 bg-clip-text text-transparent dark:from-indigo-300 dark:to-sky-300">
+            {t('app.title')}
+          </h1>
+          <p className="muted mt-1 max-w-2xl">{t('app.tagline')}</p>
         </div>
-        <div className="head-meta">
+        <div className="flex flex-wrap justify-end gap-2">
           <span className="pill">
-            {provider.country.flag} {provider.name}
+            <span aria-hidden>{provider.country.flag}</span> {providerName(provider, t)}
           </span>
           {sheet && (
             <span className="pill">
-              {sheet.teams.A.name || 'Team A'} vs {sheet.teams.B.name || 'Team B'}
+              {sheet.teams.A.name || t('sheet.row.teamA')} {t('common.vs')}{' '}
+              {sheet.teams.B.name || t('sheet.row.teamB')}
             </span>
           )}
         </div>
       </header>
 
-      <nav className="tabs no-print">
-        {TABS.map((entry) => (
+      <nav className="no-print mb-5 flex flex-wrap gap-2" aria-label={t('app.title')}>
+        {STEPS.map((id, index) => (
           <button
-            key={entry.id}
+            key={id}
             type="button"
-            className={tab === entry.id ? 'tab tab-active' : 'tab'}
-            disabled={!sheet && entry.id !== 'start' && entry.id !== 'settings'}
-            onClick={() => setTab(entry.id)}
-            title={entry.hint}
+            className={tab === id ? 'tab tab-active' : 'tab'}
+            disabled={!sheet && id !== 'start'}
+            onClick={() => showTab(id)}
+            title={t(`tabs.${id}.hint`)}
+            aria-current={tab === id ? 'page' : undefined}
           >
-            {entry.label}
+            <span aria-hidden className="mono opacity-60">
+              {index + 1}
+            </span>
+            {t(`tabs.${id}.label`)}
           </button>
         ))}
+        <button
+          type="button"
+          className={`${tab === 'settings' ? 'tab tab-active' : 'tab'} ml-auto`}
+          onClick={() => showTab('settings')}
+          title={t('tabs.settings.hint')}
+          aria-current={tab === 'settings' ? 'page' : undefined}
+        >
+          {t('tabs.settings.label')}
+        </button>
       </nav>
 
       <main>
         {tab === 'start' && (
           <>
             <Card
-              title="Start a sheet"
-              subtitle="Import a fixture to prefill the header, teams and officials, or start from a blank sheet."
+              title={t('start.title')}
+              subtitle={t('start.subtitle')}
               actions={
                 <button type="button" className="primary" onClick={startBlank}>
-                  Blank sheet
+                  {t('start.blank')}
                 </button>
               }
             >
-              <p className="muted">
-                With a federation token the header, both squads and the referees arrive filled in. Without one, the same
-                sheet works, you just type the details yourself.
-              </p>
+              <p className="muted">{t('start.body')}</p>
             </Card>
 
             <GameBrowser
@@ -133,65 +143,69 @@ export default function App() {
               onPick={(game) => void startFromGame(game)}
             />
 
-            <Card title="Saved sheets" subtitle="Kept in this browser.">
+            <Card title={t('start.saved.title')} subtitle={t('start.saved.subtitle')}>
               {savedSheets.length === 0 ? (
-                <EmptyState>Nothing saved yet.</EmptyState>
+                <EmptyState>{t('start.saved.empty')}</EmptyState>
               ) : (
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th>Date</th>
-                      <th>Match</th>
-                      <th>Score</th>
-                      <th />
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {savedSheets.map((candidate) => {
-                      const match = computeMatchState(candidate)
-                      return (
-                        <tr key={candidate.id}>
-                          <td className="nowrap mono">{candidate.header.date}</td>
-                          <td>
-                            {candidate.teams.A.name || 'Team A'} vs {candidate.teams.B.name || 'Team B'}
-                          </td>
-                          <td className="mono">
-                            {match.setsWon.A}:{match.setsWon.B}
-                          </td>
-                          <td>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setSheet(candidate)
-                                setActiveSetIndex(0)
-                                setTab('play')
-                              }}
-                            >
-                              Open
-                            </button>
-                            <button
-                              type="button"
-                              className="ghost"
-                              onClick={() => {
-                                sheetStore.remove(candidate.id)
-                                setSavedSheets(sheetStore.all())
-                                if (sheet?.id === candidate.id) setSheet(null)
-                              }}
-                            >
-                              Delete
-                            </button>
-                          </td>
-                        </tr>
-                      )
-                    })}
-                  </tbody>
-                </table>
+                <div className="table-scroll">
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th>{t('common.date')}</th>
+                        <th>{t('common.match')}</th>
+                        <th>{t('common.score')}</th>
+                        <th />
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {savedSheets.map((candidate) => {
+                        const match = computeMatchState(candidate)
+                        return (
+                          <tr key={candidate.id}>
+                            <td className="mono whitespace-nowrap">{candidate.header.date}</td>
+                            <td>
+                              {candidate.teams.A.name || t('sheet.row.teamA')} {t('common.vs')}{' '}
+                              {candidate.teams.B.name || t('sheet.row.teamB')}
+                            </td>
+                            <td className="mono">
+                              {match.setsWon.A}:{match.setsWon.B}
+                            </td>
+                            <td className="flex gap-2">
+                              <button
+                                type="button"
+                                onClick={() => openSheet(candidate, 'play')}
+                              >
+                                {t('common.open')}
+                              </button>
+                              <button
+                                type="button"
+                                className="ghost"
+                                onClick={() => {
+                                  sheetStore.remove(candidate.id)
+                                  setSavedSheets(sheetStore.all())
+                                  if (sheet?.id === candidate.id) setSheet(null)
+                                }}
+                              >
+                                {t('common.delete')}
+                              </button>
+                            </td>
+                          </tr>
+                        )
+                      })}
+                    </tbody>
+                  </table>
+                </div>
               )}
             </Card>
           </>
         )}
 
-        {tab === 'settings' && <SettingsPanel provider={provider} onProviderChange={(id) => setSettings({ ...settings, providerId: id })} />}
+        {tab === 'settings' && (
+          <SettingsPanel
+            provider={provider}
+            onProviderChange={(id) => setSettings({ ...settings, providerId: id })}
+          />
+        )}
 
         {sheet && tab === 'match' && <MatchStep sheet={sheet} update={update} />}
         {sheet && tab === 'teams' && (
@@ -205,18 +219,14 @@ export default function App() {
             onActiveSetChange={setActiveSetIndex}
           />
         )}
-        {sheet && tab === 'sheet' && <SheetView sheet={sheet} />}
+        {sheet && tab === 'sheet' && <TransferWizard sheet={sheet} update={update} provider={provider} />}
 
-        {!sheet && tab !== 'start' && tab !== 'settings' && (
-          <Banner kind="info">Start or open a sheet first.</Banner>
-        )}
+        {!sheet && tab !== 'start' && tab !== 'settings' && <Banner kind="info">{t('app.needSheet')}</Banner>}
       </main>
 
-      <footer className="app-foot no-print">
-        <p className="muted">
-          Everything stays in this browser. The paper sheet remains the official record; this only helps you fill it in
-          without arithmetic mistakes.
-        </p>
+      <footer className="no-print mt-8 flex flex-wrap items-end justify-between gap-3 border-t border-slate-200 pt-4 dark:border-slate-800">
+        <p className="muted max-w-3xl">{t('app.footer')}</p>
+        <p className="mono text-xs text-slate-400 dark:text-slate-600">{t('app.version', { version: APP_VERSION })}</p>
       </footer>
     </div>
   )

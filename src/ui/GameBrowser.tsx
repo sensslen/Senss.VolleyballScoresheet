@@ -1,15 +1,79 @@
 import { useCallback, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
-import type {
-  Competition,
-  FederationProvider,
-  GameSummary,
-  Pool,
-  Region,
-  Stage,
+import {
+  describeError,
+  providerName,
+  type Competition,
+  type FederationProvider,
+  type GameSummary,
+  type Pool,
+  type Region,
+  type Stage,
 } from '../federation/types'
 import type { Settings } from '../scoresheet/storage'
 import { Banner, Card, EmptyState, SelectField, Spinner, TextField } from './components'
+
+type LoadingWhat = 'regions' | 'competitions' | 'stages' | 'pools' | 'games'
+
+/**
+ * A list together with the parent selection it was loaded for, `null` before the
+ * first attempt. Everything else follows: the child list of a parent that has not
+ * been fetched yet is empty, and "still loading" is that mismatch rather than a
+ * separate flag to keep in step.
+ */
+interface Loaded<T> {
+  forId: string | null
+  items: T[]
+}
+
+const nothingLoaded = { forId: null, items: [] }
+
+function listFor<T>(loaded: Loaded<T>, parentId: string): T[] {
+  return loaded.forId === parentId ? loaded.items : []
+}
+
+function isPending<T>(loaded: Loaded<T>, parentId: string): boolean {
+  return loaded.forId !== parentId
+}
+
+/**
+ * Loads one level of the hierarchy whenever its parent changes. A `null` parent
+ * means the level does not apply and nothing is fetched; a superseded request is
+ * dropped rather than allowed to overwrite a newer one.
+ */
+function useLoadedList<T>(
+  parentId: string | null,
+  fetch: (parentId: string) => Promise<T[]>,
+  onSettled: (cause: unknown) => void,
+): Loaded<T> {
+  const [loaded, setLoaded] = useState<Loaded<T>>(nothingLoaded)
+
+  useEffect(() => {
+    if (parentId === null) return
+    let cancelled = false
+
+    void (async () => {
+      try {
+        const items = await fetch(parentId)
+        if (cancelled) return
+        setLoaded({ forId: parentId, items })
+        onSettled(null)
+      } catch (cause) {
+        if (cancelled) return
+        // Settle the slot anyway, or the level stays "loading" forever.
+        setLoaded({ forId: parentId, items: [] })
+        onSettled(cause)
+      }
+    })()
+
+    return () => {
+      cancelled = true
+    }
+  }, [parentId, fetch, onSettled])
+
+  return loaded
+}
 
 /**
  * Browses a federation's fixture list down the neutral hierarchy
@@ -26,12 +90,9 @@ export function GameBrowser({
   onSettingsChange: (settings: Settings) => void
   onPick: (game: GameSummary) => void
 }) {
-  const [regions, setRegions] = useState<Region[]>([])
-  const [competitions, setCompetitions] = useState<Competition[]>([])
-  const [stages, setStages] = useState<Stage[]>([])
-  const [pools, setPools] = useState<Pool[]>([])
+  const { t } = useTranslation()
   const [games, setGames] = useState<GameSummary[]>([])
-  const [loading, setLoading] = useState<string | null>(null)
+  const [loadingGames, setLoadingGames] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [search, setSearch] = useState('')
   const [dateFrom, setDateFrom] = useState('')
@@ -41,96 +102,100 @@ export function GameBrowser({
   const competitionId = settings.competitionId ?? ''
   const stageId = settings.stageId ?? ''
   const poolId = settings.poolId ?? ''
+  const name = providerName(provider, t)
+  const ready = provider.isReady()
 
-  const run = useCallback(async <T,>(what: string, work: () => Promise<T>, apply: (value: T) => void) => {
-    setLoading(what)
-    setError(null)
-    try {
-      apply(await work())
-    } catch (cause) {
-      setError((cause as Error).message)
-    } finally {
-      setLoading(null)
-    }
-  }, [])
+  const onSettled = useCallback(
+    (cause: unknown) => setError(cause === null ? null : describeError(cause, t)),
+    [t],
+  )
 
-  useEffect(() => {
-    if (!provider.isReady() || !provider.listRegions) return
-    void run('regions', () => provider.listRegions!(), setRegions)
-  }, [provider, run])
+  const fetchRegions = useCallback(() => provider.listRegions?.() ?? Promise.resolve([]), [provider])
+  const fetchCompetitions = useCallback(
+    (id: string) => provider.listCompetitions?.({ regionId: id || undefined }) ?? Promise.resolve([]),
+    [provider],
+  )
+  const fetchStages = useCallback((id: string) => provider.listStages?.(id) ?? Promise.resolve([]), [provider])
+  const fetchPools = useCallback((id: string) => provider.listPools?.(id) ?? Promise.resolve([]), [provider])
 
-  useEffect(() => {
-    if (!provider.isReady() || !provider.listCompetitions) return
-    setCompetitions([])
-    void run('competitions', () => provider.listCompetitions!({ regionId: regionId || undefined }), setCompetitions)
-  }, [provider, regionId, run])
-
-  useEffect(() => {
-    if (!competitionId || !provider.listStages) {
-      setStages([])
-      return
-    }
-    void run('stages', () => provider.listStages!(competitionId), setStages)
-  }, [provider, competitionId, run])
-
-  useEffect(() => {
-    if (!stageId || !provider.listPools) {
-      setPools([])
-      return
-    }
-    void run('pools', () => provider.listPools!(stageId), setPools)
-  }, [provider, stageId, run])
+  const regions = useLoadedList<Region>(
+    ready && provider.listRegions ? provider.id : null,
+    fetchRegions,
+    onSettled,
+  )
+  const competitions = useLoadedList<Competition>(
+    ready && provider.listCompetitions ? regionId : null,
+    fetchCompetitions,
+    onSettled,
+  )
+  const stages = useLoadedList<Stage>(
+    competitionId && provider.listStages ? competitionId : null,
+    fetchStages,
+    onSettled,
+  )
+  const pools = useLoadedList<Pool>(stageId && provider.listPools ? stageId : null, fetchPools, onSettled)
 
   const patch = (change: Partial<Settings>) => onSettingsChange({ ...settings, ...change })
 
+  const fetchGames = async (work: () => Promise<GameSummary[]>) => {
+    setLoadingGames(true)
+    try {
+      setGames(await work())
+      setError(null)
+    } catch (cause) {
+      setError(describeError(cause, t))
+    } finally {
+      setLoadingGames(false)
+    }
+  }
+
+  const filters = {
+    regionId: regionId || undefined,
+    competitionId: competitionId || undefined,
+    stageId: stageId || undefined,
+    poolId: poolId || undefined,
+  }
+
   const loadGames = () => {
     if (!provider.listGames) return
-    void run(
-      'games',
-      () =>
-        provider.listGames!({
-          regionId: regionId || undefined,
-          competitionId: competitionId || undefined,
-          stageId: stageId || undefined,
-          poolId: poolId || undefined,
-          dateFrom: dateFrom || undefined,
-          dateTo: dateTo || undefined,
-        }),
-      setGames,
+    void fetchGames(() =>
+      provider.listGames!({ ...filters, dateFrom: dateFrom || undefined, dateTo: dateTo || undefined }),
     )
   }
 
   const loadUpcoming = () => {
     if (!provider.listUpcomingGames) return
-    void run(
-      'games',
-      () =>
-        provider.listUpcomingGames!({
-          regionId: regionId || undefined,
-          competitionId: competitionId || undefined,
-          stageId: stageId || undefined,
-          poolId: poolId || undefined,
-        }),
-      setGames,
-    )
+    void fetchGames(() => provider.listUpcomingGames!(filters))
   }
+
+  const pending: LoadingWhat | null = loadingGames
+    ? 'games'
+    : provider.capabilities.regions && isPending(regions, provider.id)
+      ? 'regions'
+      : isPending(competitions, regionId)
+        ? 'competitions'
+        : competitionId && isPending(stages, competitionId)
+          ? 'stages'
+          : stageId && isPending(pools, stageId)
+            ? 'pools'
+            : null
 
   if (!provider.capabilities.browseGames) {
     return (
-      <Card title="Browse fixtures">
-        <EmptyState>
-          {provider.name} does not offer fixture browsing. Start a blank sheet and type the match details in.
-        </EmptyState>
+      <Card title={t('browser.title')}>
+        <EmptyState>{t('browser.unsupported', { name })}</EmptyState>
       </Card>
     )
   }
 
-  if (!provider.isReady()) {
+  if (!ready) {
     return (
-      <Card title="Browse fixtures">
+      <Card title={t('browser.title')}>
         <Banner kind="info">
-          {provider.name} needs {provider.auth?.label ?? 'a credential'} before it can list games. Add it under
-          Settings, or start a blank sheet and fill everything in by hand.
+          {t('browser.needCredential', {
+            name,
+            credential: provider.auth ? t(provider.auth.labelKey) : t('browser.credentialFallback'),
+          })}
         </Banner>
       </Card>
     )
@@ -146,91 +211,100 @@ export function GameBrowser({
     : games
 
   return (
-    <Card title="Browse fixtures" subtitle={`${provider.country.flag} ${provider.name}`}>
-      <div className="grid grid-4">
+    <Card title={t('browser.title')} subtitle={`${provider.country.flag} ${name}`}>
+      <div className="grid-4">
         {provider.capabilities.regions && (
           <SelectField
-            label="Region"
+            label={t('browser.region')}
             value={regionId}
-            options={regions.map((region) => ({ value: region.id, label: region.name }))}
+            options={listFor(regions, provider.id).map((region) => ({ value: region.id, label: region.name }))}
             onChange={(value) => patch({ regionId: value, competitionId: '', stageId: '', poolId: '' })}
           />
         )}
         <SelectField
-          label="Competition"
+          label={t('browser.competition')}
           value={competitionId}
-          options={competitions.map((competition) => ({
+          options={listFor(competitions, regionId).map((competition) => ({
             value: competition.id,
-            label: `${competition.name}${competition.gender ? ` (${competition.gender === 'f' ? 'W' : 'M'})` : ''}`,
+            label: `${competition.name}${
+              competition.gender ? ` (${competition.gender === 'f' ? t('browser.women') : t('browser.men')})` : ''
+            }`,
           }))}
           onChange={(value) => patch({ competitionId: value, stageId: '', poolId: '' })}
         />
         <SelectField
-          label="Stage"
+          label={t('browser.stage')}
           value={stageId}
-          options={stages.map((stage) => ({ value: stage.id, label: stage.name }))}
+          options={listFor(stages, competitionId).map((stage) => ({ value: stage.id, label: stage.name }))}
           onChange={(value) => patch({ stageId: value, poolId: '' })}
         />
         <SelectField
-          label="Pool"
+          label={t('browser.pool')}
           value={poolId}
-          options={pools.map((pool) => ({ value: pool.id, label: pool.name }))}
+          options={listFor(pools, stageId).map((pool) => ({ value: pool.id, label: pool.name }))}
           onChange={(value) => patch({ poolId: value })}
         />
-        <TextField label="From" type="date" value={dateFrom} onChange={setDateFrom} />
-        <TextField label="To" type="date" value={dateTo} onChange={setDateTo} />
-        <TextField label="Filter list" value={search} onChange={setSearch} placeholder="Team, hall, match no." />
+        <TextField label={t('browser.from')} type="date" value={dateFrom} onChange={setDateFrom} />
+        <TextField label={t('browser.to')} type="date" value={dateTo} onChange={setDateTo} />
+        <TextField
+          label={t('browser.filter')}
+          value={search}
+          onChange={setSearch}
+          placeholder={t('browser.filterPlaceholder')}
+        />
       </div>
 
       <div className="button-row">
         <button type="button" className="primary" onClick={loadGames}>
-          Load games
+          {t('browser.load')}
         </button>
         {provider.listUpcomingGames && (
           <button type="button" onClick={loadUpcoming}>
-            Upcoming only
+            {t('browser.upcoming')}
           </button>
         )}
       </div>
 
-      {loading && <Spinner label={`Loading ${loading}...`} />}
+      {pending && <Spinner label={t(`browser.loading.${pending}`)} />}
       {error && <Banner kind="error">{error}</Banner>}
 
       {visible.length > 0 && (
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Match</th>
-              <th>Competition</th>
-              <th>Venue</th>
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            {visible.map((game) => (
-              <tr key={game.id}>
-                <td className="nowrap">{game.playDate ?? ''}</td>
-                <td>
-                  <strong>{game.home.name}</strong> vs <strong>{game.away.name}</strong>
-                </td>
-                <td>
-                  {game.competitionName}
-                  {game.poolName ? ` / ${game.poolName}` : ''}
-                </td>
-                <td>{game.venueName ?? ''}</td>
-                <td>
-                  <button type="button" className="primary" onClick={() => onPick(game)}>
-                    Use this match
-                  </button>
-                </td>
+        <div className="table-scroll">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>{t('common.date')}</th>
+                <th>{t('common.match')}</th>
+                <th>{t('common.competition')}</th>
+                <th>{t('common.venue')}</th>
+                <th />
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {visible.map((game) => (
+                <tr key={game.id}>
+                  <td className="mono whitespace-nowrap">{game.playDate ?? ''}</td>
+                  <td>
+                    <strong>{game.home.name}</strong> {t('common.vs')} <strong>{game.away.name}</strong>
+                  </td>
+                  <td>
+                    {game.competitionName}
+                    {game.poolName ? ` / ${game.poolName}` : ''}
+                  </td>
+                  <td>{game.venueName ?? ''}</td>
+                  <td>
+                    <button type="button" className="primary whitespace-nowrap" onClick={() => onPick(game)}>
+                      {t('browser.use')}
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
 
-      {!loading && games.length === 0 && <EmptyState>Pick a competition and load the fixture list.</EmptyState>}
+      {!pending && games.length === 0 && <EmptyState>{t('browser.empty')}</EmptyState>}
     </Card>
   )
 }

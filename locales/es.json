@@ -1,0 +1,414 @@
+{
+  "language": {
+    "name": "Español"
+  },
+  "common": {
+    "teamSide": "Equipo {{side}}",
+    "unnamed": "(sin nombre)",
+    "blank": "--",
+    "vs": "vs",
+    "open": "Abrir",
+    "delete": "Eliminar",
+    "remove": "Quitar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "print": "Imprimir",
+    "copy": "Copiar como texto",
+    "copied": "Copiado",
+    "date": "Fecha",
+    "score": "Marcador",
+    "match": "Partido",
+    "set": "Set",
+    "team": "Equipo",
+    "position": "Posición",
+    "name": "Nombre",
+    "number": "N.º",
+    "venue": "Pabellón",
+    "competition": "Competición",
+    "empty": "vacío",
+    "notDecided": "sin decidir"
+  },
+  "app": {
+    "title": "Asistente de acta de voleibol",
+    "tagline": "Te guía por un acta internacional y después casilla por casilla, para que la copies en el acta de papel.",
+    "footer": "Todo se queda en este navegador. El acta de papel sigue siendo el documento oficial; esta aplicación solo ayuda a rellenarla sin errores de cálculo.",
+    "needSheet": "Empieza o abre un acta primero.",
+    "version": "Versión {{version}}",
+    "loading": "Cargando..."
+  },
+  "tabs": {
+    "start": { "label": "Partido", "hint": "Elige un encuentro o empieza en blanco" },
+    "match": { "label": "Encabezado", "hint": "Competición, pabellón, oficiales" },
+    "teams": { "label": "Equipos", "hint": "Plantillas, capitán, líberos" },
+    "play": { "label": "Marcador", "hint": "Sorteo, alineaciones, jugadas" },
+    "sheet": { "label": "Traspaso", "hint": "Copia guiada al acta de papel" },
+    "settings": { "label": "Ajustes", "hint": "Federación, token e idioma" }
+  },
+  "start": {
+    "title": "Iniciar un acta",
+    "subtitle": "Importa un encuentro para rellenar el encabezado, los equipos y los oficiales, o empieza con un acta en blanco.",
+    "blank": "Acta en blanco",
+    "body": "Con un token de la federación, el encabezado, ambas plantillas y los árbitros llegan ya rellenados. Sin él, la misma acta funciona igual, solo que escribes los datos tú.",
+    "saved": {
+      "title": "Actas guardadas",
+      "subtitle": "Guardadas en este navegador.",
+      "empty": "Todavía no hay nada guardado."
+    }
+  },
+  "browser": {
+    "title": "Buscar encuentros",
+    "unsupported": "{{name}} no ofrece búsqueda de encuentros. Empieza un acta en blanco y escribe los datos del partido.",
+    "needCredential": "{{name}} necesita {{credential}} para listar partidos. Añádelo en Ajustes, o empieza un acta en blanco y rellénalo todo a mano.",
+    "credentialFallback": "una credencial",
+    "region": "Región",
+    "competition": "Competición",
+    "stage": "Fase",
+    "pool": "Grupo",
+    "from": "Desde",
+    "to": "Hasta",
+    "filter": "Filtrar lista",
+    "filterPlaceholder": "Equipo, pabellón, n.º de partido",
+    "load": "Cargar partidos",
+    "upcoming": "Solo próximos",
+    "use": "Usar este partido",
+    "empty": "Elige una competición y carga el calendario.",
+    "women": "F",
+    "men": "M",
+    "loading": {
+      "regions": "Cargando regiones...",
+      "competitions": "Cargando competiciones...",
+      "stages": "Cargando fases...",
+      "pools": "Cargando grupos...",
+      "games": "Cargando partidos..."
+    }
+  },
+  "match": {
+    "header": {
+      "title": "Encabezado del partido",
+      "subtitle": "La banda superior del acta."
+    },
+    "field": {
+      "competition": "Competición",
+      "stage": "Fase / ronda",
+      "pool": "Grupo",
+      "matchNumber": "Número de partido",
+      "category": "Categoría",
+      "categoryPlaceholder": "Femenino / Masculino / Sub-19",
+      "date": "Fecha",
+      "time": "Hora de inicio",
+      "hall": "Pabellón",
+      "city": "Ciudad"
+    },
+    "rules": {
+      "title": "Reglamento",
+      "subtitle": "Define los puntos por set y los límites de cambios y tiempos muertos.",
+      "ruleSet": "Reglamento",
+      "fromFederation": "{{name}} (de la federación)",
+      "summary": "Al mejor de {{best}}, sets a {{points}}, set decisivo a {{deciding}}, {{substitutions}} cambios y {{timeouts}} tiempos muertos por set."
+    },
+    "officials": {
+      "title": "Oficiales",
+      "first": "1.er árbitro",
+      "second": "2.º árbitro",
+      "scorer": "Anotador",
+      "assistantScorer": "Anotador auxiliar",
+      "lineJudges": "Jueces de línea"
+    }
+  },
+  "rules": {
+    "fivb-best-of-5": "Internacional, al mejor de 5 (FIVB)",
+    "fivb-best-of-3": "Internacional, al mejor de 3",
+    "ncaa-best-of-5": "NCAA, al mejor de 5 (el líbero puede sacar)",
+    "bestOf": "Al mejor de {{count}}"
+  },
+  "teams": {
+    "cardTitle": "Equipo {{side}} - {{name}}",
+    "home": "Equipo local en el calendario.",
+    "away": "Equipo visitante en el calendario.",
+    "import": "Importar plantilla",
+    "addPlayer": "Añadir jugador",
+    "field": {
+      "name": "Nombre del equipo",
+      "club": "Club",
+      "coach": "Entrenador",
+      "assistantCoach": "Entrenador ayudante",
+      "physiotherapist": "Fisioterapeuta",
+      "doctor": "Médico"
+    },
+    "loadingRoster": "Cargando plantilla...",
+    "imported": "Importados {{count}} jugadores.",
+    "notImported": "Este equipo no se importó de {{name}}, así que no hay plantilla que traer. Escribe los jugadores.",
+    "noCaptain": "No hay capitán marcado. En el acta el capitán debe ir rodeado con un círculo.",
+    "tooManyCaptains": "Hay más de un capitán marcado.",
+    "tooManyLiberos": "Hay más de dos líberos marcados.",
+    "tooManyPlayers": "{{count}} jugadores en la lista; el reglamento permite {{allowed}}.",
+    "col": {
+      "lastName": "Apellidos",
+      "firstName": "Nombre",
+      "licence": "Licencia",
+      "captainShort": "C",
+      "liberoShort": "L"
+    }
+  },
+  "play": {
+    "toss": {
+      "title": "Sorteo",
+      "subtitle": "Se anota en la banda del encabezado antes del set 1.",
+      "firstServe": "Saca primero en el set 1",
+      "leftSide": "Empieza en el lado izquierdo"
+    },
+    "sets": {
+      "title": "Sets",
+      "subtitle": "Marcador del partido {{a}} : {{b}}",
+      "wins": "Marcador del partido {{a}} : {{b}} - gana el equipo {{side}}",
+      "start": "Empezar el set {{number}}",
+      "tab": "Set {{number}}"
+    },
+    "setNotStarted": "Ese set no se ha empezado.",
+    "lineups": {
+      "title": "Alineaciones del set {{number}}",
+      "subtitle": "Las posiciones I a VI son también el orden de saque.",
+      "firstServe": "Saca primero en este set",
+      "decidingHint": "El set decisivo empieza con un nuevo sorteo.",
+      "locked": "El set ya ha empezado; cambia la alineación solo para corregir un error de transcripción.",
+      "position": "Posición {{label}}",
+      "libero": "Líbero en el acta",
+      "addLibero": "Añadir líbero"
+    },
+    "scoring": {
+      "title": "Puntuación del set {{number}}",
+      "serving": "al saque",
+      "nextServer": "siguiente sacador n.º {{number}}",
+      "point": "Punto equipo {{side}}",
+      "undoRally": "Deshacer la última jugada",
+      "timeout": "Tiempo muerto {{side}} ({{used}}/{{max}})",
+      "undoTimeout": "Deshacer tiempo muerto",
+      "setFinished": "El set {{number}} termina {{a}}:{{b}} para el equipo {{side}}. Escribe la duración en el cuadro de resultados."
+    },
+    "subs": {
+      "title": "Cambios",
+      "heading": "Equipo {{side}} ({{used}}/{{max}} usados)",
+      "leaving": "Posición que sale",
+      "entering": "Jugador que entra",
+      "record": "Registrar cambio",
+      "undo": "Deshacer el último",
+      "entry": "{{position}}: n.º {{in}} por n.º {{out}} en {{a}}:{{b}}"
+    },
+    "sanctions": {
+      "title": "Sanciones",
+      "subtitle": "Equipo, miembro, set y marcador van en el cuadro de sanciones.",
+      "kind": "Sanción",
+      "member": "Miembro",
+      "memberPlaceholder": "N.º de jugador o función",
+      "atScore": "Con el marcador",
+      "atScoreValue": "{{a}}:{{b}} en el set {{number}}",
+      "add": "Añadir sanción"
+    }
+  },
+  "sanction": {
+    "warning": "Amonestación (tarjeta amarilla)",
+    "penalty": "Penalización (tarjeta roja)",
+    "expulsion": "Expulsión (ambas tarjetas juntas)",
+    "disqualification": "Descalificación (ambas tarjetas por separado)"
+  },
+  "engine": {
+    "tooManySubstitutions": "El equipo {{side}} tiene más cambios que los {{allowed}} permitidos.",
+    "tooManyTimeouts": "El equipo {{side}} tiene más tiempos muertos que los {{allowed}} permitidos.",
+    "incompleteLineup": "El equipo {{side}} solo tiene {{filled}} de las 6 posiciones iniciales cubiertas en el set {{number}}.",
+    "noFirstServe": "El set {{number}} todavía no tiene registrado el primer saque.",
+    "liberoServing": "El equipo {{side}} tiene un líbero en la posición de saque, algo que este reglamento no permite.",
+    "blocker": {
+      "noSet": "Este set no se ha empezado.",
+      "noFirstServe": "Registra qué equipo saca primero en este set.",
+      "lineup": "El equipo {{side}} necesita las seis posiciones iniciales antes de la primera jugada.",
+      "setFinished": "Este set ha terminado."
+    },
+    "sub": {
+      "noSet": "Ese set no existe.",
+      "setFinished": "El set ya ha terminado.",
+      "emptySlot": "Esa posición todavía no tiene jugador en pista.",
+      "samePlayer": "Ese jugador ya está en pista en esta posición.",
+      "alreadyOnCourt": "Ese jugador ya está en pista.",
+      "allUsed": "El equipo {{side}} ya ha usado los {{allowed}} cambios de este set.",
+      "unknownPlayer": "Jugador desconocido.",
+      "libero": "Los cambios de líbero no son sustituciones y no se anotan aquí.",
+      "starterNotOut": "Ese titular no ha salido de la pista, así que no hay a quién hacer volver.",
+      "starterReturned": "Un titular solo puede volver una vez por set.",
+      "starterPairing": "Un titular solo puede volver por el jugador que lo sustituyó.",
+      "substituteReturned": "Un suplente solo puede entrar una vez por set."
+    }
+  },
+  "transfer": {
+    "title": "Traspasar al acta de papel",
+    "subtitle": "Una casilla cada vez, en el orden en que el anotador rellena el acta.",
+    "step": "Paso {{current}} de {{total}}",
+    "progress": "{{done}} de {{total}} casillas completadas",
+    "markDone": "Marcar como copiada",
+    "markNotDone": "Quitar la marca",
+    "doneAndNext": "Copiada, siguiente casilla",
+    "finish": "Finalizar",
+    "restart": "Empezar de nuevo por la primera casilla",
+    "overview": "Todas las casillas",
+    "allDone": "Todas las casillas están marcadas como copiadas. Comprueba los totales con el acta de papel antes de firmar.",
+    "whatToWrite": "Qué escribir",
+    "printSection": "Imprimir esta casilla",
+    "copySection": "Copiar esta casilla como texto",
+    "notStarted": "Set no empezado.",
+    "noPlayers": "Todavía no hay jugadores del equipo {{side}}.",
+    "noRallies": "Todavía no hay jugadas registradas en este set.",
+    "noRounds": "Todavía no hay rondas de saque.",
+    "noSubstitutions": "Sin cambios.",
+    "noSanctions": "No hay sanciones registradas."
+  },
+  "section": {
+    "header": {
+      "title": "Encabezado y oficiales",
+      "help": "Banda superior del acta. Copia la competición, el número de partido, la fecha, la hora y el pabellón, después los nombres de ambos equipos y los oficiales. Escribe los nombres tal como figuran en las licencias."
+    },
+    "toss": {
+      "title": "Sorteo y campos",
+      "help": "Marca qué equipo saca y cuál está a la izquierda en el set 1. Los equipos cambian de campo cada set; el set decisivo tiene su propio sorteo y cambio de campo al llegar a 8."
+    },
+    "roster": {
+      "title": "Plantilla del equipo {{side}}",
+      "help": "Rellena la columna del equipo por orden de dorsal, rodea al capitán y marca cada líbero con una L. El entrenador y su ayudante van debajo."
+    },
+    "lineup": {
+      "title": "Set {{number}}: alineaciones iniciales",
+      "help": "Escribe el seis inicial en las posiciones I a VI. Ese orden es también el de saque, así que debe coincidir con la hoja que entregó el entrenador."
+    },
+    "score": {
+      "title": "Set {{number}}: marcador continuo",
+      "help": "Recorre las rondas de saque: anota el número del sacador y luego tacha cada punto ganado con ese saque. La lista de abajo muestra el marcador tras cada punto."
+    },
+    "changes": {
+      "title": "Set {{number}}: cambios y tiempos muertos",
+      "help": "Anota cada cambio en la posición donde ocurrió, con el número que entra encima del que sale y el marcador al lado. Los tiempos muertos van en las casillas pequeñas como el marcador en que se pidieron."
+    },
+    "results": {
+      "title": "Cuadro de resultados",
+      "help": "Una fila por set: duración, ambos marcadores, cambios, tiempos muertos y ganador. Añade las duraciones de los sets y después suma los puntos y la duración del partido."
+    },
+    "sanctions": {
+      "title": "Sanciones",
+      "help": "Una línea por sanción con el equipo, el miembro, el set y el marcador en que se aplicó."
+    },
+    "remarks": {
+      "title": "Observaciones y firmas",
+      "help": "Escribe las observaciones y recoge las firmas: primero los capitanes, después los entrenadores, el anotador y por último los dos árbitros."
+    },
+    "submit": {
+      "title": "Comunicar el resultado",
+      "help": "El acta de papel se queda con el árbitro. El resultado todavía tiene que llegar a la federación, así que copia el resumen de abajo en su sistema."
+    }
+  },
+  "sheet": {
+    "row": {
+      "competition": "Competición",
+      "stage": "Fase / ronda",
+      "pool": "Grupo",
+      "matchNumber": "Número de partido",
+      "category": "Categoría",
+      "date": "Fecha",
+      "time": "Hora de inicio",
+      "hall": "Pabellón",
+      "city": "Ciudad",
+      "teamA": "Equipo A",
+      "teamB": "Equipo B",
+      "rules": "Reglamento",
+      "servesFirst": "Saca primero (set 1)",
+      "receivesFirst": "Recibe primero (set 1)",
+      "leftSide": "Lado izquierdo (set 1)",
+      "rightSide": "Lado derecho (set 1)",
+      "team": "Equipo",
+      "coach": "Entrenador",
+      "assistantCoach": "Entrenador ayudante",
+      "liberos": "Líberos",
+      "servesFirstSet": "Saca primero",
+      "setsWon": "Sets ganados",
+      "totalPoints": "Puntos totales",
+      "matchWinner": "Ganador del partido",
+      "remarks": "Observaciones",
+      "scorer": "Anotador",
+      "captain": "Capitán {{side}}",
+      "coachSide": "Entrenador {{side}}",
+      "firstReferee": "1.er árbitro"
+    },
+    "serviceRounds": "Rondas de saque del equipo {{side}} - {{name}}",
+    "rallyByRally": "Jugada a jugada",
+    "col": {
+      "round": "Ronda",
+      "serverNumber": "Sacador n.º",
+      "pointsOnService": "Puntos logrados con este saque",
+      "fromScore": "(desde {{own}}:{{opponent}})",
+      "pointTo": "Punto para",
+      "scoreA": "Puntos A",
+      "scoreB": "Puntos B",
+      "playerNumber": "Jugador n.º",
+      "in": "Entra",
+      "out": "Sale",
+      "duration": "Duración",
+      "subsA": "Cambios A",
+      "subsB": "Cambios B",
+      "timeoutsA": "TM A",
+      "timeoutsB": "TM B",
+      "winner": "Ganador",
+      "member": "Miembro"
+    },
+    "timeouts": "Tiempos muertos",
+    "signatureNote": "Las firmas van en el papel: los capitanes firman al terminar el partido, después los entrenadores y los árbitros."
+  },
+  "submit": {
+    "title": "Comunicar el resultado",
+    "noApi": {
+      "title": "Sin envío directo",
+      "body": "{{name}} publica calendario, equipos y plantillas, pero no acepta actas por su API, así que el resultado no se puede enviar desde aquí. Copia el resumen de abajo en el sistema de la federación y entrega el acta de papel al árbitro como siempre."
+    },
+    "manualBody": "No hay ninguna federación seleccionada, así que no hay dónde enviar el resultado. Aun así, el resumen de abajo es la forma más rápida de comunicarlo por el cauce que use tu competición.",
+    "summary": "Resumen del resultado",
+    "copySummary": "Copiar el resumen",
+    "openPortal": "Abrir {{name}}",
+    "checklist": "Antes de entregar el acta",
+    "check": {
+      "totals": "El total de puntos por set coincide con el marcador continuo.",
+      "signatures": "Han firmado los dos capitanes, los dos entrenadores y los dos árbitros.",
+      "durations": "Está escrita la duración de cada set y la del partido.",
+      "sanctions": "Cada sanción figura en el cuadro de sanciones con su marcador."
+    }
+  },
+  "settings": {
+    "title": "Federación",
+    "subtitle": "Qué fuente de datos rellena el acta por ti.",
+    "country": "País / federación",
+    "apiDocs": "Documentación de la API",
+    "tokenPlaceholder": "Pega el token",
+    "save": "Guardar token",
+    "forget": "Olvidar token",
+    "whereToGet": "Dónde conseguir uno",
+    "stored": "Guardado solo en este navegador.",
+    "privacy": "El token se queda en el almacenamiento local de este navegador y solo se envía a la API de la federación por HTTPS. No se sube nada a ningún otro sitio y la aplicación no tiene backend. Sin token todo sigue funcionando, solo que escribes los datos del partido tú.",
+    "noCredential": "{{name}} no necesita credenciales.",
+    "language": {
+      "title": "Idioma",
+      "subtitle": "Se aplica a toda la aplicación y se recuerda en este navegador.",
+      "label": "Idioma",
+      "system": "Seguir al navegador"
+    }
+  },
+  "provider": {
+    "manual": {
+      "name": "Entrada manual (sin federación)",
+      "country": "Cualquier país"
+    },
+    "swiss": {
+      "tokenLabel": "Token de la API de Volley Manager",
+      "tokenHelp": "Un administrador del club lo genera en Volley Manager en Administración > Club > Webservice/API. Se envía en la cabecera Authorization y se guarda solo en este navegador.",
+      "country": "Suiza"
+    }
+  },
+  "federation": {
+    "noToken": "No hay token de {{name}} configurado. Añade uno en Ajustes o sigue con la entrada manual.",
+    "unreachable": "No se pudo acceder a {{url}}: {{reason}}",
+    "httpError": "{{name}} respondió {{status}} {{statusText}}"
+  }
+}

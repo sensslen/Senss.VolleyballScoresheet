@@ -167,7 +167,7 @@ describe('match state', () => {
 describe('entry guards', () => {
   it('blocks rally entry until lineups and first service are known', () => {
     const sheet = createScoresheet()
-    expect(rallyEntryBlocker(sheet, 0)).toMatch(/serves first/i)
+    expect(rallyEntryBlocker(sheet, 0)?.key).toBe('engine.blocker.noFirstServe')
 
     const ready = sheetWithLineups()
     expect(rallyEntryBlocker(ready, 0)).toBeNull()
@@ -208,7 +208,7 @@ describe('substitutions', () => {
 
     expect(validateSubstitution(sheet, 0, 'A', 2, 'A3')).toBeNull()
     // A3 did not leave slot 4, so it cannot re-enter there.
-    expect(validateSubstitution(sheet, 0, 'A', 4, 'A3')).toMatch(/replaced them/i)
+    expect(validateSubstitution(sheet, 0, 'A', 4, 'A3')?.key).toBe('engine.sub.starterPairing')
   })
 
   it('refuses a second entry for the same substitute', () => {
@@ -220,7 +220,7 @@ describe('substitutions', () => {
       { slot: 2, outPlayerId: 'A7', inPlayerId: 'A3', atRally: 0, scoreA: 1, scoreB: 0 },
     )
 
-    expect(validateSubstitution(sheet, 0, 'A', 3, 'A7')).toMatch(/only enter once/i)
+    expect(validateSubstitution(sheet, 0, 'A', 3, 'A7')?.key).toBe('engine.sub.substituteReturned')
   })
 
   it('refuses to exceed the allowed substitution count', () => {
@@ -236,13 +236,16 @@ describe('substitutions', () => {
       scoreB: 0,
     }))
 
-    expect(validateSubstitution(sheet, 0, 'A', 5, 'A8')).toMatch(/all 6 substitutions/i)
+    expect(validateSubstitution(sheet, 0, 'A', 5, 'A8')).toEqual({
+      key: 'engine.sub.allUsed',
+      params: { side: 'A', allowed: 6 },
+    })
   })
 
   it('keeps liberos out of the substitution box', () => {
     const sheet = sheetWithLineups()
     playRallies(sheet, 0, ['A'])
-    expect(validateSubstitution(sheet, 0, 'A', 1, 'A8')).toMatch(/libero/i)
+    expect(validateSubstitution(sheet, 0, 'A', 1, 'A8')?.key).toBe('engine.sub.libero')
   })
 
   it('serves with the substitute once the slot comes round', () => {
@@ -268,7 +271,7 @@ describe('issues', () => {
     sheet.sets[0]!.lineups.A.slots[0] = 'A8'
     const state = computeSetState(sheet, 0)
 
-    expect(state.issues.join(' ')).toMatch(/libero/i)
+    expect(state.issues.map((issue) => issue.key)).toContain('engine.liberoServing')
   })
 
   it('flags an incomplete lineup', () => {
@@ -276,6 +279,9 @@ describe('issues', () => {
     sheet.sets[0]!.lineups.B.slots[5] = null
     const state = computeSetState(sheet, 0)
 
-    expect(state.issues.join(' ')).toMatch(/only 5 of 6/i)
+    expect(state.issues).toContainEqual({
+      key: 'engine.incompleteLineup',
+      params: { side: 'B', filled: 5, number: 1 },
+    })
   })
 })

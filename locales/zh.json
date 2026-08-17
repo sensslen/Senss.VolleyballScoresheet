@@ -1,0 +1,414 @@
+{
+  "language": {
+    "name": "中文"
+  },
+  "common": {
+    "teamSide": "{{side}}队",
+    "unnamed": "(未命名)",
+    "blank": "--",
+    "vs": "对阵",
+    "open": "打开",
+    "delete": "删除",
+    "remove": "移除",
+    "back": "上一步",
+    "next": "下一步",
+    "print": "打印",
+    "copy": "复制为文本",
+    "copied": "已复制",
+    "date": "日期",
+    "score": "比分",
+    "match": "比赛",
+    "set": "局",
+    "team": "球队",
+    "position": "位置",
+    "name": "姓名",
+    "number": "号",
+    "venue": "场馆",
+    "competition": "赛事",
+    "empty": "空缺",
+    "notDecided": "未决出"
+  },
+  "app": {
+    "title": "排球记录表助手",
+    "tagline": "带你走完一份国际排联记录表，然后逐栏显示，方便你抄写到纸质记录表上。",
+    "footer": "所有数据都留在本浏览器中。纸质记录表仍是正式记录，本应用只是帮你填写时不出算术错误。",
+    "needSheet": "请先新建或打开一份记录表。",
+    "version": "版本 {{version}}",
+    "loading": "加载中..."
+  },
+  "tabs": {
+    "start": { "label": "比赛", "hint": "选择赛程或从空白开始" },
+    "match": { "label": "表头", "hint": "赛事、场馆、临场人员" },
+    "teams": { "label": "球队", "hint": "名单、队长、自由人" },
+    "play": { "label": "比分", "hint": "挑边、首发阵容、每球" },
+    "sheet": { "label": "抄写", "hint": "引导式抄写到纸质记录表" },
+    "settings": { "label": "设置", "hint": "协会、令牌与语言" }
+  },
+  "start": {
+    "title": "新建记录表",
+    "subtitle": "导入一场比赛以预填表头、球队和临场人员，或从空白记录表开始。",
+    "blank": "空白记录表",
+    "body": "有协会令牌时，表头、两队名单和裁判会直接填好。没有令牌时同一份记录表照常可用，只是要自己输入。",
+    "saved": {
+      "title": "已保存的记录表",
+      "subtitle": "保存在本浏览器中。",
+      "empty": "还没有保存任何内容。"
+    }
+  },
+  "browser": {
+    "title": "浏览赛程",
+    "unsupported": "{{name}} 不提供赛程浏览。请新建空白记录表并手动输入比赛信息。",
+    "needCredential": "{{name}} 需要{{credential}}才能列出比赛。请在设置中添加，或新建空白记录表全部手工填写。",
+    "credentialFallback": "凭据",
+    "region": "地区",
+    "competition": "联赛",
+    "stage": "阶段",
+    "pool": "小组",
+    "from": "起始日期",
+    "to": "结束日期",
+    "filter": "筛选列表",
+    "filterPlaceholder": "球队、场馆、比赛编号",
+    "load": "加载比赛",
+    "upcoming": "仅未来赛事",
+    "use": "使用这场比赛",
+    "empty": "选择一个联赛并加载赛程。",
+    "women": "女",
+    "men": "男",
+    "loading": {
+      "regions": "正在加载地区...",
+      "competitions": "正在加载联赛...",
+      "stages": "正在加载阶段...",
+      "pools": "正在加载小组...",
+      "games": "正在加载比赛..."
+    }
+  },
+  "match": {
+    "header": {
+      "title": "比赛表头",
+      "subtitle": "记录表最上方的一栏。"
+    },
+    "field": {
+      "competition": "赛事",
+      "stage": "阶段 / 轮次",
+      "pool": "小组",
+      "matchNumber": "比赛编号",
+      "category": "组别",
+      "categoryPlaceholder": "女子 / 男子 / U19",
+      "date": "日期",
+      "time": "开赛时间",
+      "hall": "场馆",
+      "city": "城市"
+    },
+    "rules": {
+      "title": "规则",
+      "subtitle": "决定每局分数上限以及换人和暂停次数。",
+      "ruleSet": "规则集",
+      "fromFederation": "{{name}}（来自协会）",
+      "summary": "{{best}}局制，每局{{points}}分，决胜局{{deciding}}分，每局{{substitutions}}次换人和{{timeouts}}次暂停。"
+    },
+    "officials": {
+      "title": "临场人员",
+      "first": "第一裁判",
+      "second": "第二裁判",
+      "scorer": "记录员",
+      "assistantScorer": "助理记录员",
+      "lineJudges": "司线员"
+    }
+  },
+  "rules": {
+    "fivb-best-of-5": "国际赛制，五局三胜（FIVB）",
+    "fivb-best-of-3": "国际赛制，三局两胜",
+    "ncaa-best-of-5": "NCAA，五局三胜（自由人可发球）",
+    "bestOf": "{{count}}局制"
+  },
+  "teams": {
+    "cardTitle": "{{side}}队 - {{name}}",
+    "home": "赛程表上的主队。",
+    "away": "赛程表上的客队。",
+    "import": "导入名单",
+    "addPlayer": "添加队员",
+    "field": {
+      "name": "队名",
+      "club": "俱乐部",
+      "coach": "主教练",
+      "assistantCoach": "助理教练",
+      "physiotherapist": "理疗师",
+      "doctor": "队医"
+    },
+    "loadingRoster": "正在加载名单...",
+    "imported": "已导入 {{count}} 名队员。",
+    "notImported": "这支球队不是从 {{name}} 导入的，因此没有名单可拉取。请手动输入队员。",
+    "noCaptain": "尚未标记队长。记录表上需要把队长圈出来。",
+    "tooManyCaptains": "标记了不止一名队长。",
+    "tooManyLiberos": "标记了超过两名自由人。",
+    "tooManyPlayers": "已列出 {{count}} 名队员；规则允许 {{allowed}} 名。",
+    "col": {
+      "lastName": "姓",
+      "firstName": "名",
+      "licence": "注册号",
+      "captainShort": "C",
+      "liberoShort": "L"
+    }
+  },
+  "play": {
+    "toss": {
+      "title": "挑边",
+      "subtitle": "第一局开始前记入表头栏。",
+      "firstServe": "第一局先发球方",
+      "leftSide": "从左侧开始的球队"
+    },
+    "sets": {
+      "title": "各局",
+      "subtitle": "比赛局分 {{a}} : {{b}}",
+      "wins": "比赛局分 {{a}} : {{b}} - {{side}}队获胜",
+      "start": "开始第 {{number}} 局",
+      "tab": "第 {{number}} 局"
+    },
+    "setNotStarted": "该局尚未开始。",
+    "lineups": {
+      "title": "第 {{number}} 局首发阵容",
+      "subtitle": "位置 I 至 VI 同时就是发球次序。",
+      "firstServe": "本局先发球方",
+      "decidingHint": "决胜局要重新挑边。",
+      "locked": "本局已经开始；只有在更正抄写错误时才修改阵容。",
+      "position": "位置 {{label}}",
+      "libero": "记录表上的自由人",
+      "addLibero": "添加自由人"
+    },
+    "scoring": {
+      "title": "第 {{number}} 局记分",
+      "serving": "发球中",
+      "nextServer": "下一发球队员 {{number}} 号",
+      "point": "{{side}}队得分",
+      "undoRally": "撤销上一球",
+      "timeout": "暂停 {{side}}（{{used}}/{{max}}）",
+      "undoTimeout": "撤销暂停",
+      "setFinished": "第 {{number}} 局以 {{a}}:{{b}} 由{{side}}队取胜。请把本局用时写入结果栏。"
+    },
+    "subs": {
+      "title": "换人",
+      "heading": "{{side}}队（已用 {{used}}/{{max}}）",
+      "leaving": "下场位置",
+      "entering": "上场队员",
+      "record": "记录换人",
+      "undo": "撤销上一次",
+      "entry": "{{position}}: {{in}} 号换下 {{out}} 号，比分 {{a}}:{{b}}"
+    },
+    "sanctions": {
+      "title": "判罚",
+      "subtitle": "球队、成员、局次和比分记入判罚栏。",
+      "kind": "判罚",
+      "member": "成员",
+      "memberPlaceholder": "队员号码或职务",
+      "atScore": "判罚时比分",
+      "atScoreValue": "第 {{number}} 局 {{a}}:{{b}}",
+      "add": "添加判罚"
+    }
+  },
+  "sanction": {
+    "warning": "警告（黄牌）",
+    "penalty": "判罚（红牌）",
+    "expulsion": "驱逐（两牌同出）",
+    "disqualification": "取消比赛资格（两牌分开出示）"
+  },
+  "engine": {
+    "tooManySubstitutions": "{{side}}队的换人次数超过规则允许的 {{allowed}} 次。",
+    "tooManyTimeouts": "{{side}}队的暂停次数超过规则允许的 {{allowed}} 次。",
+    "incompleteLineup": "{{side}}队第 {{number}} 局的六个首发位置只填了 {{filled}} 个。",
+    "noFirstServe": "第 {{number}} 局还没有记录首次发球方。",
+    "liberoServing": "{{side}}队的发球位置上是自由人，本规则不允许。",
+    "blocker": {
+      "noSet": "本局尚未开始。",
+      "noFirstServe": "请记录本局由哪队先发球。",
+      "lineup": "{{side}}队必须在第一球之前填满六个首发位置。",
+      "setFinished": "本局已结束。"
+    },
+    "sub": {
+      "noSet": "该局不存在。",
+      "setFinished": "本局已经结束。",
+      "emptySlot": "该位置场上还没有队员。",
+      "samePlayer": "该队员已经在这个位置上场。",
+      "alreadyOnCourt": "该队员已经在场上。",
+      "allUsed": "{{side}}队本局已用完全部 {{allowed}} 次换人。",
+      "unknownPlayer": "未知队员。",
+      "libero": "自由人换人不属于换人，不在此记录。",
+      "starterNotOut": "该首发队员没有下场，无从重新上场。",
+      "starterReturned": "首发队员每局只能重新上场一次。",
+      "starterPairing": "首发队员只能替换当初换下自己的队员重新上场。",
+      "substituteReturned": "替补队员每局只能上场一次。"
+    }
+  },
+  "transfer": {
+    "title": "抄写到纸质记录表",
+    "subtitle": "每次一栏，按记录员填表的顺序进行。",
+    "step": "第 {{current}} 步，共 {{total}} 步",
+    "progress": "已完成 {{total}} 栏中的 {{done}} 栏",
+    "markDone": "标记为已抄写",
+    "markNotDone": "取消标记",
+    "doneAndNext": "已抄写，下一栏",
+    "finish": "完成",
+    "restart": "从第一栏重新开始",
+    "overview": "全部栏目",
+    "allDone": "所有栏目都已标记为已抄写。签字前请与纸质记录表核对合计数。",
+    "whatToWrite": "该写什么",
+    "printSection": "打印本栏",
+    "copySection": "把本栏复制为文本",
+    "notStarted": "本局未开始。",
+    "noPlayers": "{{side}}队还没有输入队员。",
+    "noRallies": "本局还没有记录任何一球。",
+    "noRounds": "还没有发球轮次。",
+    "noSubstitutions": "没有换人。",
+    "noSanctions": "没有判罚记录。"
+  },
+  "section": {
+    "header": {
+      "title": "表头与临场人员",
+      "help": "记录表最上方一栏。抄写赛事、比赛编号、日期、时间和场馆，然后是两队队名和临场人员。姓名要与注册证件完全一致。"
+    },
+    "toss": {
+      "title": "挑边与场区",
+      "help": "标明第一局由哪队发球、哪队在左侧。两队每局交换场区；决胜局单独挑边，并在一方得到 8 分时交换场区。"
+    },
+    "roster": {
+      "title": "{{side}}队名单",
+      "help": "按号码顺序填写球队栏，把队长圈出来，每名自由人标注 L。教练和助理教练写在下方。"
+    },
+    "lineup": {
+      "title": "第 {{number}} 局：首发阵容",
+      "help": "把首发六人填入位置 I 至 VI。这个顺序同时是发球次序，必须与教练递交的阵容单一致。"
+    },
+    "score": {
+      "title": "第 {{number}} 局：比分进程",
+      "help": "逐轮发球填写：先写发球队员号码，再划掉该轮发球中拿到的每一分。下方列表显示每得一分后的比分。"
+    },
+    "changes": {
+      "title": "第 {{number}} 局：换人与暂停",
+      "help": "把每次换人记在发生的位置上，上场号码写在下场号码上方，旁边记比分。暂停按请求时的比分填入小格中。"
+    },
+    "results": {
+      "title": "结果表",
+      "help": "每局一行：用时、双方比分、换人数、暂停数和胜方。补上各局用时，再合计总得分和比赛总时长。"
+    },
+    "sanctions": {
+      "title": "判罚",
+      "help": "每条判罚一行，写明球队、成员、局次以及判罚时的比分。"
+    },
+    "remarks": {
+      "title": "备注与签字",
+      "help": "写下备注，然后收集签字：先两队队长，再教练、记录员，最后两名裁判。"
+    },
+    "submit": {
+      "title": "上报成绩",
+      "help": "纸质记录表由裁判保管。成绩仍须报送协会，请把下面的摘要抄入协会系统。"
+    }
+  },
+  "sheet": {
+    "row": {
+      "competition": "赛事",
+      "stage": "阶段 / 轮次",
+      "pool": "小组",
+      "matchNumber": "比赛编号",
+      "category": "组别",
+      "date": "日期",
+      "time": "开赛时间",
+      "hall": "场馆",
+      "city": "城市",
+      "teamA": "A队",
+      "teamB": "B队",
+      "rules": "规则",
+      "servesFirst": "先发球（第一局）",
+      "receivesFirst": "先接发球（第一局）",
+      "leftSide": "左侧场区（第一局）",
+      "rightSide": "右侧场区（第一局）",
+      "team": "球队",
+      "coach": "主教练",
+      "assistantCoach": "助理教练",
+      "liberos": "自由人",
+      "servesFirstSet": "先发球",
+      "setsWon": "胜局数",
+      "totalPoints": "总得分",
+      "matchWinner": "获胜球队",
+      "remarks": "备注",
+      "scorer": "记录员",
+      "captain": "{{side}}队队长",
+      "coachSide": "{{side}}队教练",
+      "firstReferee": "第一裁判"
+    },
+    "serviceRounds": "{{side}}队发球轮次 - {{name}}",
+    "rallyByRally": "逐球进程",
+    "col": {
+      "round": "轮次",
+      "serverNumber": "发球队员号",
+      "pointsOnService": "本轮发球得分",
+      "fromScore": "（自 {{own}}:{{opponent}} 起）",
+      "pointTo": "得分方",
+      "scoreA": "A队得分",
+      "scoreB": "B队得分",
+      "playerNumber": "队员号",
+      "in": "上场",
+      "out": "下场",
+      "duration": "用时",
+      "subsA": "A队换人",
+      "subsB": "B队换人",
+      "timeoutsA": "A队暂停",
+      "timeoutsB": "B队暂停",
+      "winner": "胜方",
+      "member": "成员"
+    },
+    "timeouts": "暂停",
+    "signatureNote": "签字在纸上完成：赛后先由两队队长签字，然后是教练和裁判。"
+  },
+  "submit": {
+    "title": "上报成绩",
+    "noApi": {
+      "title": "不支持直接提交",
+      "body": "{{name}} 公布赛程、球队和名单，但其接口不接收记录表，因此无法从这里提交成绩。请把下面的摘要抄入协会系统，纸质记录表照常交给裁判。"
+    },
+    "manualBody": "尚未选择协会，因此没有可提交成绩的地方。下面的摘要仍是按你所在赛事既定渠道上报成绩最省事的方式。",
+    "summary": "成绩摘要",
+    "copySummary": "复制摘要",
+    "openPortal": "打开 {{name}}",
+    "checklist": "交出记录表之前",
+    "check": {
+      "totals": "每局总分与比分进程一致。",
+      "signatures": "两队队长、两位教练和两名裁判都已签字。",
+      "durations": "每局用时和全场用时都已填写。",
+      "sanctions": "每条判罚都连同比分记入判罚栏。"
+    }
+  },
+  "settings": {
+    "title": "协会",
+    "subtitle": "由哪个国家的数据源为你预填记录表。",
+    "country": "国家 / 协会",
+    "apiDocs": "API 文档",
+    "tokenPlaceholder": "粘贴令牌",
+    "save": "保存令牌",
+    "forget": "清除令牌",
+    "whereToGet": "如何获取",
+    "stored": "仅保存在本浏览器中。",
+    "privacy": "令牌保存在本浏览器的本地存储中，只通过 HTTPS 发送给协会的接口。不会上传到其他任何地方，本应用也没有后端。没有令牌一切照常工作，只是需要自己输入比赛信息。",
+    "noCredential": "{{name}} 不需要凭据。",
+    "language": {
+      "title": "语言",
+      "subtitle": "对整个应用生效，并记忆在本浏览器中。",
+      "label": "语言",
+      "system": "跟随浏览器"
+    }
+  },
+  "provider": {
+    "manual": {
+      "name": "手工输入（不使用协会）",
+      "country": "任意国家"
+    },
+    "swiss": {
+      "tokenLabel": "Volley Manager API 令牌",
+      "tokenHelp": "由俱乐部管理员在 Volley Manager 的 管理 > 俱乐部 > Webservice/API 中生成。它通过 Authorization 头发送，且只保存在本浏览器中。",
+      "country": "瑞士"
+    }
+  },
+  "federation": {
+    "noToken": "未配置 {{name}} 的令牌。请在设置中添加，或继续使用手工输入。",
+    "unreachable": "无法访问 {{url}}：{{reason}}",
+    "httpError": "{{name}} 返回 {{status}} {{statusText}}"
+  }
+}

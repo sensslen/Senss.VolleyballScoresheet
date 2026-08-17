@@ -1,0 +1,414 @@
+{
+  "language": {
+    "name": "日本語"
+  },
+  "common": {
+    "teamSide": "チーム{{side}}",
+    "unnamed": "(名称未設定)",
+    "blank": "--",
+    "vs": "対",
+    "open": "開く",
+    "delete": "削除",
+    "remove": "外す",
+    "back": "戻る",
+    "next": "次へ",
+    "print": "印刷",
+    "copy": "テキストとしてコピー",
+    "copied": "コピーしました",
+    "date": "日付",
+    "score": "得点",
+    "match": "試合",
+    "set": "セット",
+    "team": "チーム",
+    "position": "ポジション",
+    "name": "名前",
+    "number": "番号",
+    "venue": "会場",
+    "competition": "大会",
+    "empty": "空き",
+    "notDecided": "未決定"
+  },
+  "app": {
+    "title": "バレーボール記録用紙アシスタント",
+    "tagline": "国際式記録用紙の手順を案内し、その後は欄ごとに表示するので、そのまま紙の記録用紙に書き写せます。",
+    "footer": "すべてこのブラウザ内に留まります。紙の記録用紙が公式記録であり、このアプリは計算ミスなく記入するための補助にすぎません。",
+    "needSheet": "先に記録用紙を作成するか開いてください。",
+    "version": "バージョン {{version}}",
+    "loading": "読み込み中..."
+  },
+  "tabs": {
+    "start": { "label": "試合", "hint": "試合を選ぶか白紙で開始" },
+    "match": { "label": "ヘッダー", "hint": "大会、会場、役員" },
+    "teams": { "label": "チーム", "hint": "登録選手、キャプテン、リベロ" },
+    "play": { "label": "得点", "hint": "トス、スターティング、ラリー" },
+    "sheet": { "label": "書き写し", "hint": "紙の記録用紙への案内付き転記" },
+    "settings": { "label": "設定", "hint": "協会、トークン、言語" }
+  },
+  "start": {
+    "title": "記録用紙を作成",
+    "subtitle": "試合を取り込んでヘッダー、チーム、役員を先に埋めるか、白紙の記録用紙から始めます。",
+    "blank": "白紙の記録用紙",
+    "body": "協会のトークンがあれば、ヘッダー、両チームの登録選手、審判が記入済みで届きます。トークンがなくても同じ記録用紙が使えます。入力を自分で行うだけです。",
+    "saved": {
+      "title": "保存した記録用紙",
+      "subtitle": "このブラウザに保存されています。",
+      "empty": "まだ保存されていません。"
+    }
+  },
+  "browser": {
+    "title": "試合を探す",
+    "unsupported": "{{name}} は試合検索に対応していません。白紙の記録用紙を作成し、試合情報を入力してください。",
+    "needCredential": "{{name}} で試合一覧を表示するには{{credential}}が必要です。設定から追加するか、白紙の記録用紙を作成してすべて手入力してください。",
+    "credentialFallback": "認証情報",
+    "region": "地域",
+    "competition": "リーグ",
+    "stage": "ステージ",
+    "pool": "グループ",
+    "from": "開始日",
+    "to": "終了日",
+    "filter": "一覧を絞り込む",
+    "filterPlaceholder": "チーム、体育館、試合番号",
+    "load": "試合を読み込む",
+    "upcoming": "今後の試合のみ",
+    "use": "この試合を使う",
+    "empty": "リーグを選んで日程を読み込んでください。",
+    "women": "女",
+    "men": "男",
+    "loading": {
+      "regions": "地域を読み込み中...",
+      "competitions": "リーグを読み込み中...",
+      "stages": "ステージを読み込み中...",
+      "pools": "グループを読み込み中...",
+      "games": "試合を読み込み中..."
+    }
+  },
+  "match": {
+    "header": {
+      "title": "試合ヘッダー",
+      "subtitle": "記録用紙の最上段の帯です。"
+    },
+    "field": {
+      "competition": "大会",
+      "stage": "ステージ / ラウンド",
+      "pool": "グループ",
+      "matchNumber": "試合番号",
+      "category": "カテゴリー",
+      "categoryPlaceholder": "女子 / 男子 / U19",
+      "date": "日付",
+      "time": "開始時刻",
+      "hall": "体育館",
+      "city": "都市"
+    },
+    "rules": {
+      "title": "ルール",
+      "subtitle": "セットの目標点、交代とタイムアウトの上限を決めます。",
+      "ruleSet": "ルールセット",
+      "fromFederation": "{{name}}（協会より）",
+      "summary": "{{best}}セットマッチ、各セット{{points}}点、最終セット{{deciding}}点、1セットあたり交代{{substitutions}}回、タイムアウト{{timeouts}}回。"
+    },
+    "officials": {
+      "title": "役員",
+      "first": "主審",
+      "second": "副審",
+      "scorer": "記録員",
+      "assistantScorer": "副記録員",
+      "lineJudges": "線審"
+    }
+  },
+  "rules": {
+    "fivb-best-of-5": "国際式、5セットマッチ（FIVB）",
+    "fivb-best-of-3": "国際式、3セットマッチ",
+    "ncaa-best-of-5": "NCAA、5セットマッチ（リベロのサーブ可）",
+    "bestOf": "{{count}}セットマッチ"
+  },
+  "teams": {
+    "cardTitle": "チーム{{side}} - {{name}}",
+    "home": "日程表のホームチームです。",
+    "away": "日程表のビジターチームです。",
+    "import": "登録選手を取り込む",
+    "addPlayer": "選手を追加",
+    "field": {
+      "name": "チーム名",
+      "club": "クラブ",
+      "coach": "監督",
+      "assistantCoach": "コーチ",
+      "physiotherapist": "トレーナー",
+      "doctor": "ドクター"
+    },
+    "loadingRoster": "登録選手を読み込み中...",
+    "imported": "{{count}}名の選手を取り込みました。",
+    "notImported": "このチームは {{name}} から取り込まれていないため、取得できる登録選手がありません。選手を入力してください。",
+    "noCaptain": "キャプテンが指定されていません。記録用紙ではキャプテンを丸で囲む必要があります。",
+    "tooManyCaptains": "キャプテンが複数指定されています。",
+    "tooManyLiberos": "リベロが3名以上指定されています。",
+    "tooManyPlayers": "{{count}}名が登録されています。ルール上の上限は{{allowed}}名です。",
+    "col": {
+      "lastName": "姓",
+      "firstName": "名",
+      "licence": "登録番号",
+      "captainShort": "C",
+      "liberoShort": "L"
+    }
+  },
+  "play": {
+    "toss": {
+      "title": "トス",
+      "subtitle": "第1セット前にヘッダーの帯に記入します。",
+      "firstServe": "第1セットの最初のサーブ",
+      "leftSide": "左側で開始するチーム"
+    },
+    "sets": {
+      "title": "セット",
+      "subtitle": "セットカウント {{a}} : {{b}}",
+      "wins": "セットカウント {{a}} : {{b}} - チーム{{side}}の勝利",
+      "start": "第{{number}}セットを開始",
+      "tab": "第{{number}}セット"
+    },
+    "setNotStarted": "そのセットはまだ開始されていません。",
+    "lineups": {
+      "title": "第{{number}}セットのスターティング",
+      "subtitle": "ポジションIからVIはそのままサーブ順になります。",
+      "firstServe": "このセットの最初のサーブ",
+      "decidingHint": "最終セットは新たなトスから始まります。",
+      "locked": "セットはすでに始まっています。転記ミスの訂正以外でスターティングを変更しないでください。",
+      "position": "ポジション{{label}}",
+      "libero": "記録用紙のリベロ",
+      "addLibero": "リベロを追加"
+    },
+    "scoring": {
+      "title": "第{{number}}セットの得点",
+      "serving": "サーブ権",
+      "nextServer": "次のサーバー 背番号{{number}}",
+      "point": "チーム{{side}}に得点",
+      "undoRally": "直前のラリーを取り消す",
+      "timeout": "タイムアウト {{side}}（{{used}}/{{max}}）",
+      "undoTimeout": "タイムアウトを取り消す",
+      "setFinished": "第{{number}}セットは{{a}}:{{b}}でチーム{{side}}の勝ちです。所要時間を結果欄に記入してください。"
+    },
+    "subs": {
+      "title": "選手交代",
+      "heading": "チーム{{side}}（{{used}}/{{max}}使用）",
+      "leaving": "退くポジション",
+      "entering": "入る選手",
+      "record": "交代を記録",
+      "undo": "直前を取り消す",
+      "entry": "{{position}}: 背番号{{in}}が背番号{{out}}と交代、{{a}}:{{b}}で"
+    },
+    "sanctions": {
+      "title": "罰則",
+      "subtitle": "チーム、対象者、セット、得点を罰則欄に記入します。",
+      "kind": "罰則",
+      "member": "対象者",
+      "memberPlaceholder": "背番号または役職",
+      "atScore": "その時の得点",
+      "atScoreValue": "第{{number}}セット {{a}}:{{b}}",
+      "add": "罰則を追加"
+    }
+  },
+  "sanction": {
+    "warning": "警告（イエローカード）",
+    "penalty": "ペナルティ（レッドカード）",
+    "expulsion": "退場（2枚同時提示）",
+    "disqualification": "失格（2枚別々に提示）"
+  },
+  "engine": {
+    "tooManySubstitutions": "チーム{{side}}の交代が上限の{{allowed}}回を超えています。",
+    "tooManyTimeouts": "チーム{{side}}のタイムアウトが上限の{{allowed}}回を超えています。",
+    "incompleteLineup": "チーム{{side}}は第{{number}}セットのスターティング6のうち{{filled}}人しか入っていません。",
+    "noFirstServe": "第{{number}}セットの最初のサーブがまだ記録されていません。",
+    "liberoServing": "チーム{{side}}のサーブ位置にリベロがいます。このルールでは認められません。",
+    "blocker": {
+      "noSet": "このセットはまだ開始されていません。",
+      "noFirstServe": "このセットでどちらのチームが先にサーブするか記録してください。",
+      "lineup": "チーム{{side}}は最初のラリーの前に6ポジションすべてが必要です。",
+      "setFinished": "このセットは終了しています。"
+    },
+    "sub": {
+      "noSet": "そのセットは存在しません。",
+      "setFinished": "そのセットはすでに終了しています。",
+      "emptySlot": "そのポジションにはまだコート上の選手がいません。",
+      "samePlayer": "その選手はすでにこのポジションでコートにいます。",
+      "alreadyOnCourt": "その選手はすでにコートにいます。",
+      "allUsed": "チーム{{side}}はこのセットで{{allowed}}回の交代をすべて使い切っています。",
+      "unknownPlayer": "不明な選手です。",
+      "libero": "リベロの交代は選手交代ではないため、ここには記録しません。",
+      "starterNotOut": "そのスターティングメンバーはコートを離れていないため、戻す対象がありません。",
+      "starterReturned": "スターティングメンバーが再入場できるのは1セットに1回だけです。",
+      "starterPairing": "スターティングメンバーは自分と交代した選手とのみ再交代できます。",
+      "substituteReturned": "交代選手が入場できるのは1セットに1回だけです。"
+    }
+  },
+  "transfer": {
+    "title": "紙の記録用紙へ書き写す",
+    "subtitle": "記録員が記入する順に、1つの欄ずつ進みます。",
+    "step": "ステップ {{current}} / {{total}}",
+    "progress": "{{total}}欄中{{done}}欄が完了",
+    "markDone": "書き写し済みにする",
+    "markNotDone": "未完了に戻す",
+    "doneAndNext": "書き写し済み、次の欄へ",
+    "finish": "完了",
+    "restart": "最初の欄からやり直す",
+    "overview": "すべての欄",
+    "allDone": "すべての欄が書き写し済みです。署名の前に紙の記録用紙と合計を照合してください。",
+    "whatToWrite": "記入する内容",
+    "printSection": "この欄を印刷",
+    "copySection": "この欄をテキストとしてコピー",
+    "notStarted": "セットは未開始です。",
+    "noPlayers": "チーム{{side}}の選手はまだ入力されていません。",
+    "noRallies": "このセットにはまだラリーが記録されていません。",
+    "noRounds": "サーブ順の記録がまだありません。",
+    "noSubstitutions": "交代はありません。",
+    "noSanctions": "罰則の記録はありません。"
+  },
+  "section": {
+    "header": {
+      "title": "ヘッダーと役員",
+      "help": "記録用紙の最上段です。大会、試合番号、日付、時刻、会場を書き写し、続いて両チーム名と役員を記入します。氏名は登録証のとおりに正確に書いてください。"
+    },
+    "toss": {
+      "title": "トスとコート",
+      "help": "第1セットでどちらがサーブし、どちらが左側かを記入します。チームは毎セットコートを交代し、最終セットは独自のトスと8点でのコート交代があります。"
+    },
+    "roster": {
+      "title": "チーム{{side}}の登録選手",
+      "help": "背番号順にチーム欄を埋め、キャプテンを丸で囲み、リベロにはLを付けます。監督とコーチはその下に記入します。"
+    },
+    "lineup": {
+      "title": "第{{number}}セット: スターティング",
+      "help": "スターティング6をポジションIからVIに記入します。この順序はサーブ順でもあるため、監督が提出したメンバー表と一致していなければなりません。"
+    },
+    "score": {
+      "title": "第{{number}}セット: 得点経過",
+      "help": "サーブ順に沿って進めます。サーバーの背番号を記入し、そのサーブで得た得点を1つずつ消し込みます。下のラリー一覧に各得点後のスコアが出ます。"
+    },
+    "changes": {
+      "title": "第{{number}}セット: 交代とタイムアウト",
+      "help": "交代は発生したポジション欄に、入る選手の番号を出る選手の番号の上に書き、横に得点を記入します。タイムアウトは取得時の得点として小さい欄に記入します。"
+    },
+    "results": {
+      "title": "結果表",
+      "help": "セットごとに1行: 所要時間、両チームの得点、交代数、タイムアウト数、勝者。各セットの時間を記入したうえで、総得点と試合時間を合計します。"
+    },
+    "sanctions": {
+      "title": "罰則",
+      "help": "罰則ごとに1行で、チーム、対象者、セット、提示時の得点を記入します。"
+    },
+    "remarks": {
+      "title": "備考と署名",
+      "help": "備考があれば記入し、署名を集めます。まず両キャプテン、次に監督、記録員、最後に両審判です。"
+    },
+    "submit": {
+      "title": "結果を報告する",
+      "help": "紙の記録用紙は審判が保管します。それでも結果は協会に届ける必要があるため、下の要約を協会のシステムに転記してください。"
+    }
+  },
+  "sheet": {
+    "row": {
+      "competition": "大会",
+      "stage": "ステージ / ラウンド",
+      "pool": "グループ",
+      "matchNumber": "試合番号",
+      "category": "カテゴリー",
+      "date": "日付",
+      "time": "開始時刻",
+      "hall": "体育館",
+      "city": "都市",
+      "teamA": "チームA",
+      "teamB": "チームB",
+      "rules": "ルール",
+      "servesFirst": "先にサーブ（第1セット）",
+      "receivesFirst": "先にレシーブ（第1セット）",
+      "leftSide": "左側（第1セット）",
+      "rightSide": "右側（第1セット）",
+      "team": "チーム",
+      "coach": "監督",
+      "assistantCoach": "コーチ",
+      "liberos": "リベロ",
+      "servesFirstSet": "先にサーブ",
+      "setsWon": "獲得セット",
+      "totalPoints": "総得点",
+      "matchWinner": "勝利チーム",
+      "remarks": "備考",
+      "scorer": "記録員",
+      "captain": "キャプテン{{side}}",
+      "coachSide": "監督{{side}}",
+      "firstReferee": "主審"
+    },
+    "serviceRounds": "チーム{{side}}のサーブ順 - {{name}}",
+    "rallyByRally": "ラリーごとの経過",
+    "col": {
+      "round": "順",
+      "serverNumber": "サーバー番号",
+      "pointsOnService": "このサーブでの得点",
+      "fromScore": "（{{own}}:{{opponent}}から）",
+      "pointTo": "得点したチーム",
+      "scoreA": "得点A",
+      "scoreB": "得点B",
+      "playerNumber": "選手番号",
+      "in": "イン",
+      "out": "アウト",
+      "duration": "所要時間",
+      "subsA": "交代A",
+      "subsB": "交代B",
+      "timeoutsA": "TO A",
+      "timeoutsB": "TO B",
+      "winner": "勝者",
+      "member": "対象者"
+    },
+    "timeouts": "タイムアウト",
+    "signatureNote": "署名は紙に行います。試合後にまず両キャプテン、続いて監督と審判です。"
+  },
+  "submit": {
+    "title": "結果を報告する",
+    "noApi": {
+      "title": "直接送信はできません",
+      "body": "{{name}} は日程、チーム、登録選手を公開していますが、APIで記録用紙を受け付けていないため、ここから結果を提出することはできません。下の要約を協会のシステムに転記し、紙の記録用紙はいつもどおり審判に渡してください。"
+    },
+    "manualBody": "協会が選択されていないため、結果の提出先がありません。それでも下の要約は、大会で定められた方法で結果を報告する最短の手段になります。",
+    "summary": "結果の要約",
+    "copySummary": "要約をコピー",
+    "openPortal": "{{name}} を開く",
+    "checklist": "記録用紙を渡す前に",
+    "check": {
+      "totals": "各セットの合計得点が得点経過と一致している。",
+      "signatures": "両キャプテン、両監督、両審判が署名している。",
+      "durations": "各セットと試合全体の所要時間が記入されている。",
+      "sanctions": "すべての罰則が得点とともに罰則欄に記入されている。"
+    }
+  },
+  "settings": {
+    "title": "協会",
+    "subtitle": "どの国のデータ提供元が記録用紙を埋めるかを選びます。",
+    "country": "国 / 協会",
+    "apiDocs": "APIドキュメント",
+    "tokenPlaceholder": "トークンを貼り付け",
+    "save": "トークンを保存",
+    "forget": "トークンを削除",
+    "whereToGet": "取得方法",
+    "stored": "このブラウザにのみ保存されます。",
+    "privacy": "トークンはこのブラウザのローカルストレージに保存され、HTTPSで協会のAPIにのみ送信されます。それ以外へのアップロードはなく、このアプリにバックエンドはありません。トークンがなくてもすべて動作し、試合情報を自分で入力するだけです。",
+    "noCredential": "{{name}} は認証情報を必要としません。",
+    "language": {
+      "title": "言語",
+      "subtitle": "アプリ全体に適用され、このブラウザに記憶されます。",
+      "label": "言語",
+      "system": "ブラウザに合わせる"
+    }
+  },
+  "provider": {
+    "manual": {
+      "name": "手入力（協会なし）",
+      "country": "すべての国"
+    },
+    "swiss": {
+      "tokenLabel": "Volley Manager APIトークン",
+      "tokenHelp": "クラブ管理者が Volley Manager の 管理 > クラブ > Webservice/API で発行します。Authorizationヘッダーで送信され、このブラウザにのみ保存されます。",
+      "country": "スイス"
+    }
+  },
+  "federation": {
+    "noToken": "{{name}} のトークンが設定されていません。設定で追加するか、手入力を続けてください。",
+    "unreachable": "{{url}} に接続できませんでした: {{reason}}",
+    "httpError": "{{name}} が {{status}} {{statusText}} を返しました"
+  }
+}

@@ -6,8 +6,9 @@ import type { FederationProvider } from './types'
  */
 export const manualProvider: FederationProvider = {
   id: 'manual',
-  name: 'Manual entry (no federation)',
-  country: { code: 'ZZ', name: 'Any country', flag: '🌐' },
+  name: 'Manual entry',
+  nameKey: 'provider.manual.name',
+  country: { code: 'ZZ', nameKey: 'provider.manual.country', flag: '🌐' },
   capabilities: {
     browseCompetitions: false,
     browseGames: false,
@@ -16,6 +17,7 @@ export const manualProvider: FederationProvider = {
     officials: false,
     regions: false,
     seasons: false,
+    submitResult: false,
   },
   isReady() {
     return true

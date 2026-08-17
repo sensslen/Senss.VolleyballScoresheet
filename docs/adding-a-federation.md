@@ -34,17 +34,23 @@ export function createExampleProvider(): FederationProvider {
   return {
     id: 'example-volley',
     name: 'Example Volley',
-    country: { code: 'XX', name: 'Example', flag: '🏐' },
+    country: { code: 'XX', nameKey: 'provider.example.country', flag: '🏐' },
+    resultPortalUrl: 'https://example-volley.example/results',
     capabilities: {
       browseCompetitions: true,
       browseGames: true,
       gameDetail: true,
-      rosters: false,   // no squad endpoint: the UI stops offering roster import
+      rosters: false,       // no squad endpoint: the UI stops offering roster import
       officials: true,
       regions: false,
       seasons: false,
+      submitResult: false,  // no federation accepts a scoresheet over its API
     },
-    auth: { label: 'API key', required: true, helpText: 'Where a club gets one.' },
+    auth: {
+      labelKey: 'provider.example.tokenLabel',
+      required: true,
+      helpTextKey: 'provider.example.tokenHelp',
+    },
     isReady: () => api.hasToken(),
     listCompetitions: async () => /* ... */,
     listGames: async (query) => /* ... */,
@@ -69,6 +75,17 @@ Rules that matter:
 - **Set `setsToWin` on `GameDetail`** when the federation publishes the match format.
   `ruleSetForSetsToWin` turns it into the right set targets, so best-of-3 competitions
   score correctly without user input.
+- **Anything a user reads is a translation key.** `nameKey`, `labelKey` and
+  `helpTextKey` are looked up in `locales/*.json`; add the strings to every language
+  or the completeness test fails. A federation's brand name stays a proper noun in
+  `name`. See [translating.md](translating.md).
+- **Errors the adapter authors carry a key.** Throw
+  `new FederationError(englishText, { key, params })` so the message appears in the
+  reader's language; leave the second argument off for text the API produced, which
+  cannot be translated.
+- **`submitResult` is almost certainly `false`.** See
+  [reporting-a-result.md](reporting-a-result.md) for what the transfer wizard does
+  with that, and set `resultPortalUrl` to wherever a human files the score.
 
 ## 3. Register it
 

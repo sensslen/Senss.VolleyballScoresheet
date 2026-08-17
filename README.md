@@ -21,8 +21,12 @@ write them down.
 - **Derive what the sheet needs**: running score, which team serves, the serving
   player's number for every service round, rotation after each side-out, substitution
   legality, set and match completion.
-- **Show one box at a time** under *Copy*, print-friendly, so you transcribe rather
-  than calculate.
+- **Walk the transfer** under *Transfer*: a wizard that steps through every box of the
+  paper sheet in the order a scorer fills it, says what goes in that box, shows the
+  derived values, and remembers which boxes you have already copied. The last step
+  hands you the result summary to file with the federation.
+- **Speak the reader's language**: eleven of them, picked in Settings or from the
+  browser.
 
 Works with or without an API token. Without one, nothing is prefilled and you type the
 match details in yourself; the guidance and derivation are identical.
@@ -32,7 +36,8 @@ match details in yourself; the guidance and derivation are identical.
 ```bash
 npm install
 npm run dev        # http://localhost:5173
-npm test           # engine rules and a UI walkthrough
+npm test           # engine rules, catalogue completeness and a UI walkthrough
+npm run lint       # eslint, including the react-hooks and react-compiler rules
 npm run build      # static output in dist/
 ```
 
@@ -56,7 +61,10 @@ backend. A club administrator generates a Swiss Volley token in Volley Manager u
 *Administration > Club > Webservice/API*.
 
 Swiss Volley publishes fixtures, teams and squads but not a match log, so points,
-substitutions and sanctions are always entered here.
+substitutions and sanctions are always entered here. Its API is read-only, so the
+finished result cannot be filed from the app either: see
+[docs/reporting-a-result.md](docs/reporting-a-result.md) for what the transfer wizard
+does about that.
 
 Adding another country means writing one adapter: see
 [docs/adding-a-federation.md](docs/adding-a-federation.md).
@@ -64,13 +72,19 @@ Adding another country means writing one adapter: see
 ## Layout
 
 ```
+locales/            one JSON catalogue per language, en.json is the source of truth
 src/federation/     country-neutral provider interface, registry, Swiss Volley adapter
-src/scoresheet/     sheet model, rule sets, scoring engine (no UI imports)
-src/ui/             wizard steps, fixture browser, section viewer
+src/scoresheet/     sheet model, rule sets, scoring engine, sections (no UI imports)
+src/ui/             wizard steps, fixture browser, transfer wizard
 ```
 
 The engine is pure and covered by tests, so rotation and substitution rules can be
-checked without a browser.
+checked without a browser. It reports rule problems as translation keys rather than
+sentences, which is what keeps it free of UI and language.
+
+Styling is Tailwind; a small set of component classes in `src/styles.css` keeps the
+markup readable. Translation is i18next, documented in
+[docs/translating.md](docs/translating.md).
 
 ## Licence
 

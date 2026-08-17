@@ -1,3 +1,4 @@
+import { localized, type LocalizedMessage } from '../localizedMessage'
 import {
   otherSide,
   TEAM_SIDES,
@@ -41,7 +42,7 @@ export interface SetState {
   isComplete: boolean
   winner: TeamSide | null
   /** Things a scorer should look at; never blocks entry. */
-  issues: string[]
+  issues: LocalizedMessage[]
 }
 
 export interface MatchState {
@@ -101,7 +102,7 @@ export function computeSetState(sheet: Scoresheet, setIndex: number): SetState {
   const record = sheet.sets[setIndex]
   const setNumber = setIndex + 1
   const target = targetPoints(sheet.rules, setNumber)
-  const issues: string[] = []
+  const issues: LocalizedMessage[] = []
 
   const state: SetState = {
     setNumber,
@@ -127,19 +128,19 @@ export function computeSetState(sheet: Scoresheet, setIndex: number): SetState {
     state.substitutionsUsed[side] = record.substitutions[side].length
     state.timeoutsUsed[side] = record.timeouts.filter((timeout) => timeout.team === side).length
     if (state.substitutionsUsed[side] > sheet.rules.substitutionsPerSet) {
-      issues.push(`Team ${side} has more substitutions than the ${sheet.rules.substitutionsPerSet} the rules allow.`)
+      issues.push(localized('engine.tooManySubstitutions', { side, allowed: sheet.rules.substitutionsPerSet }))
     }
     if (state.timeoutsUsed[side] > sheet.rules.timeoutsPerSet) {
-      issues.push(`Team ${side} has more time-outs than the ${sheet.rules.timeoutsPerSet} the rules allow.`)
+      issues.push(localized('engine.tooManyTimeouts', { side, allowed: sheet.rules.timeoutsPerSet }))
     }
     const filled = record.lineups[side].slots.filter(Boolean).length
     if (filled > 0 && filled < 6) {
-      issues.push(`Team ${side} has only ${filled} of 6 starting positions filled for set ${setNumber}.`)
+      issues.push(localized('engine.incompleteLineup', { side, filled, number: setNumber }))
     }
   }
 
   if (!firstServe) {
-    issues.push(`Set ${setNumber} has no first service recorded yet.`)
+    issues.push(localized('engine.noFirstServe', { number: setNumber }))
     return state
   }
 
@@ -208,7 +209,7 @@ export function computeSetState(sheet: Scoresheet, setIndex: number): SetState {
     const server = state.nextServer[serving]
     const servingPlayer = sheet.teams[serving].players.find((player) => player.id === server?.playerId)
     if (servingPlayer?.isLibero && !sheet.rules.liberoMayServe) {
-      issues.push(`Team ${serving} has a libero in the service position, which these rules do not allow.`)
+      issues.push(localized('engine.liberoServing', { side: serving }))
     }
   }
 
@@ -269,26 +270,26 @@ export function validateSubstitution(
   side: TeamSide,
   slot: number,
   inPlayerId: string,
-): string | null {
+): LocalizedMessage | null {
   const record = sheet.sets[setIndex]
-  if (!record) return 'That set does not exist.'
+  if (!record) return localized('engine.sub.noSet')
   const state = computeSetState(sheet, setIndex)
-  if (state.isComplete) return 'The set is already finished.'
+  if (state.isComplete) return localized('engine.sub.setFinished')
 
   const outPlayerId = state.courtSlots[side][slot] ?? null
-  if (!outPlayerId) return 'That position has no player on court yet.'
-  if (outPlayerId === inPlayerId) return 'That player is already on court in this position.'
+  if (!outPlayerId) return localized('engine.sub.emptySlot')
+  if (outPlayerId === inPlayerId) return localized('engine.sub.samePlayer')
 
   const onCourt = state.courtSlots[side]
-  if (onCourt.includes(inPlayerId)) return 'That player is already on court.'
+  if (onCourt.includes(inPlayerId)) return localized('engine.sub.alreadyOnCourt')
 
   if (state.substitutionsUsed[side] >= sheet.rules.substitutionsPerSet) {
-    return `Team ${side} has already used all ${sheet.rules.substitutionsPerSet} substitutions in this set.`
+    return localized('engine.sub.allUsed', { side, allowed: sheet.rules.substitutionsPerSet })
   }
 
   const incoming = sheet.teams[side].players.find((player) => player.id === inPlayerId)
-  if (!incoming) return 'Unknown player.'
-  if (incoming.isLibero) return 'Libero replacements are not substitutions and are not recorded here.'
+  if (!incoming) return localized('engine.sub.unknownPlayer')
+  if (incoming.isLibero) return localized('engine.sub.libero')
 
   const history = record.substitutions[side]
   const starterIds = new Set(record.lineups[side].slots.filter((id): id is string => Boolean(id)))
@@ -296,17 +297,17 @@ export function validateSubstitution(
   if (starterIds.has(inPlayerId)) {
     // A starter coming back: only into the pairing they left, and only once.
     const leftAs = history.find((entry) => entry.outPlayerId === inPlayerId)
-    if (!leftAs) return 'That starter has not left the court, so there is nothing to re-enter.'
+    if (!leftAs) return localized('engine.sub.starterNotOut')
     const alreadyBack = history.some((entry) => entry.inPlayerId === inPlayerId)
-    if (alreadyBack) return 'A starter may only re-enter once per set.'
+    if (alreadyBack) return localized('engine.sub.starterReturned')
     if (leftAs.inPlayerId !== outPlayerId) {
-      return 'A starter may only re-enter for the player who replaced them.'
+      return localized('engine.sub.starterPairing')
     }
     return null
   }
 
   const enteredBefore = history.some((entry) => entry.inPlayerId === inPlayerId)
-  if (enteredBefore) return 'A substitute may only enter once per set.'
+  if (enteredBefore) return localized('engine.sub.substituteReturned')
   return null
 }
 
@@ -333,15 +334,15 @@ export function applySubstitution(
 }
 
 /** Why rally entry is not possible yet, or null when it is. */
-export function rallyEntryBlocker(sheet: Scoresheet, setIndex: number): string | null {
+export function rallyEntryBlocker(sheet: Scoresheet, setIndex: number): LocalizedMessage | null {
   const record = sheet.sets[setIndex]
-  if (!record) return 'This set has not been started.'
-  if (!record.firstServe) return 'Record which team serves first in this set.'
+  if (!record) return localized('engine.blocker.noSet')
+  if (!record.firstServe) return localized('engine.blocker.noFirstServe')
   for (const side of TEAM_SIDES) {
     const filled = record.lineups[side].slots.filter(Boolean).length
-    if (filled < 6) return `Team ${side} needs all six starting positions before the first rally.`
+    if (filled < 6) return localized('engine.blocker.lineup', { side })
   }
   const state = computeSetState(sheet, setIndex)
-  if (state.isComplete) return 'This set is finished.'
+  if (state.isComplete) return localized('engine.blocker.setFinished')
   return null
 }

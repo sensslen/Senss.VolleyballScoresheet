@@ -133,7 +133,7 @@ export interface SetRecord {
 
 export interface RuleSet {
   id: string
-  name: string
+  nameKey: string
   /** Sets a team must win to take the match. */
   setsToWin: number
   pointsPerSet: number
@@ -160,6 +160,8 @@ export interface Scoresheet {
   sets: SetRecord[]
   sanctions: Sanction[]
   remarks: string
+  /** Section ids already copied onto the paper sheet. */
+  copiedSections: string[]
 }
 
 export const TEAM_SIDES: TeamSide[] = ['A', 'B']

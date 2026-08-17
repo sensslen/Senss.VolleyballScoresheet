@@ -80,6 +80,7 @@ export function createScoresheet(rules: RuleSet = DEFAULT_RULE_SET): Scoresheet 
     sets: [emptySet(1)],
     sanctions: [],
     remarks: '',
+    copiedSections: [],
   }
 }
 
