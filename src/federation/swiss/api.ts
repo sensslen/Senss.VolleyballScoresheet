@@ -6,13 +6,6 @@ export const SWISS_API_BASE = 'https://api.volleyball.ch'
 export const SWISS_VOLLEY_NAME = 'Swiss Volley'
 
 /** Shapes are trimmed to the fields the scoresheet needs. */
-export interface SwissSeasonDto {
-  year: string
-  displayname: string
-  active: boolean
-  defaultForPublicAPI: boolean
-}
-
 export interface SwissTranslations {
   d?: string
   shortD?: string
@@ -23,26 +16,6 @@ export interface SwissTranslations {
   D?: string
   F?: string
   I?: string
-}
-
-export interface SwissLeagueDto {
-  leagueId: number
-  caption: string
-  gender?: string
-  leagueCategory?: string
-  translations?: SwissTranslations
-}
-
-export interface SwissPhaseDto {
-  phaseId: number
-  caption: string
-  translations?: SwissTranslations
-}
-
-export interface SwissGroupDto {
-  groupId: number
-  caption: string
-  translations?: SwissTranslations
 }
 
 export interface SwissTeamInGameDto {
@@ -156,26 +129,6 @@ export class SwissVolleyApi {
       )
     }
     return body as T
-  }
-
-  listSeasons(): Promise<SwissSeasonDto[]> {
-    return this.get('/indoor/indoorseasons')
-  }
-
-  listRegions(): Promise<string[]> {
-    return this.get('/indoor/regions')
-  }
-
-  listLeagues(region: string, gender?: string, includeCup = true): Promise<SwissLeagueDto[]> {
-    return this.get(`/indoor/leagues/${encodeURIComponent(region)}`, { gender, includeCup: includeCup ? 1 : 0 })
-  }
-
-  listPhases(leagueId: string): Promise<SwissPhaseDto[]> {
-    return this.get(`/indoor/phases/${encodeURIComponent(leagueId)}`)
-  }
-
-  listGroups(phaseId: string): Promise<SwissGroupDto[]> {
-    return this.get(`/indoor/groups/${encodeURIComponent(phaseId)}`)
   }
 
   listGames(query: {

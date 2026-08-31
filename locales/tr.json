@@ -72,14 +72,9 @@
     "load": "Maçları yükle",
     "upcoming": "Sadece yaklaşanlar",
     "use": "Bu maçı kullan",
-    "empty": "Bir lig seçip fikstürü yükleyin.",
-    "women": "K",
-    "men": "E",
+    "empty": "Maç listesini yükleyin, ardından filtrelerle daraltın.",
+    "noMatch": "Yüklenen maçların hiçbiri bu filtrelere uymuyor.",
     "loading": {
-      "regions": "Bölgeler yükleniyor...",
-      "competitions": "Ligler yükleniyor...",
-      "stages": "Aşamalar yükleniyor...",
-      "pools": "Gruplar yükleniyor...",
       "games": "Maçlar yükleniyor..."
     }
   },

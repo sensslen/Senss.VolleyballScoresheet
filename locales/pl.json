@@ -72,14 +72,9 @@
     "load": "Wczytaj mecze",
     "upcoming": "Tylko nadchodzące",
     "use": "Użyj tego meczu",
-    "empty": "Wybierz ligę i wczytaj terminarz.",
-    "women": "K",
-    "men": "M",
+    "empty": "Wczytaj listę meczów, a następnie zawęź ją filtrami.",
+    "noMatch": "Żaden wczytany mecz nie pasuje do tych filtrów.",
     "loading": {
-      "regions": "Wczytywanie regionów...",
-      "competitions": "Wczytywanie lig...",
-      "stages": "Wczytywanie faz...",
-      "pools": "Wczytywanie grup...",
       "games": "Wczytywanie meczów..."
     }
   },

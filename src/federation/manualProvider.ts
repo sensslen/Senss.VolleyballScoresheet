@@ -10,13 +10,11 @@ export const manualProvider: FederationProvider = {
   nameKey: 'provider.manual.name',
   country: { code: 'ZZ', nameKey: 'provider.manual.country', flag: '🌐' },
   capabilities: {
-    browseCompetitions: false,
     browseGames: false,
     gameDetail: false,
     rosters: false,
     officials: false,
     regions: false,
-    seasons: false,
     submitResult: false,
   },
   isReady() {

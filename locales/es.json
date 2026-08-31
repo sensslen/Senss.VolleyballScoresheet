@@ -72,14 +72,9 @@
     "load": "Cargar partidos",
     "upcoming": "Solo próximos",
     "use": "Usar este partido",
-    "empty": "Elige una competición y carga el calendario.",
-    "women": "F",
-    "men": "M",
+    "empty": "Carga el calendario y luego acótalo con los filtros.",
+    "noMatch": "Ningún partido cargado coincide con estos filtros.",
     "loading": {
-      "regions": "Cargando regiones...",
-      "competitions": "Cargando competiciones...",
-      "stages": "Cargando fases...",
-      "pools": "Cargando grupos...",
       "games": "Cargando partidos..."
     }
   },

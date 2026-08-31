@@ -72,14 +72,9 @@
     "load": "Charger les matchs",
     "upcoming": "À venir seulement",
     "use": "Utiliser ce match",
-    "empty": "Choisissez un championnat et chargez le calendrier.",
-    "women": "F",
-    "men": "M",
+    "empty": "Chargez le calendrier, puis affinez-le avec les filtres.",
+    "noMatch": "Aucun match chargé ne correspond à ces filtres.",
     "loading": {
-      "regions": "Chargement des régions...",
-      "competitions": "Chargement des championnats...",
-      "stages": "Chargement des phases...",
-      "pools": "Chargement des poules...",
       "games": "Chargement des matchs..."
     }
   },

@@ -1,83 +1,39 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import {
   describeError,
   providerName,
-  type Competition,
   type FederationProvider,
   type GameSummary,
-  type Pool,
   type Region,
-  type Stage,
 } from '../federation/types'
 import type { Settings } from '../scoresheet/storage'
 import { Banner, Card, EmptyState, SelectField, Spinner, TextField } from './components'
 
-type LoadingWhat = 'regions' | 'competitions' | 'stages' | 'pools' | 'games'
+type IdKey = 'competitionId' | 'stageId' | 'poolId'
+type NameKey = 'competitionName' | 'stageName' | 'poolName'
 
 /**
- * A list together with the parent selection it was loaded for, `null` before the
- * first attempt. Everything else follows: the child list of a parent that has not
- * been fetched yet is empty, and "still loading" is that mismatch rather than a
- * separate flag to keep in step.
+ * The competition, stage and pool the loaded fixtures report. Federations publish
+ * the hierarchy behind endpoints of its own, but a club credential is not always
+ * allowed to read those and every fixture carries the same values anyway.
  */
-interface Loaded<T> {
-  forId: string | null
-  items: T[]
-}
-
-const nothingLoaded = { forId: null, items: [] }
-
-function listFor<T>(loaded: Loaded<T>, parentId: string): T[] {
-  return loaded.forId === parentId ? loaded.items : []
-}
-
-function isPending<T>(loaded: Loaded<T>, parentId: string): boolean {
-  return loaded.forId !== parentId
+function facetOptions(games: GameSummary[], idKey: IdKey, nameKey: NameKey): Array<{ value: string; label: string }> {
+  const named = new Map<string, string>()
+  for (const game of games) {
+    const id = game[idKey]
+    if (id) named.set(id, game[nameKey] ?? id)
+  }
+  return [...named]
+    .map(([value, label]) => ({ value, label }))
+    .sort((a, b) => a.label.localeCompare(b.label))
 }
 
 /**
- * Loads one level of the hierarchy whenever its parent changes. A `null` parent
- * means the level does not apply and nothing is fetched; a superseded request is
- * dropped rather than allowed to overwrite a newer one.
- */
-function useLoadedList<T>(
-  parentId: string | null,
-  fetch: (parentId: string) => Promise<T[]>,
-  onSettled: (cause: unknown) => void,
-): Loaded<T> {
-  const [loaded, setLoaded] = useState<Loaded<T>>(nothingLoaded)
-
-  useEffect(() => {
-    if (parentId === null) return
-    let cancelled = false
-
-    void (async () => {
-      try {
-        const items = await fetch(parentId)
-        if (cancelled) return
-        setLoaded({ forId: parentId, items })
-        onSettled(null)
-      } catch (cause) {
-        if (cancelled) return
-        // Settle the slot anyway, or the level stays "loading" forever.
-        setLoaded({ forId: parentId, items: [] })
-        onSettled(cause)
-      }
-    })()
-
-    return () => {
-      cancelled = true
-    }
-  }, [parentId, fetch, onSettled])
-
-  return loaded
-}
-
-/**
- * Browses a federation's fixture list down the neutral hierarchy
- * (region -> competition -> stage -> pool) and hands the chosen game back.
+ * Browses a federation's fixture list and hands the chosen game back. Region and
+ * date range narrow the request; competition, stage, pool and the free text box
+ * narrow what came back.
  */
 export function GameBrowser({
   provider,
@@ -93,6 +49,7 @@ export function GameBrowser({
   onPick: (game: GameSummary) => void
 }) {
   const { t } = useTranslation()
+  const [regions, setRegions] = useState<Region[]>([])
   const [games, setGames] = useState<GameSummary[]>([])
   const [loadingGames, setLoadingGames] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -107,35 +64,19 @@ export function GameBrowser({
   const name = providerName(provider, t)
   const ready = provider.isReady()
 
-  const onSettled = useCallback(
-    (cause: unknown) => setError(cause === null ? null : describeError(cause, t)),
-    [t],
-  )
+  useEffect(() => {
+    if (!ready || !provider.listRegions) return
+    let cancelled = false
 
-  const fetchRegions = useCallback(() => provider.listRegions?.() ?? Promise.resolve([]), [provider])
-  const fetchCompetitions = useCallback(
-    (id: string) => provider.listCompetitions?.({ regionId: id || undefined }) ?? Promise.resolve([]),
-    [provider],
-  )
-  const fetchStages = useCallback((id: string) => provider.listStages?.(id) ?? Promise.resolve([]), [provider])
-  const fetchPools = useCallback((id: string) => provider.listPools?.(id) ?? Promise.resolve([]), [provider])
+    void provider.listRegions().then(
+      (items) => !cancelled && setRegions(items),
+      (cause) => !cancelled && setError(describeError(cause, t)),
+    )
 
-  const regions = useLoadedList<Region>(
-    ready && provider.listRegions ? provider.id : null,
-    fetchRegions,
-    onSettled,
-  )
-  const competitions = useLoadedList<Competition>(
-    ready && provider.listCompetitions ? regionId : null,
-    fetchCompetitions,
-    onSettled,
-  )
-  const stages = useLoadedList<Stage>(
-    competitionId && provider.listStages ? competitionId : null,
-    fetchStages,
-    onSettled,
-  )
-  const pools = useLoadedList<Pool>(stageId && provider.listPools ? stageId : null, fetchPools, onSettled)
+    return () => {
+      cancelled = true
+    }
+  }, [provider, ready, t])
 
   const patch = (change: Partial<Settings>) => onSettingsChange({ ...settings, ...change })
 
@@ -151,36 +92,21 @@ export function GameBrowser({
     }
   }
 
-  const filters = {
-    regionId: regionId || undefined,
-    competitionId: competitionId || undefined,
-    stageId: stageId || undefined,
-    poolId: poolId || undefined,
-  }
-
   const loadGames = () => {
     if (!provider.listGames) return
     void fetchGames(() =>
-      provider.listGames!({ ...filters, dateFrom: dateFrom || undefined, dateTo: dateTo || undefined }),
+      provider.listGames!({
+        regionId: regionId || undefined,
+        dateFrom: dateFrom || undefined,
+        dateTo: dateTo || undefined,
+      }),
     )
   }
 
   const loadUpcoming = () => {
     if (!provider.listUpcomingGames) return
-    void fetchGames(() => provider.listUpcomingGames!(filters))
+    void fetchGames(() => provider.listUpcomingGames!({ regionId: regionId || undefined }))
   }
-
-  const pending: LoadingWhat | null = loadingGames
-    ? 'games'
-    : provider.capabilities.regions && isPending(regions, provider.id)
-      ? 'regions'
-      : isPending(competitions, regionId)
-        ? 'competitions'
-        : competitionId && isPending(stages, competitionId)
-          ? 'stages'
-          : stageId && isPending(pools, stageId)
-            ? 'pools'
-            : null
 
   if (!provider.capabilities.browseGames) {
     return (
@@ -209,13 +135,16 @@ export function GameBrowser({
   }
 
   const needle = search.trim().toLowerCase()
-  const visible = needle
-    ? games.filter((game) =>
+  const visible = games.filter(
+    (game) =>
+      (!competitionId || game.competitionId === competitionId) &&
+      (!stageId || game.stageId === stageId) &&
+      (!poolId || game.poolId === poolId) &&
+      (!needle ||
         [game.home.name, game.away.name, game.competitionName, game.venueName, game.matchNumber]
           .filter(Boolean)
-          .some((value) => value!.toLowerCase().includes(needle)),
-      )
-    : games
+          .some((value) => value!.toLowerCase().includes(needle))),
+  )
 
   return (
     <Card title={t('browser.title')} subtitle={`${provider.country.flag} ${name}`}>
@@ -224,35 +153,38 @@ export function GameBrowser({
           <SelectField
             label={t('browser.region')}
             value={regionId}
-            options={listFor(regions, provider.id).map((region) => ({ value: region.id, label: region.name }))}
-            onChange={(value) => patch({ regionId: value, competitionId: '', stageId: '', poolId: '' })}
+            options={regions.map((region) => ({ value: region.id, label: region.name }))}
+            onChange={(value) => patch({ regionId: value })}
           />
         )}
+        <TextField label={t('browser.from')} type="date" value={dateFrom} onChange={setDateFrom} />
+        <TextField label={t('browser.to')} type="date" value={dateTo} onChange={setDateTo} />
         <SelectField
           label={t('browser.competition')}
           value={competitionId}
-          options={listFor(competitions, regionId).map((competition) => ({
-            value: competition.id,
-            label: `${competition.name}${
-              competition.gender ? ` (${competition.gender === 'f' ? t('browser.women') : t('browser.men')})` : ''
-            }`,
-          }))}
+          options={facetOptions(games, 'competitionId', 'competitionName')}
           onChange={(value) => patch({ competitionId: value, stageId: '', poolId: '' })}
         />
         <SelectField
           label={t('browser.stage')}
           value={stageId}
-          options={listFor(stages, competitionId).map((stage) => ({ value: stage.id, label: stage.name }))}
+          options={facetOptions(
+            games.filter((game) => !competitionId || game.competitionId === competitionId),
+            'stageId',
+            'stageName',
+          )}
           onChange={(value) => patch({ stageId: value, poolId: '' })}
         />
         <SelectField
           label={t('browser.pool')}
           value={poolId}
-          options={listFor(pools, stageId).map((pool) => ({ value: pool.id, label: pool.name }))}
+          options={facetOptions(
+            games.filter((game) => !stageId || game.stageId === stageId),
+            'poolId',
+            'poolName',
+          )}
           onChange={(value) => patch({ poolId: value })}
         />
-        <TextField label={t('browser.from')} type="date" value={dateFrom} onChange={setDateFrom} />
-        <TextField label={t('browser.to')} type="date" value={dateTo} onChange={setDateTo} />
         <TextField
           label={t('browser.filter')}
           value={search}
@@ -272,7 +204,7 @@ export function GameBrowser({
         )}
       </div>
 
-      {pending && <Spinner label={t(`browser.loading.${pending}`)} />}
+      {loadingGames && <Spinner label={t('browser.loading.games')} />}
       {error && <Banner kind="error">{error}</Banner>}
 
       {visible.length > 0 && (
@@ -311,7 +243,9 @@ export function GameBrowser({
         </div>
       )}
 
-      {!pending && games.length === 0 && <EmptyState>{t('browser.empty')}</EmptyState>}
+      {!loadingGames && visible.length === 0 && (
+        <EmptyState>{games.length === 0 ? t('browser.empty') : t('browser.noMatch')}</EmptyState>
+      )}
     </Card>
   )
 }

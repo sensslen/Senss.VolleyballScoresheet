@@ -72,14 +72,9 @@
     "load": "Carregar jogos",
     "upcoming": "Somente próximos",
     "use": "Usar esta partida",
-    "empty": "Escolha uma competição e carregue a lista de jogos.",
-    "women": "F",
-    "men": "M",
+    "empty": "Carregue a lista de jogos e depois refine-a com os filtros.",
+    "noMatch": "Nenhum jogo carregado corresponde a estes filtros.",
     "loading": {
-      "regions": "Carregando regiões...",
-      "competitions": "Carregando competições...",
-      "stages": "Carregando fases...",
-      "pools": "Carregando grupos...",
       "games": "Carregando jogos..."
     }
   },

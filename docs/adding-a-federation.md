@@ -14,7 +14,12 @@ One country means one adapter. The app never branches on country: it talks to
 | Stage        | phase        | round, qualification, playoffs     |
 | Pool         | group        | conference, bracket               |
 
-Anything the federation does not have is simply left unimplemented.
+Only the region is asked for by name, through `listRegions`. Competition, stage and
+pool are read off the fixtures themselves (`competitionId`, `stageId`, `poolId` on
+`GameSummary`) and narrow the loaded list in the browser, so a federation that keeps
+its hierarchy behind separate endpoints - or behind a credential a club does not
+have - still gets working filters. Anything the federation does not have is simply
+left unimplemented.
 
 ## 2. Write the adapter
 

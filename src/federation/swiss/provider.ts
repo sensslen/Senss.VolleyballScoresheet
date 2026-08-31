@@ -1,29 +1,24 @@
 import { credentials } from '../credentials'
 import type {
-  Competition,
   FederationProvider,
   GameDetail,
   GameQuery,
   GameSummary,
   Gender,
   Official,
-  Pool,
   Region,
   Roster,
-  Season,
-  Stage,
   TeamRef,
 } from '../types'
-import {
-  SwissVolleyApi,
-  type SwissGameDto,
-  type SwissTeamInGameDto,
-  type SwissTranslations,
-} from './api'
+import { SwissVolleyApi, type SwissGameDto, type SwissTeamInGameDto, type SwissTranslations } from './api'
 
 export const SWISS_PROVIDER_ID = 'swiss-volley'
 
-/** Swiss Volley region codes are opaque strings; these are the published labels. */
+/**
+ * The published region codes and their labels. A club API key is refused (403) by
+ * /indoor/regions and the rest of the hierarchy, so the list is carried here and the
+ * remaining levels are read off the fixtures themselves.
+ */
 const REGION_NAMES: Record<string, string> = {
   SV: 'Swiss Volley (national)',
   SVRA: 'Region Aargau',
@@ -45,10 +40,6 @@ const REGION_NAMES: Record<string, string> = {
 
 function label(translations: SwissTranslations | undefined, fallback: string): string {
   return translations?.d ?? translations?.D ?? fallback
-}
-
-function shortLabel(translations: SwissTranslations | undefined): string | undefined {
-  return translations?.shortD ?? translations?.shortF ?? undefined
 }
 
 function toGender(value: string | undefined): Gender | undefined {
@@ -87,8 +78,11 @@ function toGameSummary(dto: SwissGameDto): GameSummary {
     playDate: dto.playDate,
     home: toTeamRef(dto.teams.home),
     away: toTeamRef(dto.teams.away),
+    competitionId: dto.league ? String(dto.league.leagueId) : undefined,
     competitionName: dto.league ? label(dto.league.translations, dto.league.caption ?? '') : undefined,
+    stageId: dto.phase ? String(dto.phase.phaseId) : undefined,
     stageName: dto.phase ? label(dto.phase.translations, dto.phase.caption ?? '') : undefined,
+    poolId: dto.group ? String(dto.group.groupId) : undefined,
     poolName: dto.group ? label(dto.group.translations, dto.group.caption ?? '') : undefined,
     gender: toGender(dto.gender),
     venueName: dto.hall?.caption,
@@ -129,13 +123,11 @@ export function createSwissVolleyProvider(): FederationProvider {
     // so the result is reported by hand in Volley Manager.
     resultPortalUrl: 'https://volleymanager.volleyball.ch/',
     capabilities: {
-      browseCompetitions: true,
       browseGames: true,
       gameDetail: true,
       rosters: true,
       officials: true,
       regions: true,
-      seasons: true,
       submitResult: false,
     },
     auth: {
@@ -149,57 +141,13 @@ export function createSwissVolleyProvider(): FederationProvider {
       return api.hasToken()
     },
 
-    async listSeasons(): Promise<Season[]> {
-      const seasons = await api.listSeasons()
-      return seasons.map((season) => ({
-        id: season.year,
-        name: season.displayname,
-        isCurrent: season.defaultForPublicAPI || season.active,
-      }))
-    },
-
     async listRegions(): Promise<Region[]> {
-      const codes = await api.listRegions()
-      return codes.map((code) => ({ id: code, name: REGION_NAMES[code] ?? code }))
-    },
-
-    async listCompetitions({ regionId, gender }): Promise<Competition[]> {
-      const leagues = await api.listLeagues(regionId ?? 'SV', gender)
-      return leagues.map((league) => ({
-        id: String(league.leagueId),
-        name: label(league.translations, league.caption),
-        shortName: shortLabel(league.translations) ?? league.leagueCategory,
-        gender: toGender(league.gender),
-      }))
-    },
-
-    async listStages(competitionId: string): Promise<Stage[]> {
-      const phases = await api.listPhases(competitionId)
-      return phases.map((phase) => ({
-        id: String(phase.phaseId),
-        name: label(phase.translations, phase.caption),
-        shortName: shortLabel(phase.translations),
-      }))
-    },
-
-    async listPools(stageId: string): Promise<Pool[]> {
-      const groups = await api.listGroups(stageId)
-      return groups.map((group) => ({
-        id: String(group.groupId),
-        name: label(group.translations, group.caption),
-        shortName: shortLabel(group.translations),
-      }))
+      return Object.entries(REGION_NAMES).map(([id, name]) => ({ id, name }))
     },
 
     async listGames(query: GameQuery): Promise<GameSummary[]> {
       const games = await api.listGames({
         region: query.regionId,
-        gender: query.gender === 'mixed' ? undefined : query.gender,
-        leagueId: query.competitionId,
-        phaseId: query.stageId,
-        groupId: query.poolId,
-        teamId: query.teamId,
-        clubId: query.clubId,
         dateStart: query.dateFrom,
         dateEnd: query.dateTo,
       })
@@ -207,15 +155,7 @@ export function createSwissVolleyProvider(): FederationProvider {
     },
 
     async listUpcomingGames(query: GameQuery): Promise<GameSummary[]> {
-      const games = await api.listUpcomingGames({
-        region: query.regionId,
-        gender: query.gender === 'mixed' ? undefined : query.gender,
-        leagueId: query.competitionId,
-        phaseId: query.stageId,
-        groupId: query.poolId,
-        teamId: query.teamId,
-        clubId: query.clubId,
-      })
+      const games = await api.listUpcomingGames({ region: query.regionId })
       return games.map(toGameSummary)
     },
 

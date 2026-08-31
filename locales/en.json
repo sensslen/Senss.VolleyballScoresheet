@@ -72,14 +72,9 @@
     "load": "Load games",
     "upcoming": "Upcoming only",
     "use": "Use this match",
-    "empty": "Pick a competition and load the fixture list.",
-    "women": "W",
-    "men": "M",
+    "empty": "Load the fixture list, then narrow it with the filters.",
+    "noMatch": "No loaded fixture matches these filters.",
     "loading": {
-      "regions": "Loading regions...",
-      "competitions": "Loading competitions...",
-      "stages": "Loading stages...",
-      "pools": "Loading pools...",
       "games": "Loading games..."
     }
   },

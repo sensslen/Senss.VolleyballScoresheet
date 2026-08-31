@@ -24,28 +24,6 @@ export interface Region {
   name: string
 }
 
-export interface Competition {
-  id: string
-  name: string
-  gender?: Gender
-  /** Free-form federation label, e.g. "NLA" or "3. Liga". */
-  shortName?: string
-  /** How many sets a team must win. Feeds the rule set when known. */
-  setsToWin?: number
-}
-
-export interface Stage {
-  id: string
-  name: string
-  shortName?: string
-}
-
-export interface Pool {
-  id: string
-  name: string
-  shortName?: string
-}
-
 export interface TeamRef {
   id: string
   name: string
@@ -94,8 +72,11 @@ export interface GameSummary {
   playDate?: string
   home: TeamRef
   away: TeamRef
+  competitionId?: string
   competitionName?: string
+  stageId?: string
   stageName?: string
+  poolId?: string
   poolName?: string
   gender?: Gender
   venueName?: string
@@ -113,33 +94,17 @@ export interface GameDetail extends GameSummary {
 
 export interface GameQuery {
   regionId?: string
-  competitionId?: string
-  stageId?: string
-  poolId?: string
-  teamId?: string
-  clubId?: string
-  gender?: Gender
   /** YYYY-MM-DD */
   dateFrom?: string
   dateTo?: string
-  /** Federation season key as returned by listSeasons. */
-  season?: string
-}
-
-export interface Season {
-  id: string
-  name: string
-  isCurrent?: boolean
 }
 
 export interface ProviderCapabilities {
-  browseCompetitions: boolean
   browseGames: boolean
   gameDetail: boolean
   rosters: boolean
   officials: boolean
   regions: boolean
-  seasons: boolean
   /**
    * Whether the federation accepts a finished scoresheet over its API. No known
    * federation does, so the transfer wizard ends by helping a human file it instead.
@@ -183,11 +148,7 @@ export interface FederationProvider {
   /** False when a required credential is missing. */
   isReady(): boolean
 
-  listSeasons?(): Promise<Season[]>
   listRegions?(): Promise<Region[]>
-  listCompetitions?(query: { regionId?: string; gender?: Gender; season?: string }): Promise<Competition[]>
-  listStages?(competitionId: string): Promise<Stage[]>
-  listPools?(stageId: string): Promise<Pool[]>
   listGames?(query: GameQuery): Promise<GameSummary[]>
   listUpcomingGames?(query: GameQuery): Promise<GameSummary[]>
   getGame?(gameId: string): Promise<GameDetail>

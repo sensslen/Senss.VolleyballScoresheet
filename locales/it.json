@@ -72,14 +72,9 @@
     "load": "Carica gare",
     "upcoming": "Solo prossime",
     "use": "Usa questa gara",
-    "empty": "Scegli un campionato e carica il calendario.",
-    "women": "F",
-    "men": "M",
+    "empty": "Carica il calendario, poi restringilo con i filtri.",
+    "noMatch": "Nessuna gara caricata corrisponde a questi filtri.",
     "loading": {
-      "regions": "Caricamento regioni...",
-      "competitions": "Caricamento campionati...",
-      "stages": "Caricamento fasi...",
-      "pools": "Caricamento gironi...",
       "games": "Caricamento gare..."
     }
   },

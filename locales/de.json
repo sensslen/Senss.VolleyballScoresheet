@@ -72,14 +72,9 @@
     "load": "Spiele laden",
     "upcoming": "Nur kommende",
     "use": "Dieses Spiel übernehmen",
-    "empty": "Wähle eine Liga und lade die Spielliste.",
-    "women": "F",
-    "men": "M",
+    "empty": "Lade die Spielliste und grenze sie dann mit den Filtern ein.",
+    "noMatch": "Keine geladene Partie passt zu diesen Filtern.",
     "loading": {
-      "regions": "Regionen werden geladen...",
-      "competitions": "Ligen werden geladen...",
-      "stages": "Phasen werden geladen...",
-      "pools": "Gruppen werden geladen...",
       "games": "Spiele werden geladen..."
     }
   },
