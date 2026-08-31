@@ -9,6 +9,7 @@ import type {
   Region,
   Roster,
   TeamRef,
+  Venue,
 } from '../types'
 import { SwissVolleyApi, type SwissGameDto, type SwissTeamInGameDto, type SwissTranslations } from './api'
 
@@ -72,6 +73,17 @@ function toTeamRef(dto: SwissTeamInGameDto): TeamRef {
   }
 }
 
+function toVenue(hall: SwissGameDto['hall']): Venue | undefined {
+  if (!hall) return undefined
+  return {
+    id: hall.hallId === undefined ? undefined : String(hall.hallId),
+    name: hall.caption ?? '',
+    street: [hall.street, hall.number].filter(Boolean).join(' ').trim() || undefined,
+    postalCode: hall.zip === undefined ? undefined : String(hall.zip),
+    city: hall.city,
+  }
+}
+
 function toGameSummary(dto: SwissGameDto): GameSummary {
   return {
     id: String(dto.gameId),
@@ -85,7 +97,7 @@ function toGameSummary(dto: SwissGameDto): GameSummary {
     poolId: dto.group ? String(dto.group.groupId) : undefined,
     poolName: dto.group ? label(dto.group.translations, dto.group.caption ?? '') : undefined,
     gender: toGender(dto.gender),
-    venueName: dto.hall?.caption,
+    venue: toVenue(dto.hall),
     matchNumber: String(dto.gameId),
   }
 }
@@ -173,15 +185,6 @@ export function createSwissVolleyProvider(): FederationProvider {
         officials: toOfficials(dto),
         setsToWin: toSetsToWin(dto.league?.numberOfWinSets),
         setResults,
-        venue: dto.hall
-          ? {
-              id: dto.hall.hallId === undefined ? undefined : String(dto.hall.hallId),
-              name: dto.hall.caption ?? '',
-              street: [dto.hall.street, dto.hall.number].filter(Boolean).join(' ').trim() || undefined,
-              postalCode: dto.hall.zip === undefined ? undefined : String(dto.hall.zip),
-              city: dto.hall.city,
-            }
-          : undefined,
       }
     },
 

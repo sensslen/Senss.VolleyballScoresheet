@@ -160,7 +160,7 @@ export function GameBrowser({
       (!stageId || game.stageId === stageId) &&
       (!poolId || game.poolId === poolId) &&
       (!needle ||
-        [game.home.name, game.away.name, game.competitionName, game.venueName, game.matchNumber]
+        [game.home.name, game.away.name, game.competitionName, game.venue?.name, game.matchNumber]
           .filter(Boolean)
           .some((value) => value!.toLowerCase().includes(needle))),
   )
@@ -248,7 +248,7 @@ export function GameBrowser({
                     {game.competitionName}
                     {game.poolName ? ` / ${game.poolName}` : ''}
                   </td>
-                  <td>{game.venueName ?? ''}</td>
+                  <td>{game.venue?.name ?? ''}</td>
                   <td>
                     <button type="button" className="primary whitespace-nowrap" onClick={() => onPick(game)}>
                       {t('browser.use')}

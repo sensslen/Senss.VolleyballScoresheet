@@ -79,13 +79,12 @@ export interface GameSummary {
   poolId?: string
   poolName?: string
   gender?: Gender
-  venueName?: string
+  venue?: Venue
   /** Federation-facing match number printed on the sheet. */
   matchNumber?: string
 }
 
 export interface GameDetail extends GameSummary {
-  venue?: Venue
   officials: Official[]
   setsToWin?: number
   /** Already-played results, useful when transcribing an archived match. */
