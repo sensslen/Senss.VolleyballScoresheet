@@ -65,14 +65,15 @@
     "competition": "Competición",
     "stage": "Fase",
     "pool": "Grupo",
+    "women": "F",
+    "men": "M",
     "from": "Desde",
     "to": "Hasta",
+    "dateHint": "Vacío muestra los próximos partidos.",
     "filter": "Filtrar lista",
     "filterPlaceholder": "Equipo, pabellón, n.º de partido",
-    "load": "Cargar partidos",
-    "upcoming": "Solo próximos",
     "use": "Usar este partido",
-    "empty": "Carga el calendario y luego acótalo con los filtros.",
+    "empty": "No hay partidos para esta región y este periodo.",
     "noMatch": "Ningún partido cargado coincide con estos filtros.",
     "loading": {
       "games": "Cargando partidos..."

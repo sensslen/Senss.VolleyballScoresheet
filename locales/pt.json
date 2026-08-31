@@ -65,14 +65,15 @@
     "competition": "Competição",
     "stage": "Fase",
     "pool": "Grupo",
+    "women": "F",
+    "men": "M",
     "from": "De",
     "to": "Até",
+    "dateHint": "Vazio mostra os próximos jogos.",
     "filter": "Filtrar lista",
     "filterPlaceholder": "Equipe, ginásio, nº do jogo",
-    "load": "Carregar jogos",
-    "upcoming": "Somente próximos",
     "use": "Usar esta partida",
-    "empty": "Carregue a lista de jogos e depois refine-a com os filtros.",
+    "empty": "Nenhum jogo para esta região e este período.",
     "noMatch": "Nenhum jogo carregado corresponde a estes filtros.",
     "loading": {
       "games": "Carregando jogos..."

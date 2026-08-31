@@ -65,14 +65,15 @@
     "competition": "Competition",
     "stage": "Stage",
     "pool": "Pool",
+    "women": "W",
+    "men": "M",
     "from": "From",
     "to": "To",
+    "dateHint": "Empty lists the upcoming fixtures.",
     "filter": "Filter list",
     "filterPlaceholder": "Team, hall, match no.",
-    "load": "Load games",
-    "upcoming": "Upcoming only",
     "use": "Use this match",
-    "empty": "Load the fixture list, then narrow it with the filters.",
+    "empty": "No fixtures came back for this region and date range.",
     "noMatch": "No loaded fixture matches these filters.",
     "loading": {
       "games": "Loading games..."

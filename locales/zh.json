@@ -65,14 +65,15 @@
     "competition": "联赛",
     "stage": "阶段",
     "pool": "小组",
+    "women": "女",
+    "men": "男",
     "from": "起始日期",
     "to": "结束日期",
+    "dateHint": "留空则显示即将进行的比赛。",
     "filter": "筛选列表",
     "filterPlaceholder": "球队、场馆、比赛编号",
-    "load": "加载比赛",
-    "upcoming": "仅未来赛事",
     "use": "使用这场比赛",
-    "empty": "先加载赛程，再用筛选器缩小范围。",
+    "empty": "该地区和时间范围内没有比赛。",
     "noMatch": "已加载的比赛中没有符合这些筛选条件的。",
     "loading": {
       "games": "正在加载比赛..."

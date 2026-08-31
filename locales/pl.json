@@ -65,14 +65,15 @@
     "competition": "Liga",
     "stage": "Faza",
     "pool": "Grupa",
+    "women": "K",
+    "men": "M",
     "from": "Od",
     "to": "Do",
+    "dateHint": "Puste pokazuje nadchodzące mecze.",
     "filter": "Filtruj listę",
     "filterPlaceholder": "Drużyna, hala, nr meczu",
-    "load": "Wczytaj mecze",
-    "upcoming": "Tylko nadchodzące",
     "use": "Użyj tego meczu",
-    "empty": "Wczytaj listę meczów, a następnie zawęź ją filtrami.",
+    "empty": "Brak meczów dla tego regionu i zakresu dat.",
     "noMatch": "Żaden wczytany mecz nie pasuje do tych filtrów.",
     "loading": {
       "games": "Wczytywanie meczów..."

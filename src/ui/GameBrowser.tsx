@@ -12,28 +12,31 @@ import type { Settings } from '../scoresheet/storage'
 import { Banner, Card, EmptyState, SelectField, Spinner, TextField } from './components'
 
 type IdKey = 'competitionId' | 'stageId' | 'poolId'
-type NameKey = 'competitionName' | 'stageName' | 'poolName'
 
 /**
  * The competition, stage and pool the loaded fixtures report. Federations publish
  * the hierarchy behind endpoints of its own, but a club credential is not always
  * allowed to read those and every fixture carries the same values anyway.
  */
-function facetOptions(games: GameSummary[], idKey: IdKey, nameKey: NameKey): Array<{ value: string; label: string }> {
+function facetOptions(
+  games: GameSummary[],
+  idKey: IdKey,
+  label: (game: GameSummary) => string,
+): Array<{ value: string; label: string }> {
   const named = new Map<string, string>()
   for (const game of games) {
     const id = game[idKey]
-    if (id) named.set(id, game[nameKey] ?? id)
+    if (id) named.set(id, label(game))
   }
   return [...named]
-    .map(([value, label]) => ({ value, label }))
+    .map(([value, text]) => ({ value, label: text }))
     .sort((a, b) => a.label.localeCompare(b.label))
 }
 
 /**
  * Browses a federation's fixture list and hands the chosen game back. Region and
- * date range narrow the request; competition, stage, pool and the free text box
- * narrow what came back.
+ * date range decide what is fetched; competition, stage, pool and the free text
+ * box narrow what came back.
  */
 export function GameBrowser({
   provider,
@@ -50,9 +53,12 @@ export function GameBrowser({
 }) {
   const { t } = useTranslation()
   const [regions, setRegions] = useState<Region[]>([])
-  const [games, setGames] = useState<GameSummary[]>([])
-  const [loadingGames, setLoadingGames] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  // The fixtures together with the request they answer, so that "still loading" is
+  // that mismatch rather than a second flag to keep in step.
+  const [loaded, setLoaded] = useState<{ forRequest: string; games: GameSummary[] } | null>(null)
+  // The cause is kept untranslated so that switching language re-renders the
+  // message rather than leaving the one the fetch happened to be phrased in.
+  const [failure, setFailure] = useState<unknown>(null)
   const [search, setSearch] = useState('')
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
@@ -70,43 +76,51 @@ export function GameBrowser({
 
     void provider.listRegions().then(
       (items) => !cancelled && setRegions(items),
-      (cause) => !cancelled && setError(describeError(cause, t)),
+      (cause) => !cancelled && setFailure(cause),
     )
 
     return () => {
       cancelled = true
     }
-  }, [provider, ready, t])
+  }, [provider, ready])
+
+  // A dateless range means "what is coming up", which most federations answer from
+  // an endpoint of its own.
+  const dated = Boolean(dateFrom || dateTo)
+  const fetchable = dated ? provider.listGames : (provider.listUpcomingGames ?? provider.listGames)
+  const request = JSON.stringify([provider.id, dated, regionId, dateFrom, dateTo])
+
+  useEffect(() => {
+    if (!ready || !fetchable) return
+    let cancelled = false
+
+    void fetchable({
+      regionId: regionId || undefined,
+      dateFrom: dateFrom || undefined,
+      dateTo: dateTo || undefined,
+    }).then(
+      (items) => {
+        if (cancelled) return
+        setLoaded({ forRequest: request, games: items })
+        setFailure(null)
+      },
+      (cause) => {
+        if (cancelled) return
+        // Settle the request anyway, or the list stays "loading" forever.
+        setLoaded({ forRequest: request, games: [] })
+        setFailure(cause)
+      },
+    )
+
+    return () => {
+      cancelled = true
+    }
+  }, [fetchable, ready, request, regionId, dateFrom, dateTo])
+
+  const games = loaded?.games ?? []
+  const loadingGames = ready && Boolean(fetchable) && loaded?.forRequest !== request
 
   const patch = (change: Partial<Settings>) => onSettingsChange({ ...settings, ...change })
-
-  const fetchGames = async (work: () => Promise<GameSummary[]>) => {
-    setLoadingGames(true)
-    try {
-      setGames(await work())
-      setError(null)
-    } catch (cause) {
-      setError(describeError(cause, t))
-    } finally {
-      setLoadingGames(false)
-    }
-  }
-
-  const loadGames = () => {
-    if (!provider.listGames) return
-    void fetchGames(() =>
-      provider.listGames!({
-        regionId: regionId || undefined,
-        dateFrom: dateFrom || undefined,
-        dateTo: dateTo || undefined,
-      }),
-    )
-  }
-
-  const loadUpcoming = () => {
-    if (!provider.listUpcomingGames) return
-    void fetchGames(() => provider.listUpcomingGames!({ regionId: regionId || undefined }))
-  }
 
   if (!provider.capabilities.browseGames) {
     return (
@@ -134,6 +148,11 @@ export function GameBrowser({
     )
   }
 
+  // Federations run a men's and a women's competition under one name, so the mark
+  // is what tells the two entries apart.
+  const genderMark = (game: GameSummary) =>
+    game.gender === 'f' ? ` (${t('browser.women')})` : game.gender === 'm' ? ` (${t('browser.men')})` : ''
+
   const needle = search.trim().toLowerCase()
   const visible = games.filter(
     (game) =>
@@ -154,15 +173,17 @@ export function GameBrowser({
             label={t('browser.region')}
             value={regionId}
             options={regions.map((region) => ({ value: region.id, label: region.name }))}
-            onChange={(value) => patch({ regionId: value })}
+            onChange={(value) => patch({ regionId: value, competitionId: '', stageId: '', poolId: '' })}
           />
         )}
-        <TextField label={t('browser.from')} type="date" value={dateFrom} onChange={setDateFrom} />
-        <TextField label={t('browser.to')} type="date" value={dateTo} onChange={setDateTo} />
         <SelectField
           label={t('browser.competition')}
           value={competitionId}
-          options={facetOptions(games, 'competitionId', 'competitionName')}
+          options={facetOptions(
+            games,
+            'competitionId',
+            (game) => `${game.competitionName ?? game.competitionId}${genderMark(game)}`,
+          )}
           onChange={(value) => patch({ competitionId: value, stageId: '', poolId: '' })}
         />
         <SelectField
@@ -171,7 +192,7 @@ export function GameBrowser({
           options={facetOptions(
             games.filter((game) => !competitionId || game.competitionId === competitionId),
             'stageId',
-            'stageName',
+            (game) => game.stageName ?? game.stageId ?? '',
           )}
           onChange={(value) => patch({ stageId: value, poolId: '' })}
         />
@@ -181,10 +202,18 @@ export function GameBrowser({
           options={facetOptions(
             games.filter((game) => !stageId || game.stageId === stageId),
             'poolId',
-            'poolName',
+            (game) => game.poolName ?? game.poolId ?? '',
           )}
           onChange={(value) => patch({ poolId: value })}
         />
+        <TextField
+          label={t('browser.from')}
+          type="date"
+          value={dateFrom}
+          onChange={setDateFrom}
+          hint={t('browser.dateHint')}
+        />
+        <TextField label={t('browser.to')} type="date" value={dateTo} onChange={setDateTo} />
         <TextField
           label={t('browser.filter')}
           value={search}
@@ -193,19 +222,8 @@ export function GameBrowser({
         />
       </div>
 
-      <div className="button-row">
-        <button type="button" className="primary" onClick={loadGames}>
-          {t('browser.load')}
-        </button>
-        {provider.listUpcomingGames && (
-          <button type="button" onClick={loadUpcoming}>
-            {t('browser.upcoming')}
-          </button>
-        )}
-      </div>
-
       {loadingGames && <Spinner label={t('browser.loading.games')} />}
-      {error && <Banner kind="error">{error}</Banner>}
+      {failure !== null && <Banner kind="error">{describeError(failure, t)}</Banner>}
 
       {visible.length > 0 && (
         <div className="table-scroll">

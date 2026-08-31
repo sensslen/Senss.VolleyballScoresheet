@@ -7,9 +7,16 @@ import type { FederationProvider, GameQuery, GameSummary } from '../federation/t
 import type { Settings } from '../scoresheet/storage'
 import { GameBrowser } from './GameBrowser'
 
-function game(id: string, competition: [string, string], stage: [string, string], pool: [string, string]): GameSummary {
+function game(
+  id: string,
+  gender: 'm' | 'f',
+  competition: [string, string],
+  stage: [string, string],
+  pool: [string, string],
+): GameSummary {
   return {
     id,
+    gender,
     home: { id: `${id}h`, name: `Home ${id}` },
     away: { id: `${id}a`, name: `Away ${id}` },
     competitionId: competition[0],
@@ -21,9 +28,9 @@ function game(id: string, competition: [string, string], stage: [string, string]
   }
 }
 
-const NLA_QUALI_A = game('1', ['5027', 'NLA'], ['10032', 'Qualifikation'], ['9069', 'Gruppe A'])
-const NLA_PLAYOFF_B = game('2', ['5027', 'NLA'], ['10033', 'Playoff'], ['9070', 'Gruppe B'])
-const NLB_QUALI_C = game('3', ['5041', 'NLB'], ['10040', 'Qualifikation'], ['9080', 'Gruppe C'])
+const NLA_W_QUALI = game('1', 'f', ['5027', 'NLA'], ['10032', 'Qualifikation'], ['9069', 'Gruppe A'])
+const NLA_W_PLAYOFF = game('2', 'f', ['5027', 'NLA'], ['10033', 'Playoff'], ['9070', 'Gruppe B'])
+const NLA_M_QUALI = game('3', 'm', ['5026', 'NLA'], ['10040', 'Qualifikation'], ['9080', 'Gruppe C'])
 
 function stubProvider(overrides: Partial<FederationProvider> = {}): FederationProvider {
   return {
@@ -40,7 +47,8 @@ function stubProvider(overrides: Partial<FederationProvider> = {}): FederationPr
     },
     isReady: () => true,
     listRegions: async () => [{ id: 'SVRZ', name: 'Region Zürich' }],
-    listGames: async () => [NLA_QUALI_A, NLA_PLAYOFF_B, NLB_QUALI_C],
+    listGames: async () => [NLA_W_QUALI, NLA_W_PLAYOFF, NLA_M_QUALI],
+    listUpcomingGames: async () => [NLA_W_QUALI, NLA_W_PLAYOFF, NLA_M_QUALI],
     ...overrides,
   }
 }
@@ -69,34 +77,43 @@ function optionsOf(label: string): string[] {
 describe('fixture filters', () => {
   afterEach(cleanup)
 
-  it('offers the region the federation publishes and asks the query for it', async () => {
+  it('loads the upcoming fixtures without being asked', async () => {
+    const listUpcomingGames = vi.fn<(query: GameQuery) => Promise<GameSummary[]>>(async () => [NLA_W_QUALI])
+    render(<Harness provider={stubProvider({ listUpcomingGames })} />)
+
+    await waitFor(() => expect(matchRows()).toEqual(['Home 1 vs Away 1']))
+    expect(listUpcomingGames).toHaveBeenCalledTimes(1)
+  })
+
+  it('reloads for the picked region and for a date range', async () => {
     const user = userEvent.setup()
-    const listGames = vi.fn<(query: GameQuery) => Promise<GameSummary[]>>(async () => [NLA_QUALI_A])
-    render(<Harness provider={stubProvider({ listGames })} />)
+    const listGames = vi.fn<(query: GameQuery) => Promise<GameSummary[]>>(async () => [NLA_W_QUALI])
+    const listUpcomingGames = vi.fn<(query: GameQuery) => Promise<GameSummary[]>>(async () => [NLA_W_PLAYOFF])
+    render(<Harness provider={stubProvider({ listGames, listUpcomingGames })} />)
 
     const region = screen.getByLabelText('Region') as HTMLSelectElement
     await waitFor(() => expect(region.disabled).toBe(false))
     await user.selectOptions(region, 'SVRZ')
-    await user.click(screen.getByRole('button', { name: 'Load games' }))
+
+    await waitFor(() => expect(listUpcomingGames).toHaveBeenCalledTimes(2))
+    expect(listUpcomingGames.mock.calls.at(-1)?.at(0)).toMatchObject({ regionId: 'SVRZ' })
+    expect(listGames).not.toHaveBeenCalled()
+
+    // A date range switches to the dated endpoint.
+    await user.type(screen.getByLabelText('From'), '2026-09-01')
 
     await waitFor(() => expect(listGames).toHaveBeenCalled())
-    expect(listGames.mock.calls.at(0)?.at(0)).toMatchObject({ regionId: 'SVRZ' })
+    expect(listGames.mock.calls.at(-1)?.at(0)).toMatchObject({ regionId: 'SVRZ', dateFrom: '2026-09-01' })
   })
 
   it('builds the competition, stage and pool choices out of the loaded fixtures', async () => {
     const user = userEvent.setup()
     render(<Harness provider={stubProvider()} />)
 
-    const competition = screen.getByLabelText('Competition') as HTMLSelectElement
-    expect(competition.disabled).toBe(true)
-
-    await user.click(screen.getByRole('button', { name: 'Load games' }))
     await waitFor(() => expect(matchRows()).toHaveLength(3))
+    expect(optionsOf('Competition')).toEqual(['--', 'NLA (M)', 'NLA (W)'])
 
-    expect(competition.disabled).toBe(false)
-    expect(optionsOf('Competition')).toEqual(['--', 'NLA', 'NLB'])
-
-    await user.selectOptions(competition, '5027')
+    await user.selectOptions(screen.getByLabelText('Competition'), '5027')
     expect(matchRows()).toEqual(['Home 1 vs Away 1', 'Home 2 vs Away 2'])
     expect(optionsOf('Stage')).toEqual(['--', 'Playoff', 'Qualifikation'])
 
@@ -112,9 +129,7 @@ describe('fixture filters', () => {
     const user = userEvent.setup()
     render(<Harness provider={stubProvider()} />)
 
-    await user.click(screen.getByRole('button', { name: 'Load games' }))
     await waitFor(() => expect(matchRows()).toHaveLength(3))
-
     await user.type(screen.getByLabelText('Filter list'), 'nothing matches this')
 
     expect(screen.getByText('No loaded fixture matches these filters.')).toBeTruthy()

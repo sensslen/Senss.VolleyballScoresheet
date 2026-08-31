@@ -65,14 +65,15 @@
     "competition": "Championnat",
     "stage": "Phase",
     "pool": "Poule",
+    "women": "F",
+    "men": "M",
     "from": "Du",
     "to": "Au",
+    "dateHint": "Vide affiche les prochains matchs.",
     "filter": "Filtrer la liste",
     "filterPlaceholder": "Équipe, salle, n° de match",
-    "load": "Charger les matchs",
-    "upcoming": "À venir seulement",
     "use": "Utiliser ce match",
-    "empty": "Chargez le calendrier, puis affinez-le avec les filtres.",
+    "empty": "Aucun match pour cette région et cette période.",
     "noMatch": "Aucun match chargé ne correspond à ces filtres.",
     "loading": {
       "games": "Chargement des matchs..."

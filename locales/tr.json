@@ -65,14 +65,15 @@
     "competition": "Lig",
     "stage": "Aşama",
     "pool": "Grup",
+    "women": "K",
+    "men": "E",
     "from": "Başlangıç",
     "to": "Bitiş",
+    "dateHint": "Boş bırakılırsa yaklaşan maçlar listelenir.",
     "filter": "Listeyi süz",
     "filterPlaceholder": "Takım, salon, maç no",
-    "load": "Maçları yükle",
-    "upcoming": "Sadece yaklaşanlar",
     "use": "Bu maçı kullan",
-    "empty": "Maç listesini yükleyin, ardından filtrelerle daraltın.",
+    "empty": "Bu bölge ve tarih aralığı için maç yok.",
     "noMatch": "Yüklenen maçların hiçbiri bu filtrelere uymuyor.",
     "loading": {
       "games": "Maçlar yükleniyor..."

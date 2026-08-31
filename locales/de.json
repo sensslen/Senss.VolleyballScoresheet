@@ -65,14 +65,15 @@
     "competition": "Liga",
     "stage": "Phase",
     "pool": "Gruppe",
+    "women": "F",
+    "men": "M",
     "from": "Von",
     "to": "Bis",
+    "dateHint": "Leer zeigt die kommenden Spiele.",
     "filter": "Liste filtern",
     "filterPlaceholder": "Team, Halle, Spielnummer",
-    "load": "Spiele laden",
-    "upcoming": "Nur kommende",
     "use": "Dieses Spiel übernehmen",
-    "empty": "Lade die Spielliste und grenze sie dann mit den Filtern ein.",
+    "empty": "Für diese Region und diesen Zeitraum kamen keine Spiele zurück.",
     "noMatch": "Keine geladene Partie passt zu diesen Filtern.",
     "loading": {
       "games": "Spiele werden geladen..."

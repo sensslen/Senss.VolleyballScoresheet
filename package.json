@@ -1,7 +1,7 @@
 {
   "name": "senss-volleyball-scoresheet",
   "private": true,
-  "version": "0.2.2",
+  "version": "0.2.3",
   "type": "module",
   "description": "Guided assistant for filling out an international volleyball scoresheet by hand, with match data imported from national federation APIs.",
   "scripts": {
