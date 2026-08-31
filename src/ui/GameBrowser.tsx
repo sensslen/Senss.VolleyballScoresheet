@@ -62,6 +62,9 @@ export function GameBrowser({
   const [search, setSearch] = useState('')
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
+  // Counts the manual refreshes, so that asking for the same fixtures again is a
+  // different request and fetches rather than sitting on what is already held.
+  const [refreshes, setRefreshes] = useState(0)
 
   const regionId = settings.regionId ?? ''
   const competitionId = settings.competitionId ?? ''
@@ -88,7 +91,7 @@ export function GameBrowser({
   // an endpoint of its own.
   const dated = Boolean(dateFrom || dateTo)
   const fetchable = dated ? provider.listGames : (provider.listUpcomingGames ?? provider.listGames)
-  const request = JSON.stringify([provider.id, dated, regionId, dateFrom, dateTo])
+  const request = JSON.stringify([provider.id, dated, regionId, dateFrom, dateTo, refreshes])
 
   useEffect(() => {
     if (!ready || !fetchable) return
@@ -220,6 +223,12 @@ export function GameBrowser({
           onChange={setSearch}
           placeholder={t('browser.filterPlaceholder')}
         />
+      </div>
+
+      <div className="button-row">
+        <button type="button" onClick={() => setRefreshes(refreshes + 1)} disabled={loadingGames}>
+          {t('browser.refresh')}
+        </button>
       </div>
 
       {loadingGames && <Spinner label={t('browser.loading.games')} />}

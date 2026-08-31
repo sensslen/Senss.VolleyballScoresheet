@@ -72,6 +72,7 @@
     "dateHint": "Empty lists the upcoming fixtures.",
     "filter": "Filter list",
     "filterPlaceholder": "Team, hall, match no.",
+    "refresh": "Refresh",
     "use": "Use this match",
     "empty": "No fixtures came back for this region and date range.",
     "noMatch": "No loaded fixture matches these filters.",

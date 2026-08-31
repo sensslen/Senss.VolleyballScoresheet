@@ -104,7 +104,7 @@ export class SwissVolleyApi {
     let response: Response
     try {
       // The API sends Access-Control-Allow-Origin: *, so the browser may call it directly.
-      response = await fetch(url, { headers: { Authorization: token }, redirect: 'follow' })
+      response = await fetch(url, { headers: { Authorization: token }, redirect: 'follow', cache: 'no-store' })
     } catch (cause) {
       const reason = (cause as Error).message
       throw new FederationError(`Could not reach ${SWISS_API_BASE}: ${reason}`, {

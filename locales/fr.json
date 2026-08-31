@@ -72,6 +72,7 @@
     "dateHint": "Vide affiche les prochains matchs.",
     "filter": "Filtrer la liste",
     "filterPlaceholder": "Équipe, salle, n° de match",
+    "refresh": "Actualiser",
     "use": "Utiliser ce match",
     "empty": "Aucun match pour cette région et cette période.",
     "noMatch": "Aucun match chargé ne correspond à ces filtres.",

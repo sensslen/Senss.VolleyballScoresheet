@@ -72,6 +72,7 @@
     "dateHint": "Vacío muestra los próximos partidos.",
     "filter": "Filtrar lista",
     "filterPlaceholder": "Equipo, pabellón, n.º de partido",
+    "refresh": "Actualizar",
     "use": "Usar este partido",
     "empty": "No hay partidos para esta región y este periodo.",
     "noMatch": "Ningún partido cargado coincide con estos filtros.",

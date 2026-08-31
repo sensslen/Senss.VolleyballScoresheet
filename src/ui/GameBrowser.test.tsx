@@ -106,6 +106,17 @@ describe('fixture filters', () => {
     expect(listGames.mock.calls.at(-1)?.at(0)).toMatchObject({ regionId: 'SVRZ', dateFrom: '2026-09-01' })
   })
 
+  it('refetches the same request when refresh is pressed', async () => {
+    const user = userEvent.setup()
+    const listUpcomingGames = vi.fn<(query: GameQuery) => Promise<GameSummary[]>>(async () => [NLA_W_QUALI])
+    render(<Harness provider={stubProvider({ listUpcomingGames })} />)
+
+    await waitFor(() => expect(listUpcomingGames).toHaveBeenCalledTimes(1))
+    await user.click(screen.getByRole('button', { name: 'Refresh' }))
+
+    await waitFor(() => expect(listUpcomingGames).toHaveBeenCalledTimes(2))
+  })
+
   it('builds the competition, stage and pool choices out of the loaded fixtures', async () => {
     const user = userEvent.setup()
     render(<Harness provider={stubProvider()} />)

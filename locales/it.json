@@ -72,6 +72,7 @@
     "dateHint": "Vuoto mostra le prossime gare.",
     "filter": "Filtra elenco",
     "filterPlaceholder": "Squadra, palestra, n. gara",
+    "refresh": "Aggiorna",
     "use": "Usa questa gara",
     "empty": "Nessuna gara per questa regione e questo periodo.",
     "noMatch": "Nessuna gara caricata corrisponde a questi filtri.",

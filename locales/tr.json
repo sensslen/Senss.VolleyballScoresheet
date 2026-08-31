@@ -72,6 +72,7 @@
     "dateHint": "Boş bırakılırsa yaklaşan maçlar listelenir.",
     "filter": "Listeyi süz",
     "filterPlaceholder": "Takım, salon, maç no",
+    "refresh": "Yenile",
     "use": "Bu maçı kullan",
     "empty": "Bu bölge ve tarih aralığı için maç yok.",
     "noMatch": "Yüklenen maçların hiçbiri bu filtrelere uymuyor.",

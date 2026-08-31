@@ -72,6 +72,7 @@
     "dateHint": "Vazio mostra os próximos jogos.",
     "filter": "Filtrar lista",
     "filterPlaceholder": "Equipe, ginásio, nº do jogo",
+    "refresh": "Atualizar",
     "use": "Usar esta partida",
     "empty": "Nenhum jogo para esta região e este período.",
     "noMatch": "Nenhum jogo carregado corresponde a estes filtros.",

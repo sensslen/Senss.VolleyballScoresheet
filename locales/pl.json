@@ -72,6 +72,7 @@
     "dateHint": "Puste pokazuje nadchodzące mecze.",
     "filter": "Filtruj listę",
     "filterPlaceholder": "Drużyna, hala, nr meczu",
+    "refresh": "Odśwież",
     "use": "Użyj tego meczu",
     "empty": "Brak meczów dla tego regionu i zakresu dat.",
     "noMatch": "Żaden wczytany mecz nie pasuje do tych filtrów.",
