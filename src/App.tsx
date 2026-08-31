@@ -66,7 +66,9 @@ export default function App() {
         // The summary already carries teams, date and competition; detail is a bonus.
       }
     }
-    openSheet(created, 'teams')
+    // The header tab is where the referees land, and they are the one part of the
+    // prefill worth checking before scoring.
+    openSheet(created, 'match')
   }
 
   const startBlank = () => openSheet(createScoresheet(), 'match')
