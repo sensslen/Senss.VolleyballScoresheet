@@ -157,18 +157,6 @@ export class SwissVolleyApi {
     })
   }
 
-  listUpcomingGames(query: {
-    region?: string
-    gender?: string
-    leagueId?: string
-    phaseId?: string
-    groupId?: string
-    teamId?: string
-    clubId?: string
-  }): Promise<SwissGameDto[]> {
-    return this.get('/indoor/upcomingGames', { ...query })
-  }
-
   getGame(gameId: string): Promise<SwissGameDto> {
     return this.get(`/indoor/game/${encodeURIComponent(gameId)}`)
   }

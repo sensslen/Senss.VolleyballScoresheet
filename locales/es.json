@@ -69,13 +69,14 @@
     "men": "M",
     "from": "Desde",
     "to": "Hasta",
-    "dateHint": "Vacío muestra los próximos partidos.",
+    "dateHint": "Vacío carga toda la temporada.",
     "filter": "Filtrar lista",
     "filterPlaceholder": "Equipo, pabellón, n.º de partido",
     "refresh": "Actualizar",
     "use": "Usar este partido",
     "empty": "No hay partidos para esta región y este periodo.",
     "noMatch": "Ningún partido cargado coincide con estos filtros.",
+    "more": "Hay {{count}} partidos más que coinciden. Acota los filtros para verlos.",
     "loading": {
       "games": "Cargando partidos..."
     }

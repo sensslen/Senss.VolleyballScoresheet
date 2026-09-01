@@ -69,13 +69,14 @@
     "men": "M",
     "from": "From",
     "to": "To",
-    "dateHint": "Empty lists the upcoming fixtures.",
+    "dateHint": "Empty loads the whole season.",
     "filter": "Filter list",
     "filterPlaceholder": "Team, hall, match no.",
     "refresh": "Refresh",
     "use": "Use this match",
     "empty": "No fixtures came back for this region and date range.",
     "noMatch": "No loaded fixture matches these filters.",
+    "more": "{{count}} more fixtures match. Narrow the filters to reach them.",
     "loading": {
       "games": "Loading games..."
     }

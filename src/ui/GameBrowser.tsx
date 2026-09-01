@@ -13,6 +13,10 @@ import { Banner, Card, EmptyState, SelectField, Spinner, TextField } from './com
 
 type IdKey = 'competitionId' | 'stageId' | 'poolId'
 
+// A whole season runs into the thousands of fixtures, and putting every row in the
+// DOM is what makes the page crawl. The filters still work on the full list.
+const ROW_LIMIT = 200
+
 /**
  * The competition, stage and pool the loaded fixtures report. Federations publish
  * the hierarchy behind endpoints of its own, but a club credential is not always
@@ -87,11 +91,8 @@ export function GameBrowser({
     }
   }, [provider, ready])
 
-  // A dateless range means "what is coming up", which most federations answer from
-  // an endpoint of its own.
-  const dated = Boolean(dateFrom || dateTo)
-  const fetchable = dated ? provider.listGames : (provider.listUpcomingGames ?? provider.listGames)
-  const request = JSON.stringify([provider.id, dated, regionId, dateFrom, dateTo, refreshes])
+  const fetchable = provider.listGames
+  const request = JSON.stringify([provider.id, regionId, dateFrom, dateTo, refreshes])
 
   useEffect(() => {
     if (!ready || !fetchable) return
@@ -168,6 +169,8 @@ export function GameBrowser({
           .some((value) => value!.toLowerCase().includes(needle))),
   )
 
+  const shown = visible.slice(0, ROW_LIMIT)
+
   return (
     <Card title={t('browser.title')} subtitle={`${provider.country.flag} ${name}`}>
       <div className="grid-4">
@@ -234,7 +237,7 @@ export function GameBrowser({
       {loadingGames && <Spinner label={t('browser.loading.games')} />}
       {failure !== null && <Banner kind="error">{describeError(failure, t)}</Banner>}
 
-      {visible.length > 0 && (
+      {shown.length > 0 && (
         <div className="table-scroll">
           <table className="table">
             <thead>
@@ -247,7 +250,7 @@ export function GameBrowser({
               </tr>
             </thead>
             <tbody>
-              {visible.map((game) => (
+              {shown.map((game) => (
                 <tr key={game.id}>
                   <td className="mono whitespace-nowrap">{game.playDate ?? ''}</td>
                   <td>
@@ -268,6 +271,10 @@ export function GameBrowser({
             </tbody>
           </table>
         </div>
+      )}
+
+      {visible.length > shown.length && (
+        <EmptyState>{t('browser.more', { count: visible.length - shown.length })}</EmptyState>
       )}
 
       {!loadingGames && visible.length === 0 && (

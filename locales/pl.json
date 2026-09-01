@@ -69,13 +69,14 @@
     "men": "M",
     "from": "Od",
     "to": "Do",
-    "dateHint": "Puste pokazuje nadchodzące mecze.",
+    "dateHint": "Puste wczytuje cały sezon.",
     "filter": "Filtruj listę",
     "filterPlaceholder": "Drużyna, hala, nr meczu",
     "refresh": "Odśwież",
     "use": "Użyj tego meczu",
     "empty": "Brak meczów dla tego regionu i zakresu dat.",
     "noMatch": "Żaden wczytany mecz nie pasuje do tych filtrów.",
+    "more": "Pasuje jeszcze {{count}} meczów. Zawęź filtry, aby je zobaczyć.",
     "loading": {
       "games": "Wczytywanie meczów..."
     }

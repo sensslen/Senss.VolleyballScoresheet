@@ -123,6 +123,16 @@ function toOfficials(dto: SwissGameDto): Official[] {
     .filter((official) => official.firstName !== '' || official.lastName !== '')
 }
 
+/**
+ * The API defaults dateStart to the current season's start and dateEnd to today, so
+ * asking for the whole season is a matter of pushing the end past the last fixture.
+ * The season boundaries live behind /indoor/indoorseasons, which a club key cannot read.
+ */
+function aYearOut(): string {
+  const now = new Date()
+  return new Date(now.getFullYear() + 1, now.getMonth(), now.getDate()).toISOString().slice(0, 10)
+}
+
 export function createSwissVolleyProvider(): FederationProvider {
   const api = new SwissVolleyApi(() => credentials.get(SWISS_PROVIDER_ID))
 
@@ -161,13 +171,8 @@ export function createSwissVolleyProvider(): FederationProvider {
       const games = await api.listGames({
         region: query.regionId,
         dateStart: query.dateFrom,
-        dateEnd: query.dateTo,
+        dateEnd: query.dateTo ?? aYearOut(),
       })
-      return games.map(toGameSummary)
-    },
-
-    async listUpcomingGames(query: GameQuery): Promise<GameSummary[]> {
-      const games = await api.listUpcomingGames({ region: query.regionId })
       return games.map(toGameSummary)
     },
 

@@ -48,7 +48,6 @@ function stubProvider(overrides: Partial<FederationProvider> = {}): FederationPr
     isReady: () => true,
     listRegions: async () => [{ id: 'SVRZ', name: 'Region Zürich' }],
     listGames: async () => [NLA_W_QUALI, NLA_W_PLAYOFF, NLA_M_QUALI],
-    listUpcomingGames: async () => [NLA_W_QUALI, NLA_W_PLAYOFF, NLA_M_QUALI],
     ...overrides,
   }
 }
@@ -77,44 +76,56 @@ function optionsOf(label: string): string[] {
 describe('fixture filters', () => {
   afterEach(cleanup)
 
-  it('loads the upcoming fixtures without being asked', async () => {
-    const listUpcomingGames = vi.fn<(query: GameQuery) => Promise<GameSummary[]>>(async () => [NLA_W_QUALI])
-    render(<Harness provider={stubProvider({ listUpcomingGames })} />)
+  it('loads the fixtures without being asked, and with no date range of its own', async () => {
+    const listGames = vi.fn<(query: GameQuery) => Promise<GameSummary[]>>(async () => [NLA_W_QUALI])
+    render(<Harness provider={stubProvider({ listGames })} />)
 
     await waitFor(() => expect(matchRows()).toEqual(['Home 1 vs Away 1']))
-    expect(listUpcomingGames).toHaveBeenCalledTimes(1)
+    expect(listGames).toHaveBeenCalledTimes(1)
+    expect(listGames.mock.calls.at(0)?.at(0)).toEqual({
+      regionId: undefined,
+      dateFrom: undefined,
+      dateTo: undefined,
+    })
   })
 
   it('reloads for the picked region and for a date range', async () => {
     const user = userEvent.setup()
     const listGames = vi.fn<(query: GameQuery) => Promise<GameSummary[]>>(async () => [NLA_W_QUALI])
-    const listUpcomingGames = vi.fn<(query: GameQuery) => Promise<GameSummary[]>>(async () => [NLA_W_PLAYOFF])
-    render(<Harness provider={stubProvider({ listGames, listUpcomingGames })} />)
+    render(<Harness provider={stubProvider({ listGames })} />)
 
     const region = screen.getByLabelText('Region') as HTMLSelectElement
     await waitFor(() => expect(region.disabled).toBe(false))
     await user.selectOptions(region, 'SVRZ')
 
-    await waitFor(() => expect(listUpcomingGames).toHaveBeenCalledTimes(2))
-    expect(listUpcomingGames.mock.calls.at(-1)?.at(0)).toMatchObject({ regionId: 'SVRZ' })
-    expect(listGames).not.toHaveBeenCalled()
+    await waitFor(() => expect(listGames).toHaveBeenCalledTimes(2))
+    expect(listGames.mock.calls.at(-1)?.at(0)).toMatchObject({ regionId: 'SVRZ' })
 
-    // A date range switches to the dated endpoint.
     await user.type(screen.getByLabelText('From'), '2026-09-01')
 
-    await waitFor(() => expect(listGames).toHaveBeenCalled())
+    await waitFor(() => expect(listGames.mock.calls.length).toBeGreaterThan(2))
     expect(listGames.mock.calls.at(-1)?.at(0)).toMatchObject({ regionId: 'SVRZ', dateFrom: '2026-09-01' })
   })
 
   it('refetches the same request when refresh is pressed', async () => {
     const user = userEvent.setup()
-    const listUpcomingGames = vi.fn<(query: GameQuery) => Promise<GameSummary[]>>(async () => [NLA_W_QUALI])
-    render(<Harness provider={stubProvider({ listUpcomingGames })} />)
+    const listGames = vi.fn<(query: GameQuery) => Promise<GameSummary[]>>(async () => [NLA_W_QUALI])
+    render(<Harness provider={stubProvider({ listGames })} />)
 
-    await waitFor(() => expect(listUpcomingGames).toHaveBeenCalledTimes(1))
+    await waitFor(() => expect(listGames).toHaveBeenCalledTimes(1))
     await user.click(screen.getByRole('button', { name: 'Refresh' }))
 
-    await waitFor(() => expect(listUpcomingGames).toHaveBeenCalledTimes(2))
+    await waitFor(() => expect(listGames).toHaveBeenCalledTimes(2))
+  })
+
+  it('renders a bounded number of rows and says how many are held back', async () => {
+    const many = Array.from({ length: 260 }, (_, index) =>
+      game(String(index), 'f', ['5027', 'NLA'], ['10032', 'Qualifikation'], ['9069', 'Gruppe A']),
+    )
+    render(<Harness provider={stubProvider({ listGames: async () => many })} />)
+
+    await waitFor(() => expect(matchRows()).toHaveLength(200))
+    expect(screen.getByText('60 more fixtures match. Narrow the filters to reach them.')).toBeTruthy()
   })
 
   it('builds the competition, stage and pool choices out of the loaded fixtures', async () => {

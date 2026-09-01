@@ -69,13 +69,14 @@
     "men": "M",
     "from": "Dal",
     "to": "Al",
-    "dateHint": "Vuoto mostra le prossime gare.",
+    "dateHint": "Vuoto carica tutta la stagione.",
     "filter": "Filtra elenco",
     "filterPlaceholder": "Squadra, palestra, n. gara",
     "refresh": "Aggiorna",
     "use": "Usa questa gara",
     "empty": "Nessuna gara per questa regione e questo periodo.",
     "noMatch": "Nessuna gara caricata corrisponde a questi filtri.",
+    "more": "Altre {{count}} gare corrispondono. Restringi i filtri per vederle.",
     "loading": {
       "games": "Caricamento gare..."
     }

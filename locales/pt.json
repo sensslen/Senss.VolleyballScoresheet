@@ -69,13 +69,14 @@
     "men": "M",
     "from": "De",
     "to": "Até",
-    "dateHint": "Vazio mostra os próximos jogos.",
+    "dateHint": "Vazio carrega a época inteira.",
     "filter": "Filtrar lista",
     "filterPlaceholder": "Equipe, ginásio, nº do jogo",
     "refresh": "Atualizar",
     "use": "Usar esta partida",
     "empty": "Nenhum jogo para esta região e este período.",
     "noMatch": "Nenhum jogo carregado corresponde a estes filtros.",
+    "more": "Mais {{count}} jogos correspondem. Refine os filtros para os ver.",
     "loading": {
       "games": "Carregando jogos..."
     }

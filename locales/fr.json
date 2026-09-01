@@ -69,13 +69,14 @@
     "men": "M",
     "from": "Du",
     "to": "Au",
-    "dateHint": "Vide affiche les prochains matchs.",
+    "dateHint": "Vide charge toute la saison.",
     "filter": "Filtrer la liste",
     "filterPlaceholder": "Équipe, salle, n° de match",
     "refresh": "Actualiser",
     "use": "Utiliser ce match",
     "empty": "Aucun match pour cette région et cette période.",
     "noMatch": "Aucun match chargé ne correspond à ces filtres.",
+    "more": "{{count}} autres matchs correspondent. Affinez les filtres pour les atteindre.",
     "loading": {
       "games": "Chargement des matchs..."
     }

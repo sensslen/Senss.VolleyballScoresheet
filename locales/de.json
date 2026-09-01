@@ -69,13 +69,14 @@
     "men": "M",
     "from": "Von",
     "to": "Bis",
-    "dateHint": "Leer zeigt die kommenden Spiele.",
+    "dateHint": "Leer lädt die ganze Saison.",
     "filter": "Liste filtern",
     "filterPlaceholder": "Team, Halle, Spielnummer",
     "refresh": "Aktualisieren",
     "use": "Dieses Spiel übernehmen",
     "empty": "Für diese Region und diesen Zeitraum kamen keine Spiele zurück.",
     "noMatch": "Keine geladene Partie passt zu diesen Filtern.",
+    "more": "{{count}} weitere Spiele passen. Grenze die Filter ein, um sie zu sehen.",
     "loading": {
       "games": "Spiele werden geladen..."
     }

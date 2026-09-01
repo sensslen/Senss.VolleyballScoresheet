@@ -149,7 +149,6 @@ export interface FederationProvider {
 
   listRegions?(): Promise<Region[]>
   listGames?(query: GameQuery): Promise<GameSummary[]>
-  listUpcomingGames?(query: GameQuery): Promise<GameSummary[]>
   getGame?(gameId: string): Promise<GameDetail>
   getRoster?(teamId: string): Promise<Roster>
   listTeams?(query: { regionId?: string; competitionId?: string; poolId?: string; clubId?: string }): Promise<TeamRef[]>
