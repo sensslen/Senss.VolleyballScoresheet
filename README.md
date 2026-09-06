@@ -9,6 +9,9 @@ The paper sheet stays the official record. This app just does the bookkeeping so
 service order, rotation, substitution counts and running score are right before you
 write them down.
 
+The published app lives at
+<https://sensslen.github.io/Senss.VolleyballScoresheet/>.
+
 ## What it does
 
 - **Browse fixtures** down a federation's hierarchy (region, competition, stage, pool)
@@ -43,8 +46,8 @@ npm run build      # static output in dist/
 
 ## Hosting
 
-Any static host works. The GitHub Actions workflow publishes to GitHub Pages when a
-`v*` tag is pushed:
+Any static host works. The GitHub Actions workflow publishes to
+<https://sensslen.github.io/Senss.VolleyballScoresheet/> when a `v*` tag is pushed:
 
 ```bash
 git tag v0.1.0 && git push origin v0.1.0
