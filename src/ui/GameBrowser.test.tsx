@@ -31,6 +31,7 @@ function game(
 const NLA_W_QUALI = game('1', 'f', ['5027', 'NLA'], ['10032', 'Qualifikation'], ['9069', 'Gruppe A'])
 const NLA_W_PLAYOFF = game('2', 'f', ['5027', 'NLA'], ['10033', 'Playoff'], ['9070', 'Gruppe B'])
 const NLA_M_QUALI = game('3', 'm', ['5026', 'NLA'], ['10040', 'Qualifikation'], ['9080', 'Gruppe C'])
+const NLA_W_QUALI_D = game('4', 'f', ['5027', 'NLA'], ['10032', 'Qualifikation'], ['9071', 'Gruppe D'])
 
 function stubProvider(overrides: Partial<FederationProvider> = {}): FederationProvider {
   return {
@@ -47,7 +48,7 @@ function stubProvider(overrides: Partial<FederationProvider> = {}): FederationPr
     },
     isReady: () => true,
     listRegions: async () => [{ id: 'SVRZ', name: 'Region Zürich' }],
-    listGames: async () => [NLA_W_QUALI, NLA_W_PLAYOFF, NLA_M_QUALI],
+    listGames: async () => [NLA_W_QUALI, NLA_W_PLAYOFF, NLA_M_QUALI, NLA_W_QUALI_D],
     ...overrides,
   }
 }
@@ -71,6 +72,10 @@ function matchRows(): string[] {
 
 function optionsOf(label: string): string[] {
   return Array.from((screen.getByLabelText(label) as HTMLSelectElement).options).map((option) => option.text)
+}
+
+function filterLabels(): string[] {
+  return Array.from(document.querySelectorAll('.field-label')).map((span) => span.textContent ?? '')
 }
 
 describe('fixture filters', () => {
@@ -128,30 +133,64 @@ describe('fixture filters', () => {
     expect(screen.getByText('60 more fixtures match. Narrow the filters to reach them.')).toBeTruthy()
   })
 
-  it('builds the competition, stage and pool choices out of the loaded fixtures', async () => {
+  it('opens one level at a time, each built out of the fixtures the level above left', async () => {
     const user = userEvent.setup()
     render(<Harness provider={stubProvider()} />)
 
-    await waitFor(() => expect(matchRows()).toHaveLength(3))
+    await waitFor(() => expect(matchRows()).toHaveLength(4))
     expect(optionsOf('Competition')).toEqual(['--', 'NLA (M)', 'NLA (W)'])
+    expect(screen.queryByLabelText('Stage')).toBeNull()
+    expect(screen.queryByLabelText('Pool')).toBeNull()
 
     await user.selectOptions(screen.getByLabelText('Competition'), '5027')
-    expect(matchRows()).toEqual(['Home 1 vs Away 1', 'Home 2 vs Away 2'])
+    expect(matchRows()).toEqual(['Home 1 vs Away 1', 'Home 2 vs Away 2', 'Home 4 vs Away 4'])
     expect(optionsOf('Stage')).toEqual(['--', 'Playoff', 'Qualifikation'])
+    expect(screen.queryByLabelText('Pool')).toBeNull()
 
     await user.selectOptions(screen.getByLabelText('Stage'), '10032')
-    expect(matchRows()).toEqual(['Home 1 vs Away 1'])
-    expect(optionsOf('Pool')).toEqual(['--', 'Gruppe A'])
+    expect(matchRows()).toEqual(['Home 1 vs Away 1', 'Home 4 vs Away 4'])
+    expect(optionsOf('Pool')).toEqual(['--', 'Gruppe A', 'Gruppe D'])
 
     await user.selectOptions(screen.getByLabelText('Pool'), '9069')
     expect(matchRows()).toEqual(['Home 1 vs Away 1'])
+  })
+
+  it('hides a level with nothing to choose and lets the next one take its turn', async () => {
+    render(<Harness provider={stubProvider({ listGames: async () => [NLA_W_QUALI, NLA_W_PLAYOFF] })} />)
+
+    await waitFor(() => expect(matchRows()).toHaveLength(2))
+    // One competition, one pool per stage: only the stage is worth asking about.
+    expect(screen.queryByLabelText('Competition')).toBeNull()
+    expect(screen.queryByLabelText('Pool')).toBeNull()
+    expect(optionsOf('Stage')).toEqual(['--', 'Playoff', 'Qualifikation'])
+  })
+
+  it('keeps the region, date and text filters up whatever the fixtures offer', async () => {
+    render(<Harness provider={stubProvider({ listGames: async () => [NLA_W_QUALI] })} />)
+
+    await waitFor(() => expect(matchRows()).toHaveLength(1))
+    expect(filterLabels()).toEqual(['Region', 'From', 'To', 'Filter list'])
+  })
+
+  it('ignores a stored id the loaded fixtures no longer offer', async () => {
+    render(
+      <GameBrowser
+        provider={stubProvider({ listGames: async () => [NLA_W_QUALI, NLA_W_PLAYOFF] })}
+        settings={{ providerId: 'stub', competitionId: '4711' }}
+        onSettingsChange={() => {}}
+        onOpenSettings={() => {}}
+        onPick={() => {}}
+      />,
+    )
+
+    await waitFor(() => expect(matchRows()).toHaveLength(2))
   })
 
   it('says the filters excluded everything rather than looking unloaded', async () => {
     const user = userEvent.setup()
     render(<Harness provider={stubProvider()} />)
 
-    await waitFor(() => expect(matchRows()).toHaveLength(3))
+    await waitFor(() => expect(matchRows()).toHaveLength(4))
     await user.type(screen.getByLabelText('Filter list'), 'nothing matches this')
 
     expect(screen.getByText('No loaded fixture matches these filters.')).toBeTruthy()
