@@ -68,7 +68,7 @@ export function MatchStep({ sheet, update }: { sheet: Scoresheet; update: SheetU
       </Card>
 
       <Card title={t('match.rules.title')} subtitle={t('match.rules.subtitle')}>
-        <div className="grid-2 items-start">
+        <div className="grid-2">
           <SelectField
             label={t('match.rules.ruleSet')}
             value={sheet.rules.id}
@@ -89,16 +89,14 @@ export function MatchStep({ sheet, update }: { sheet: Scoresheet; update: SheetU
                 if (value) draft.rules = ruleSetById(value)
               })
             }
-          />
-          <p className="muted">
-            {t('match.rules.summary', {
+            hint={t('match.rules.summary', {
               best: sheet.rules.setsToWin * 2 - 1,
               points: sheet.rules.pointsPerSet,
               deciding: sheet.rules.pointsDecidingSet,
               substitutions: sheet.rules.substitutionsPerSet,
               timeouts: sheet.rules.timeoutsPerSet,
             })}
-          </p>
+          />
         </div>
       </Card>
 
