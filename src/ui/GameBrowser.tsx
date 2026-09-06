@@ -38,6 +38,30 @@ function facetOptions(
 }
 
 /**
+ * One level of the competition hierarchy: the choices the fixtures at this level
+ * offer, and the one in force. A stored id the loaded fixtures no longer offer
+ * filters nothing, so a stale setting cannot empty the list from behind a control
+ * that is no longer on screen.
+ */
+function facet(
+  games: GameSummary[],
+  idKey: IdKey,
+  label: (game: GameSummary) => string,
+  stored: string,
+) {
+  const options = facetOptions(games, idKey, label)
+  const value = options.some((option) => option.value === stored) ? stored : ''
+  return {
+    options,
+    value,
+    // Nothing left to ask once the level offers at most one choice, or once it
+    // has been made: the level below can take its turn.
+    settled: options.length <= 1 || value !== '',
+    matches: (game: GameSummary) => !value || game[idKey] === value,
+  }
+}
+
+/**
  * Browses a federation's fixture list and hands the chosen game back. Region and
  * date range decide what is fetched; competition, stage, pool and the free text
  * box narrow what came back.
@@ -157,12 +181,23 @@ export function GameBrowser({
   const genderMark = (game: GameSummary) =>
     game.gender === 'f' ? ` (${t('browser.women')})` : game.gender === 'm' ? ` (${t('browser.men')})` : ''
 
+  // Each level narrows the fixtures the level below draws its choices from, so a
+  // level only ever offers what is still reachable.
+  const competition = facet(
+    games,
+    'competitionId',
+    (game) => `${game.competitionName ?? game.competitionId}${genderMark(game)}`,
+    competitionId,
+  )
+  const inCompetition = games.filter(competition.matches)
+  const stage = facet(inCompetition, 'stageId', (game) => game.stageName ?? game.stageId ?? '', stageId)
+  const inStage = inCompetition.filter(stage.matches)
+  const pool = facet(inStage, 'poolId', (game) => game.poolName ?? game.poolId ?? '', poolId)
+
   const needle = search.trim().toLowerCase()
-  const visible = games.filter(
+  const visible = inStage.filter(
     (game) =>
-      (!competitionId || game.competitionId === competitionId) &&
-      (!stageId || game.stageId === stageId) &&
-      (!poolId || game.poolId === poolId) &&
+      pool.matches(game) &&
       (!needle ||
         [game.home.name, game.away.name, game.competitionName, game.venue?.name, game.matchNumber]
           .filter(Boolean)
@@ -182,36 +217,30 @@ export function GameBrowser({
             onChange={(value) => patch({ regionId: value, competitionId: '', stageId: '', poolId: '' })}
           />
         )}
-        <SelectField
-          label={t('browser.competition')}
-          value={competitionId}
-          options={facetOptions(
-            games,
-            'competitionId',
-            (game) => `${game.competitionName ?? game.competitionId}${genderMark(game)}`,
-          )}
-          onChange={(value) => patch({ competitionId: value, stageId: '', poolId: '' })}
-        />
-        <SelectField
-          label={t('browser.stage')}
-          value={stageId}
-          options={facetOptions(
-            games.filter((game) => !competitionId || game.competitionId === competitionId),
-            'stageId',
-            (game) => game.stageName ?? game.stageId ?? '',
-          )}
-          onChange={(value) => patch({ stageId: value, poolId: '' })}
-        />
-        <SelectField
-          label={t('browser.pool')}
-          value={poolId}
-          options={facetOptions(
-            games.filter((game) => !stageId || game.stageId === stageId),
-            'poolId',
-            (game) => game.poolName ?? game.poolId ?? '',
-          )}
-          onChange={(value) => patch({ poolId: value })}
-        />
+        {competition.options.length > 1 && (
+          <SelectField
+            label={t('browser.competition')}
+            value={competition.value}
+            options={competition.options}
+            onChange={(value) => patch({ competitionId: value, stageId: '', poolId: '' })}
+          />
+        )}
+        {competition.settled && stage.options.length > 1 && (
+          <SelectField
+            label={t('browser.stage')}
+            value={stage.value}
+            options={stage.options}
+            onChange={(value) => patch({ stageId: value, poolId: '' })}
+          />
+        )}
+        {competition.settled && stage.settled && pool.options.length > 1 && (
+          <SelectField
+            label={t('browser.pool')}
+            value={pool.value}
+            options={pool.options}
+            onChange={(value) => patch({ poolId: value })}
+          />
+        )}
         <TextField
           label={t('browser.from')}
           type="date"
