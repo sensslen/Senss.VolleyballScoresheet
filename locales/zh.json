@@ -61,7 +61,6 @@
     "needCredential": "{{name}} 需要{{credential}}才能列出比赛。请在设置中添加，或新建空白记录表全部手工填写。",
     "openSettings": "打开设置",
     "credentialFallback": "凭据",
-    "region": "地区",
     "competition": "联赛",
     "stage": "阶段",
     "pool": "小组",
@@ -74,7 +73,7 @@
     "filterPlaceholder": "球队、场馆、比赛编号",
     "refresh": "刷新",
     "use": "使用这场比赛",
-    "empty": "该地区和时间范围内没有比赛。",
+    "empty": "该时间范围内没有比赛。",
     "noMatch": "已加载的比赛中没有符合这些筛选条件的。",
     "more": "还有 {{count}} 场比赛符合条件。请缩小筛选范围。",
     "loading": {

@@ -14,7 +14,6 @@ export const manualProvider: FederationProvider = {
     gameDetail: false,
     rosters: false,
     officials: false,
-    regions: false,
     submitResult: false,
   },
   isReady() {

@@ -61,7 +61,6 @@
     "needCredential": "{{name}} ha bisogno di {{credential}} per elencare le gare. Inseriscilo nelle Impostazioni, oppure avvia un referto vuoto e compila tutto a mano.",
     "openSettings": "Apri le impostazioni",
     "credentialFallback": "una credenziale",
-    "region": "Regione",
     "competition": "Campionato",
     "stage": "Fase",
     "pool": "Girone",
@@ -74,7 +73,7 @@
     "filterPlaceholder": "Squadra, palestra, n. gara",
     "refresh": "Aggiorna",
     "use": "Usa questa gara",
-    "empty": "Nessuna gara per questa regione e questo periodo.",
+    "empty": "Nessuna gara per questo periodo.",
     "noMatch": "Nessuna gara caricata corrisponde a questi filtri.",
     "more": "Altre {{count}} gare corrispondono. Restringi i filtri per vederle.",
     "loading": {

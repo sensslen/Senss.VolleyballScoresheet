@@ -8,10 +8,10 @@ export interface Settings {
   /** Empty until the user picks one; callers resolve it through the provider registry. */
   providerId: string
   /** Last used browsing filters, so the game list opens where you left it. */
-  regionId?: string
   competitionId?: string
   stageId?: string
   poolId?: string
+  teamId?: string
 }
 
 function readJson<T>(key: string, fallback: T): T {

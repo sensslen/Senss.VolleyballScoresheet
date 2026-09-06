@@ -9,17 +9,15 @@ One country means one adapter. The app never branches on country: it talks to
 
 | Neutral      | Swiss Volley | Typical alternatives              |
 | ------------ | ------------ | --------------------------------- |
-| Region       | region       | district, province, association   |
 | Competition  | league       | division, series                  |
 | Stage        | phase        | round, qualification, playoffs     |
 | Pool         | group        | conference, bracket               |
 
-Only the region is asked for by name, through `listRegions`. Competition, stage and
-pool are read off the fixtures themselves (`competitionId`, `stageId`, `poolId` on
-`GameSummary`) and narrow the loaded list in the browser, so a federation that keeps
-its hierarchy behind separate endpoints - or behind a credential a club does not
-have - still gets working filters. Anything the federation does not have is simply
-left unimplemented.
+None of it is asked for by name. Every level is read off the fixtures themselves
+(`competitionId`, `stageId`, `poolId` and the two sides on `GameSummary`) and
+narrows the loaded list in the browser, so a federation that keeps its hierarchy
+behind separate endpoints - or behind a credential a club does not have - still
+gets working filters. A level the fixtures leave empty simply never appears.
 
 ## 2. Write the adapter
 
@@ -47,7 +45,6 @@ export function createExampleProvider(): FederationProvider {
       gameDetail: true,
       rosters: false,       // no squad endpoint: the UI stops offering roster import
       officials: true,
-      regions: false,
       seasons: false,
       submitResult: false,  // no federation accepts a scoresheet over its API
     },

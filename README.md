@@ -14,8 +14,9 @@ The published app lives at
 
 ## What it does
 
-- **Browse fixtures** down a federation's hierarchy (region, competition, stage, pool)
-  and pick the match you are scoring.
+- **Browse fixtures** by date, then down the hierarchy the fixtures themselves
+  report (competition, stage, pool, team), and pick the match you are scoring. A
+  level with nothing to choose stays out of the way.
 - **Prefill** the header, both team names, referees and venue from the fixture, and
   pull both squads with shirt numbers.
 - **Guide the sheet** step by step: header and officials, rosters with captain and

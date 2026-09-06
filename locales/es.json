@@ -61,7 +61,6 @@
     "needCredential": "{{name}} necesita {{credential}} para listar partidos. Añádelo en Ajustes, o empieza un acta en blanco y rellénalo todo a mano.",
     "openSettings": "Abrir ajustes",
     "credentialFallback": "una credencial",
-    "region": "Región",
     "competition": "Competición",
     "stage": "Fase",
     "pool": "Grupo",
@@ -74,7 +73,7 @@
     "filterPlaceholder": "Equipo, pabellón, n.º de partido",
     "refresh": "Actualizar",
     "use": "Usar este partido",
-    "empty": "No hay partidos para esta región y este periodo.",
+    "empty": "No hay partidos para este periodo.",
     "noMatch": "Ningún partido cargado coincide con estos filtros.",
     "more": "Hay {{count}} partidos más que coinciden. Acota los filtros para verlos.",
     "loading": {

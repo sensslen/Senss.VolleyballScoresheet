@@ -6,65 +6,70 @@ import {
   providerName,
   type FederationProvider,
   type GameSummary,
-  type Region,
 } from '../federation/types'
 import type { Settings } from '../scoresheet/storage'
 import { Banner, Card, EmptyState, SelectField, Spinner, TextField } from './components'
-
-type IdKey = 'competitionId' | 'stageId' | 'poolId'
 
 // A whole season runs into the thousands of fixtures, and putting every row in the
 // DOM is what makes the page crawl. The filters still work on the full list.
 const ROW_LIMIT = 200
 
+interface Choice {
+  value: string
+  label: string
+}
+
 /**
- * The competition, stage and pool the loaded fixtures report. Federations publish
- * the hierarchy behind endpoints of its own, but a club credential is not always
- * allowed to read those and every fixture carries the same values anyway.
+ * The choices the given fixtures offer at one level of the hierarchy, named and
+ * deduplicated. A fixture contributes more than one where the level belongs to the
+ * sides playing it rather than to the fixture itself.
  */
-function facetOptions(
-  games: GameSummary[],
-  idKey: IdKey,
-  label: (game: GameSummary) => string,
-): Array<{ value: string; label: string }> {
+function facetOptions(games: GameSummary[], choices: (game: GameSummary) => Choice[]): Choice[] {
   const named = new Map<string, string>()
   for (const game of games) {
-    const id = game[idKey]
-    if (id) named.set(id, label(game))
+    for (const { value, label } of choices(game)) if (value) named.set(value, label)
   }
   return [...named]
-    .map(([value, text]) => ({ value, label: text }))
+    .map(([value, label]) => ({ value, label }))
     .sort((a, b) => a.label.localeCompare(b.label))
 }
 
 /**
- * One level of the competition hierarchy: the choices the fixtures at this level
- * offer, and the one in force. A stored id the loaded fixtures no longer offer
- * filters nothing, so a stale setting cannot empty the list from behind a control
- * that is no longer on screen.
+ * One level of the hierarchy: the choices the fixtures above it left, and the one in
+ * force. Federations publish the hierarchy behind endpoints of its own, but a club
+ * credential is not always allowed to read those and every fixture carries the same
+ * values anyway.
+ *
+ * A stored id the level does not offer, because the fixtures moved on or because the
+ * level above has yet to be settled, filters nothing. No control that is off screen
+ * can narrow the list.
  */
 function facet(
   games: GameSummary[],
-  idKey: IdKey,
-  label: (game: GameSummary) => string,
+  choices: (game: GameSummary) => Choice[],
   stored: string,
+  aboveSettled = true,
 ) {
-  const options = facetOptions(games, idKey, label)
-  const value = options.some((option) => option.value === stored) ? stored : ''
+  const options = facetOptions(games, choices)
+  const carries = (game: GameSummary, id: string) => choices(game).some((option) => option.value === id)
+  // A level is worth asking about only where some choice would leave a fixture out.
+  // One choice narrows nothing, and neither do the two sides of a lone fixture.
+  const narrows = options.some((option) => games.some((game) => !carries(game, option.value)))
+  const value = aboveSettled && options.some((option) => option.value === stored) ? stored : ''
   return {
     options,
     value,
-    // Nothing left to ask once the level offers at most one choice, or once it
-    // has been made: the level below can take its turn.
-    settled: options.length <= 1 || value !== '',
-    matches: (game: GameSummary) => !value || game[idKey] === value,
+    show: aboveSettled && narrows,
+    /** Settled: nothing left to ask, or the choice made. The level below can take its turn. */
+    settled: aboveSettled && (!narrows || value !== ''),
+    matches: (game: GameSummary) => !value || carries(game, value),
   }
 }
 
 /**
- * Browses a federation's fixture list and hands the chosen game back. Region and
- * date range decide what is fetched; competition, stage, pool and the free text
- * box narrow what came back.
+ * Browses a federation's fixture list and hands the chosen game back. The date range
+ * decides what is fetched; competition, stage, pool, team and the free text box narrow
+ * what came back.
  */
 export function GameBrowser({
   provider,
@@ -80,7 +85,6 @@ export function GameBrowser({
   onPick: (game: GameSummary) => void
 }) {
   const { t } = useTranslation()
-  const [regions, setRegions] = useState<Region[]>([])
   // The fixtures together with the request they answer, so that "still loading" is
   // that mismatch rather than a second flag to keep in step.
   const [loaded, setLoaded] = useState<{ forRequest: string; games: GameSummary[] } | null>(null)
@@ -94,36 +98,21 @@ export function GameBrowser({
   // different request and fetches rather than sitting on what is already held.
   const [refreshes, setRefreshes] = useState(0)
 
-  const regionId = settings.regionId ?? ''
   const competitionId = settings.competitionId ?? ''
   const stageId = settings.stageId ?? ''
   const poolId = settings.poolId ?? ''
+  const teamId = settings.teamId ?? ''
   const name = providerName(provider, t)
   const ready = provider.isReady()
 
-  useEffect(() => {
-    if (!ready || !provider.listRegions) return
-    let cancelled = false
-
-    void provider.listRegions().then(
-      (items) => !cancelled && setRegions(items),
-      (cause) => !cancelled && setFailure(cause),
-    )
-
-    return () => {
-      cancelled = true
-    }
-  }, [provider, ready])
-
   const fetchable = provider.listGames
-  const request = JSON.stringify([provider.id, regionId, dateFrom, dateTo, refreshes])
+  const request = JSON.stringify([provider.id, dateFrom, dateTo, refreshes])
 
   useEffect(() => {
     if (!ready || !fetchable) return
     let cancelled = false
 
     void fetchable({
-      regionId: regionId || undefined,
       dateFrom: dateFrom || undefined,
       dateTo: dateTo || undefined,
     }).then(
@@ -143,7 +132,7 @@ export function GameBrowser({
     return () => {
       cancelled = true
     }
-  }, [fetchable, ready, request, regionId, dateFrom, dateTo])
+  }, [fetchable, ready, request, dateFrom, dateTo])
 
   const games = loaded?.games ?? []
   const loadingGames = ready && Boolean(fetchable) && loaded?.forRequest !== request
@@ -185,19 +174,43 @@ export function GameBrowser({
   // level only ever offers what is still reachable.
   const competition = facet(
     games,
-    'competitionId',
-    (game) => `${game.competitionName ?? game.competitionId}${genderMark(game)}`,
+    (game) => [
+      {
+        value: game.competitionId ?? '',
+        label: `${game.competitionName ?? game.competitionId}${genderMark(game)}`,
+      },
+    ],
     competitionId,
   )
   const inCompetition = games.filter(competition.matches)
-  const stage = facet(inCompetition, 'stageId', (game) => game.stageName ?? game.stageId ?? '', stageId)
+  const stage = facet(
+    inCompetition,
+    (game) => [{ value: game.stageId ?? '', label: game.stageName ?? game.stageId ?? '' }],
+    stageId,
+    competition.settled,
+  )
   const inStage = inCompetition.filter(stage.matches)
-  const pool = facet(inStage, 'poolId', (game) => game.poolName ?? game.poolId ?? '', poolId)
+  const pool = facet(
+    inStage,
+    (game) => [{ value: game.poolId ?? '', label: game.poolName ?? game.poolId ?? '' }],
+    poolId,
+    stage.settled,
+  )
+  const inPool = inStage.filter(pool.matches)
+  const team = facet(
+    inPool,
+    (game) => [
+      { value: game.home.id, label: game.home.name },
+      { value: game.away.id, label: game.away.name },
+    ],
+    teamId,
+    pool.settled,
+  )
 
   const needle = search.trim().toLowerCase()
-  const visible = inStage.filter(
+  const visible = inPool.filter(
     (game) =>
-      pool.matches(game) &&
+      team.matches(game) &&
       (!needle ||
         [game.home.name, game.away.name, game.competitionName, game.venue?.name, game.matchNumber]
           .filter(Boolean)
@@ -209,36 +222,36 @@ export function GameBrowser({
   return (
     <Card title={t('browser.title')} subtitle={`${provider.country.flag} ${name}`}>
       <div className="grid-4">
-        {provider.capabilities.regions && (
-          <SelectField
-            label={t('browser.region')}
-            value={regionId}
-            options={regions.map((region) => ({ value: region.id, label: region.name }))}
-            onChange={(value) => patch({ regionId: value, competitionId: '', stageId: '', poolId: '' })}
-          />
-        )}
-        {competition.options.length > 1 && (
+        {competition.show && (
           <SelectField
             label={t('browser.competition')}
             value={competition.value}
             options={competition.options}
-            onChange={(value) => patch({ competitionId: value, stageId: '', poolId: '' })}
+            onChange={(value) => patch({ competitionId: value, stageId: '', poolId: '', teamId: '' })}
           />
         )}
-        {competition.settled && stage.options.length > 1 && (
+        {stage.show && (
           <SelectField
             label={t('browser.stage')}
             value={stage.value}
             options={stage.options}
-            onChange={(value) => patch({ stageId: value, poolId: '' })}
+            onChange={(value) => patch({ stageId: value, poolId: '', teamId: '' })}
           />
         )}
-        {competition.settled && stage.settled && pool.options.length > 1 && (
+        {pool.show && (
           <SelectField
             label={t('browser.pool')}
             value={pool.value}
             options={pool.options}
-            onChange={(value) => patch({ poolId: value })}
+            onChange={(value) => patch({ poolId: value, teamId: '' })}
+          />
+        )}
+        {team.show && (
+          <SelectField
+            label={t('common.team')}
+            value={team.value}
+            options={team.options}
+            onChange={(value) => patch({ teamId: value })}
           />
         )}
         <TextField

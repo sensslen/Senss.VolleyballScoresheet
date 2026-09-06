@@ -61,7 +61,6 @@
     "needCredential": "{{name}} maçları listeleyebilmek için {{credential}} istiyor. Ayarlar'dan ekleyin ya da boş bir cetvel başlatıp her şeyi elle doldurun.",
     "openSettings": "Ayarları aç",
     "credentialFallback": "bir kimlik bilgisi",
-    "region": "Bölge",
     "competition": "Lig",
     "stage": "Aşama",
     "pool": "Grup",
@@ -74,7 +73,7 @@
     "filterPlaceholder": "Takım, salon, maç no",
     "refresh": "Yenile",
     "use": "Bu maçı kullan",
-    "empty": "Bu bölge ve tarih aralığı için maç yok.",
+    "empty": "Bu tarih aralığı için maç yok.",
     "noMatch": "Yüklenen maçların hiçbiri bu filtrelere uymuyor.",
     "more": "{{count}} maç daha uyuyor. Görmek için filtreleri daraltın.",
     "loading": {

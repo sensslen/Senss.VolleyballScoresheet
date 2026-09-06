@@ -61,7 +61,6 @@
     "needCredential": "{{name}} braucht {{credential}}, um Spiele aufzulisten. Trage ihn unter Einstellungen ein, oder starte ein leeres Matchblatt und fülle alles von Hand aus.",
     "openSettings": "Einstellungen öffnen",
     "credentialFallback": "eine Zugangsberechtigung",
-    "region": "Region",
     "competition": "Liga",
     "stage": "Phase",
     "pool": "Gruppe",
@@ -74,7 +73,7 @@
     "filterPlaceholder": "Team, Halle, Spielnummer",
     "refresh": "Aktualisieren",
     "use": "Dieses Spiel übernehmen",
-    "empty": "Für diese Region und diesen Zeitraum kamen keine Spiele zurück.",
+    "empty": "Für diesen Zeitraum kamen keine Spiele zurück.",
     "noMatch": "Keine geladene Partie passt zu diesen Filtern.",
     "more": "{{count}} weitere Spiele passen. Grenze die Filter ein, um sie zu sehen.",
     "loading": {

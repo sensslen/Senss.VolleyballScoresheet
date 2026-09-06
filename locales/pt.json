@@ -61,7 +61,6 @@
     "needCredential": "{{name}} precisa de {{credential}} para listar jogos. Cadastre em Configurações, ou comece uma súmula em branco e preencha tudo à mão.",
     "openSettings": "Abrir configurações",
     "credentialFallback": "uma credencial",
-    "region": "Região",
     "competition": "Competição",
     "stage": "Fase",
     "pool": "Grupo",
@@ -74,7 +73,7 @@
     "filterPlaceholder": "Equipe, ginásio, nº do jogo",
     "refresh": "Atualizar",
     "use": "Usar esta partida",
-    "empty": "Nenhum jogo para esta região e este período.",
+    "empty": "Nenhum jogo para este período.",
     "noMatch": "Nenhum jogo carregado corresponde a estes filtros.",
     "more": "Mais {{count}} jogos correspondem. Refine os filtros para os ver.",
     "loading": {

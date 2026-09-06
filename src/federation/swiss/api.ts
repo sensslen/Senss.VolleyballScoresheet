@@ -132,7 +132,6 @@ export class SwissVolleyApi {
   }
 
   listGames(query: {
-    region?: string
     gender?: string
     leagueId?: string
     phaseId?: string
@@ -144,7 +143,6 @@ export class SwissVolleyApi {
     includeCup?: boolean
   }): Promise<SwissGameDto[]> {
     return this.get('/indoor/games', {
-      region: query.region,
       gender: query.gender,
       leagueId: query.leagueId,
       phaseId: query.phaseId,

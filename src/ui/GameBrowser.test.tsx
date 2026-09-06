@@ -32,6 +32,7 @@ const NLA_W_QUALI = game('1', 'f', ['5027', 'NLA'], ['10032', 'Qualifikation'], 
 const NLA_W_PLAYOFF = game('2', 'f', ['5027', 'NLA'], ['10033', 'Playoff'], ['9070', 'Gruppe B'])
 const NLA_M_QUALI = game('3', 'm', ['5026', 'NLA'], ['10040', 'Qualifikation'], ['9080', 'Gruppe C'])
 const NLA_W_QUALI_D = game('4', 'f', ['5027', 'NLA'], ['10032', 'Qualifikation'], ['9071', 'Gruppe D'])
+const NLA_W_QUALI_A2 = game('5', 'f', ['5027', 'NLA'], ['10032', 'Qualifikation'], ['9069', 'Gruppe A'])
 
 function stubProvider(overrides: Partial<FederationProvider> = {}): FederationProvider {
   return {
@@ -43,12 +44,10 @@ function stubProvider(overrides: Partial<FederationProvider> = {}): FederationPr
       gameDetail: true,
       rosters: true,
       officials: true,
-      regions: true,
       submitResult: false,
     },
     isReady: () => true,
-    listRegions: async () => [{ id: 'SVRZ', name: 'Region Zürich' }],
-    listGames: async () => [NLA_W_QUALI, NLA_W_PLAYOFF, NLA_M_QUALI, NLA_W_QUALI_D],
+    listGames: async () => [NLA_W_QUALI, NLA_W_PLAYOFF, NLA_M_QUALI, NLA_W_QUALI_D, NLA_W_QUALI_A2],
     ...overrides,
   }
 }
@@ -87,29 +86,19 @@ describe('fixture filters', () => {
 
     await waitFor(() => expect(matchRows()).toEqual(['Home 1 vs Away 1']))
     expect(listGames).toHaveBeenCalledTimes(1)
-    expect(listGames.mock.calls.at(0)?.at(0)).toEqual({
-      regionId: undefined,
-      dateFrom: undefined,
-      dateTo: undefined,
-    })
+    expect(listGames.mock.calls.at(0)?.at(0)).toEqual({ dateFrom: undefined, dateTo: undefined })
   })
 
-  it('reloads for the picked region and for a date range', async () => {
+  it('reloads for a date range', async () => {
     const user = userEvent.setup()
     const listGames = vi.fn<(query: GameQuery) => Promise<GameSummary[]>>(async () => [NLA_W_QUALI])
     render(<Harness provider={stubProvider({ listGames })} />)
 
-    const region = screen.getByLabelText('Region') as HTMLSelectElement
-    await waitFor(() => expect(region.disabled).toBe(false))
-    await user.selectOptions(region, 'SVRZ')
-
-    await waitFor(() => expect(listGames).toHaveBeenCalledTimes(2))
-    expect(listGames.mock.calls.at(-1)?.at(0)).toMatchObject({ regionId: 'SVRZ' })
-
+    await waitFor(() => expect(listGames).toHaveBeenCalledTimes(1))
     await user.type(screen.getByLabelText('From'), '2026-09-01')
 
-    await waitFor(() => expect(listGames.mock.calls.length).toBeGreaterThan(2))
-    expect(listGames.mock.calls.at(-1)?.at(0)).toMatchObject({ regionId: 'SVRZ', dateFrom: '2026-09-01' })
+    await waitFor(() => expect(listGames.mock.calls.length).toBeGreaterThan(1))
+    expect(listGames.mock.calls.at(-1)?.at(0)).toMatchObject({ dateFrom: '2026-09-01' })
   })
 
   it('refetches the same request when refresh is pressed', async () => {
@@ -137,39 +126,73 @@ describe('fixture filters', () => {
     const user = userEvent.setup()
     render(<Harness provider={stubProvider()} />)
 
-    await waitFor(() => expect(matchRows()).toHaveLength(4))
+    await waitFor(() => expect(matchRows()).toHaveLength(5))
     expect(optionsOf('Competition')).toEqual(['--', 'NLA (M)', 'NLA (W)'])
     expect(screen.queryByLabelText('Stage')).toBeNull()
     expect(screen.queryByLabelText('Pool')).toBeNull()
 
     await user.selectOptions(screen.getByLabelText('Competition'), '5027')
-    expect(matchRows()).toEqual(['Home 1 vs Away 1', 'Home 2 vs Away 2', 'Home 4 vs Away 4'])
+    expect(matchRows()).toEqual([
+      'Home 1 vs Away 1',
+      'Home 2 vs Away 2',
+      'Home 4 vs Away 4',
+      'Home 5 vs Away 5',
+    ])
     expect(optionsOf('Stage')).toEqual(['--', 'Playoff', 'Qualifikation'])
     expect(screen.queryByLabelText('Pool')).toBeNull()
 
     await user.selectOptions(screen.getByLabelText('Stage'), '10032')
-    expect(matchRows()).toEqual(['Home 1 vs Away 1', 'Home 4 vs Away 4'])
+    expect(matchRows()).toEqual(['Home 1 vs Away 1', 'Home 4 vs Away 4', 'Home 5 vs Away 5'])
     expect(optionsOf('Pool')).toEqual(['--', 'Gruppe A', 'Gruppe D'])
 
     await user.selectOptions(screen.getByLabelText('Pool'), '9069')
-    expect(matchRows()).toEqual(['Home 1 vs Away 1'])
+    expect(matchRows()).toEqual(['Home 1 vs Away 1', 'Home 5 vs Away 5'])
   })
 
   it('hides a level with nothing to choose and lets the next one take its turn', async () => {
     render(<Harness provider={stubProvider({ listGames: async () => [NLA_W_QUALI, NLA_W_PLAYOFF] })} />)
 
     await waitFor(() => expect(matchRows()).toHaveLength(2))
-    // One competition, one pool per stage: only the stage is worth asking about.
-    expect(screen.queryByLabelText('Competition')).toBeNull()
-    expect(screen.queryByLabelText('Pool')).toBeNull()
+    // One competition, and a pool that follows the stage exactly: only the stage
+    // is a question worth putting.
+    expect(filterLabels()).toEqual(['Stage', 'From', 'To', 'Filter list'])
     expect(optionsOf('Stage')).toEqual(['--', 'Playoff', 'Qualifikation'])
   })
 
-  it('keeps the region, date and text filters up whatever the fixtures offer', async () => {
+  it('keeps the date and text filters up whatever the fixtures offer', async () => {
     render(<Harness provider={stubProvider({ listGames: async () => [NLA_W_QUALI] })} />)
 
     await waitFor(() => expect(matchRows()).toHaveLength(1))
-    expect(filterLabels()).toEqual(['Region', 'From', 'To', 'Filter list'])
+    // One fixture: every level has a single choice, so no select earns its place.
+    expect(filterLabels()).toEqual(['From', 'To', 'Filter list'])
+  })
+
+  it('offers the teams once one league and group is all that is left', async () => {
+    const user = userEvent.setup()
+    render(<Harness provider={stubProvider({ listGames: async () => [NLA_W_QUALI, NLA_W_QUALI_A2] })} />)
+
+    await waitFor(() => expect(matchRows()).toHaveLength(2))
+    expect(filterLabels()).toEqual(['Team', 'From', 'To', 'Filter list'])
+    expect(optionsOf('Team')).toEqual(['--', 'Away 1', 'Away 5', 'Home 1', 'Home 5'])
+
+    await user.selectOptions(screen.getByLabelText('Team'), '5h')
+    expect(matchRows()).toEqual(['Home 5 vs Away 5'])
+  })
+
+  it('holds the teams back until the levels above are settled', async () => {
+    const user = userEvent.setup()
+    render(<Harness provider={stubProvider()} />)
+
+    await waitFor(() => expect(matchRows()).toHaveLength(5))
+    expect(screen.queryByLabelText('Team')).toBeNull()
+
+    await user.selectOptions(screen.getByLabelText('Competition'), '5027')
+    await user.selectOptions(screen.getByLabelText('Stage'), '10032')
+    // Two pools still to choose between, so the team is not yet the question.
+    expect(screen.queryByLabelText('Team')).toBeNull()
+
+    await user.selectOptions(screen.getByLabelText('Pool'), '9069')
+    expect(optionsOf('Team')).toEqual(['--', 'Away 1', 'Away 5', 'Home 1', 'Home 5'])
   })
 
   it('ignores a stored id the loaded fixtures no longer offer', async () => {
@@ -190,7 +213,7 @@ describe('fixture filters', () => {
     const user = userEvent.setup()
     render(<Harness provider={stubProvider()} />)
 
-    await waitFor(() => expect(matchRows()).toHaveLength(4))
+    await waitFor(() => expect(matchRows()).toHaveLength(5))
     await user.type(screen.getByLabelText('Filter list'), 'nothing matches this')
 
     expect(screen.getByText('No loaded fixture matches these filters.')).toBeTruthy()

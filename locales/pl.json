@@ -61,7 +61,6 @@
     "needCredential": "{{name}} potrzebuje {{credential}}, aby wyświetlić mecze. Dodaj go w Ustawieniach albo rozpocznij pusty protokół i wypełnij wszystko ręcznie.",
     "openSettings": "Otwórz ustawienia",
     "credentialFallback": "poświadczenia",
-    "region": "Region",
     "competition": "Liga",
     "stage": "Faza",
     "pool": "Grupa",
@@ -74,7 +73,7 @@
     "filterPlaceholder": "Drużyna, hala, nr meczu",
     "refresh": "Odśwież",
     "use": "Użyj tego meczu",
-    "empty": "Brak meczów dla tego regionu i zakresu dat.",
+    "empty": "Brak meczów dla tego zakresu dat.",
     "noMatch": "Żaden wczytany mecz nie pasuje do tych filtrów.",
     "more": "Pasuje jeszcze {{count}} meczów. Zawęź filtry, aby je zobaczyć.",
     "loading": {

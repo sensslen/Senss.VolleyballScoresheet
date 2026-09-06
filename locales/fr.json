@@ -61,7 +61,6 @@
     "needCredential": "{{name}} a besoin de {{credential}} pour lister les matchs. Ajoutez-le dans les Réglages, ou commencez une feuille vierge et remplissez tout à la main.",
     "openSettings": "Ouvrir les réglages",
     "credentialFallback": "un identifiant",
-    "region": "Région",
     "competition": "Championnat",
     "stage": "Phase",
     "pool": "Poule",
@@ -74,7 +73,7 @@
     "filterPlaceholder": "Équipe, salle, n° de match",
     "refresh": "Actualiser",
     "use": "Utiliser ce match",
-    "empty": "Aucun match pour cette région et cette période.",
+    "empty": "Aucun match pour cette période.",
     "noMatch": "Aucun match chargé ne correspond à ces filtres.",
     "more": "{{count}} autres matchs correspondent. Affinez les filtres pour les atteindre.",
     "loading": {

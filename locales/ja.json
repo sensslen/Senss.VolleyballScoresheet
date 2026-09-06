@@ -61,7 +61,6 @@
     "needCredential": "{{name}} で試合一覧を表示するには{{credential}}が必要です。設定から追加するか、白紙の記録用紙を作成してすべて手入力してください。",
     "openSettings": "設定を開く",
     "credentialFallback": "認証情報",
-    "region": "地域",
     "competition": "リーグ",
     "stage": "ステージ",
     "pool": "グループ",
@@ -74,7 +73,7 @@
     "filterPlaceholder": "チーム、体育館、試合番号",
     "refresh": "再読み込み",
     "use": "この試合を使う",
-    "empty": "この地域と期間の試合はありません。",
+    "empty": "この期間の試合はありません。",
     "noMatch": "読み込んだ試合の中に、この条件に合うものはありません。",
     "more": "ほかに{{count}}件の試合が該当します。フィルターで絞り込んでください。",
     "loading": {

@@ -61,7 +61,6 @@
     "needCredential": "{{name}} needs {{credential}} before it can list games. Add it under Settings, or start a blank sheet and fill everything in by hand.",
     "openSettings": "Open settings",
     "credentialFallback": "a credential",
-    "region": "Region",
     "competition": "Competition",
     "stage": "Stage",
     "pool": "Pool",
@@ -74,7 +73,7 @@
     "filterPlaceholder": "Team, hall, match no.",
     "refresh": "Refresh",
     "use": "Use this match",
-    "empty": "No fixtures came back for this region and date range.",
+    "empty": "No fixtures came back for this date range.",
     "noMatch": "No loaded fixture matches these filters.",
     "more": "{{count}} more fixtures match. Narrow the filters to reach them.",
     "loading": {

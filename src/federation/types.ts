@@ -1,9 +1,9 @@
 /**
  * Country-neutral vocabulary every federation adapter maps onto.
  *
- * Federations name their hierarchy differently (Swiss Volley: region / league /
- * phase / group). The app only ever sees Region -> Competition -> Stage -> Pool,
- * so adding a country means writing one adapter, not touching the UI.
+ * Federations name their hierarchy differently (Swiss Volley: league / phase /
+ * group). The app only ever sees Competition -> Stage -> Pool, so adding a country
+ * means writing one adapter, not touching the UI.
  */
 
 import type { LocalizedMessage } from '../localizedMessage'
@@ -17,11 +17,6 @@ export interface Country {
   nameKey: string
   /** Emoji flag, shown in the federation picker. */
   flag: string
-}
-
-export interface Region {
-  id: string
-  name: string
 }
 
 export interface TeamRef {
@@ -92,7 +87,6 @@ export interface GameDetail extends GameSummary {
 }
 
 export interface GameQuery {
-  regionId?: string
   /** YYYY-MM-DD */
   dateFrom?: string
   dateTo?: string
@@ -103,7 +97,6 @@ export interface ProviderCapabilities {
   gameDetail: boolean
   rosters: boolean
   officials: boolean
-  regions: boolean
   /**
    * Whether the federation accepts a finished scoresheet over its API. No known
    * federation does, so the transfer wizard ends by helping a human file it instead.
@@ -147,7 +140,6 @@ export interface FederationProvider {
   /** False when a required credential is missing. */
   isReady(): boolean
 
-  listRegions?(): Promise<Region[]>
   listGames?(query: GameQuery): Promise<GameSummary[]>
   getGame?(gameId: string): Promise<GameDetail>
   getRoster?(teamId: string): Promise<Roster>

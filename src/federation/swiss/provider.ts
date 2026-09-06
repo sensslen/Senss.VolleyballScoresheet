@@ -6,7 +6,6 @@ import type {
   GameSummary,
   Gender,
   Official,
-  Region,
   Roster,
   TeamRef,
   Venue,
@@ -14,30 +13,6 @@ import type {
 import { SwissVolleyApi, type SwissGameDto, type SwissTeamInGameDto, type SwissTranslations } from './api'
 
 export const SWISS_PROVIDER_ID = 'swiss-volley'
-
-/**
- * The published region codes and their labels. A club API key is refused (403) by
- * /indoor/regions and the rest of the hierarchy, so the list is carried here and the
- * remaining levels are read off the fixtures themselves.
- */
-const REGION_NAMES: Record<string, string> = {
-  SV: 'Swiss Volley (national)',
-  SVRA: 'Region Aargau',
-  SVRBA: 'Region Basel',
-  SVRBE: 'Region Bern',
-  SVRF: 'Region Fribourg',
-  SVRG: 'Region Genève',
-  SVRGSGL: 'Region Graubünden / Sarganserland / Glarus',
-  SVRI: 'Region Innerschweiz',
-  SVRJS: 'Region Jura / Seeland',
-  SVRN: 'Region Neuchâtel',
-  SVRNO: 'Region Nordostschweiz',
-  SVRS: 'Region Solothurn',
-  SVRT: 'Region Ticino',
-  SVRV: 'Region Valais',
-  SVRW: 'Region Waadt',
-  SVRZ: 'Region Zürich',
-}
 
 function label(translations: SwissTranslations | undefined, fallback: string): string {
   return translations?.d ?? translations?.D ?? fallback
@@ -149,7 +124,6 @@ export function createSwissVolleyProvider(): FederationProvider {
       gameDetail: true,
       rosters: true,
       officials: true,
-      regions: true,
       submitResult: false,
     },
     auth: {
@@ -163,13 +137,8 @@ export function createSwissVolleyProvider(): FederationProvider {
       return api.hasToken()
     },
 
-    async listRegions(): Promise<Region[]> {
-      return Object.entries(REGION_NAMES).map(([id, name]) => ({ id, name }))
-    },
-
     async listGames(query: GameQuery): Promise<GameSummary[]> {
       const games = await api.listGames({
-        region: query.regionId,
         dateStart: query.dateFrom,
         dateEnd: query.dateTo ?? aYearOut(),
       })
