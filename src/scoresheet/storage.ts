@@ -1,4 +1,4 @@
-import { browserStorage } from '../browserStorage'
+import { browserStorage, readJson, writeJson } from '../browserStorage'
 import type { Scoresheet } from './model'
 
 const SHEETS_KEY = 'vbs.sheets.v1'
@@ -14,24 +14,51 @@ export interface Settings {
   teamId?: string
 }
 
-function readJson<T>(key: string, fallback: T): T {
-  const storage = browserStorage()
-  if (!storage) return fallback
-  try {
-    const raw = storage.getItem(key)
-    return raw ? (JSON.parse(raw) as T) : fallback
-  } catch {
-    return fallback
-  }
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null
 }
 
-function writeJson(key: string, value: unknown): void {
-  browserStorage()?.setItem(key, JSON.stringify(value))
+function isStoredScoresheet(value: unknown): value is Scoresheet {
+  return isRecord(value)
+    && value.version === 2
+    && typeof value.id === 'string'
+    && typeof value.createdAt === 'string'
+    && typeof value.updatedAt === 'string'
+    && isRecord(value.header)
+    && isRecord(value.officials)
+    && isRecord(value.rules)
+    && isRecord(value.teams)
+    && Array.isArray(value.sets)
+    && Array.isArray(value.sanctions)
+    && typeof value.remarks === 'string'
 }
 
 export const sheetStore = {
+  clear(): void {
+    browserStorage()?.removeItem(SHEETS_KEY)
+  },
   all(): Scoresheet[] {
-    return readJson<Scoresheet[]>(SHEETS_KEY, []).filter((sheet) => sheet.version === 1)
+    const raw = browserStorage()?.getItem(SHEETS_KEY)
+    if (!raw) return []
+    let stored: unknown
+    try {
+      stored = JSON.parse(raw)
+    } catch {
+      throw new Error('Saved scoresheets contain invalid data. They were not loaded or changed.')
+    }
+    if (!Array.isArray(stored)) {
+      throw new Error('Saved scoresheets have an invalid format. They were not loaded or changed.')
+    }
+    const unsupportedIndex = stored.findIndex((sheet) => !isRecord(sheet) || sheet.version !== 2)
+    if (unsupportedIndex !== -1) {
+      const invalidSheet = stored[unsupportedIndex]
+      const version = isRecord(invalidSheet) ? invalidSheet.version : undefined
+      throw new Error(`A saved scoresheet uses unsupported format${version === undefined ? '' : ` v${String(version)}`}. It was not loaded or changed.`)
+    }
+    if (stored.some((sheet) => !isStoredScoresheet(sheet))) {
+      throw new Error('A saved scoresheet is incomplete or corrupted. It was not loaded or changed.')
+    }
+    return stored as Scoresheet[]
   },
   save(sheet: Scoresheet): void {
     const sheets = sheetStore.all()

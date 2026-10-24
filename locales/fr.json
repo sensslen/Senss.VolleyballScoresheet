@@ -1,7 +1,4 @@
 {
-  "language": {
-    "name": "Français"
-  },
   "common": {
     "teamSide": "Équipe {{side}}",
     "unnamed": "(sans nom)",
@@ -10,10 +7,7 @@
     "open": "Ouvrir",
     "delete": "Supprimer",
     "remove": "Retirer",
-    "back": "Retour",
-    "next": "Suivant",
     "print": "Imprimer",
-    "copy": "Copier en texte",
     "copied": "Copié",
     "date": "Date",
     "score": "Score",
@@ -30,11 +24,10 @@
   },
   "app": {
     "title": "Assistant feuille de match volley-ball",
-    "tagline": "Vous guide dans une feuille de match internationale, puis case par case pour la recopier sur la feuille papier.",
+    "tagline": "Enregistrez le match, puis recopiez les données de la feuille remplie sur papier.",
     "footer": "Tout reste dans ce navigateur. La feuille papier demeure le document officiel ; cette application aide seulement à la remplir sans erreur de calcul.",
     "needSheet": "Commencez ou ouvrez d'abord une feuille.",
-    "version": "Version {{version}}",
-    "loading": "Chargement..."
+    "version": "Version {{version}}"
   },
   "tabs": {
     "start": { "label": "Match", "hint": "Choisir une rencontre ou partir de zéro" },
@@ -120,11 +113,11 @@
     "bestOf": "Au meilleur des {{count}}"
   },
   "teams": {
+    "staff": "Encadrement",
     "cardTitle": "Équipe {{side}} - {{name}}",
     "home": "Équipe recevante au calendrier.",
     "away": "Équipe visiteuse au calendrier.",
     "import": "Importer l'effectif",
-    "addPlayer": "Ajouter un joueur",
     "field": {
       "name": "Nom de l'équipe",
       "club": "Club",
@@ -141,8 +134,7 @@
     "tooManyLiberos": "Plus de deux libéros désignés.",
     "tooManyPlayers": "{{count}} joueurs inscrits ; le règlement en autorise {{allowed}}.",
     "col": {
-      "lastName": "Nom",
-      "firstName": "Prénom",
+      "birthDate": "Date de naissance",
       "licence": "Licence",
       "captainShort": "C",
       "liberoShort": "L"
@@ -169,10 +161,9 @@
       "firstServe": "Sert en premier dans ce set",
       "decidingHint": "Le set décisif commence par un nouveau tirage au sort.",
       "locked": "Le set a commencé ; ne modifiez la composition que pour corriger une erreur de saisie.",
-      "position": "Position {{label}}",
-      "libero": "Libéro sur la feuille",
-      "addLibero": "Ajouter un libéro"
+      "position": "Position {{label}}"
     },
+    "rosterRequired": "Saisissez au moins 6 joueurs avec un numéro et un entraîneur pour chaque équipe afin d'activer le score.",
     "scoring": {
       "title": "Score du set {{number}}",
       "serving": "au service",
@@ -184,6 +175,8 @@
       "setFinished": "Le set {{number}} se termine {{a}}:{{b}} pour l'équipe {{side}}. Inscrivez la durée dans le tableau des résultats."
     },
     "subs": {
+      "return": "Faire revenir le n° {{starter}} pour le n° {{substitute}}",
+      "returned": "Le n° {{number}} a été remplacé par le titulaire de retour",
       "title": "Remplacements",
       "heading": "Équipe {{side}} ({{used}}/{{max}} utilisés)",
       "leaving": "Position qui sort",
@@ -216,12 +209,15 @@
     "noFirstServe": "Le set {{number}} n'a pas encore de premier service enregistré.",
     "liberoServing": "L'équipe {{side}} a un libéro en position de service, ce que ce règlement n'autorise pas.",
     "blocker": {
+      "duplicateLineup": "L'équipe {{side}} a un joueur sélectionné à plusieurs positions.",
       "noSet": "Ce set n'a pas été commencé.",
       "noFirstServe": "Indiquez quelle équipe sert en premier dans ce set.",
+      "noLeftSide": "Indiquez quelle équipe commence à gauche dans le set décisif.",
       "lineup": "L'équipe {{side}} doit avoir ses six positions de départ avant le premier échange.",
       "setFinished": "Ce set est terminé."
     },
     "sub": {
+      "pairing": "Le titulaire et son remplaçant doivent rester associés pour ce set.",
       "noSet": "Ce set n'existe pas.",
       "setFinished": "Le set est déjà terminé.",
       "emptySlot": "Cette position n'a pas encore de joueur sur le terrain.",
@@ -237,67 +233,34 @@
     }
   },
   "transfer": {
+    "total": "Total",
+    "filledTitle": "Feuille de match remplie",
+    "filledHint": "Zoomez avec la molette et faites glisser pour déplacer. Sur écran tactile, déplacez avec un doigt ou pincez avec deux. Choisissez une section pour l'ajuster à la vue.",
+    "zoomIn": "Agrandir",
+    "zoomOut": "Réduire",
+    "viewport": "Afficher la section",
+    "zoom": "Zoom",
+    "fit": "Ajuster à la largeur",
+    "reference": "Guide Swiss Volley",
+    "homeTeam": "Équipe à domicile",
+    "guestTeam": "Équipe visiteuse",
+    "sideSwitch": "Points au changement de côté",
     "title": "Reporter sur la feuille papier",
-    "subtitle": "Une case à la fois, dans l'ordre où un marqueur remplit la feuille.",
-    "step": "Étape {{current}} sur {{total}}",
-    "progress": "{{done}} cases sur {{total}} terminées",
-    "markDone": "Marquer comme recopiée",
-    "markNotDone": "Retirer la marque",
-    "doneAndNext": "Recopiée, case suivante",
-    "finish": "Terminer",
-    "restart": "Reprendre à la première case",
-    "overview": "Toutes les cases",
-    "allDone": "Toutes les cases sont marquées recopiées. Vérifiez les totaux sur la feuille papier avant les signatures.",
-    "whatToWrite": "Ce qu'il faut écrire",
-    "printSection": "Imprimer cette case",
-    "copySection": "Copier cette case en texte",
-    "notStarted": "Set non commencé.",
     "noPlayers": "Aucun joueur saisi pour l'équipe {{side}}.",
-    "noRallies": "Aucun échange enregistré dans ce set.",
-    "noRounds": "Aucun tour de service pour l'instant.",
-    "noSubstitutions": "Aucun remplacement.",
     "noSanctions": "Aucune sanction enregistrée."
   },
   "section": {
-    "header": {
-      "title": "En-tête et officiels",
-      "help": "Bandeau supérieur de la feuille. Reportez la compétition, le numéro de match, la date, l'heure et la salle, puis les noms des deux équipes et les officiels. Écrivez les noms exactement comme sur les licences."
-    },
-    "toss": {
-      "title": "Tirage au sort et côtés",
-      "help": "Indiquez quelle équipe sert et laquelle est à gauche au set 1. Les équipes changent de côté à chaque set ; le set décisif a son propre tirage et un changement de côté à 8 points."
-    },
     "roster": {
-      "title": "Effectif de l'équipe {{side}}",
-      "help": "Remplissez la colonne de l'équipe dans l'ordre des numéros de maillot, entourez le capitaine et marquez chaque libéro d'un L. L'entraîneur et son adjoint viennent en dessous."
-    },
-    "lineup": {
-      "title": "Set {{number}} : compositions de départ",
-      "help": "Inscrivez le six de départ aux positions I à VI. Cet ordre est aussi l'ordre de service, il doit donc correspondre à la fiche remise par l'entraîneur."
-    },
-    "score": {
-      "title": "Set {{number}} : score continu",
-      "help": "Déroulez les tours de service : inscrivez le numéro du serveur, puis barrez chaque point gagné sur ce service. La liste en dessous montre le score après chaque point."
-    },
-    "changes": {
-      "title": "Set {{number}} : remplacements et temps morts",
-      "help": "Notez chaque remplacement à la position où il a eu lieu, le numéro entrant au-dessus du sortant et le score à côté. Les temps morts vont dans les petites cases sous la forme du score auquel ils ont été pris."
+      "title": "Effectif de l'équipe {{side}}"
     },
     "results": {
-      "title": "Tableau des résultats",
-      "help": "Une ligne par set : durée, les deux scores, remplacements, temps morts et vainqueur. Ajoutez les durées des sets, puis totalisez les points et la durée du match."
+      "title": "Tableau des résultats"
     },
     "sanctions": {
-      "title": "Sanctions",
-      "help": "Une ligne par sanction avec l'équipe, le membre, le set et le score auquel elle a été donnée."
-    },
-    "remarks": {
-      "title": "Remarques et signatures",
-      "help": "Notez les éventuelles remarques, puis recueillez les signatures : les capitaines d'abord, ensuite les entraîneurs, le marqueur et enfin les deux arbitres."
+      "title": "Sanctions"
     },
     "submit": {
-      "title": "Transmettre le résultat",
-      "help": "La feuille papier reste à l'arbitre. Le résultat doit tout de même parvenir à la fédération : recopiez le récapitulatif ci-dessous dans son système."
+      "title": "Transmettre le résultat"
     }
   },
   "sheet": {
@@ -319,45 +282,30 @@
       "leftSide": "Côté gauche (set 1)",
       "rightSide": "Côté droit (set 1)",
       "team": "Équipe",
-      "coach": "Entraîneur",
-      "assistantCoach": "Entraîneur adjoint",
       "liberos": "Libéros",
-      "servesFirstSet": "Sert en premier",
       "setsWon": "Sets gagnés",
       "totalPoints": "Total des points",
       "matchWinner": "Vainqueur du match",
       "remarks": "Remarques",
-      "scorer": "Marqueur",
-      "captain": "Capitaine {{side}}",
-      "coachSide": "Entraîneur {{side}}",
-      "firstReferee": "1er arbitre"
+      "captain": "Capitaine {{side}}"
     },
-    "serviceRounds": "Tours de service équipe {{side}} - {{name}}",
     "rallyByRally": "Échange par échange",
     "col": {
-      "round": "Tour",
-      "serverNumber": "Serveur n°",
-      "pointsOnService": "Points marqués sur ce service",
-      "fromScore": "(à partir de {{own}}:{{opponent}})",
-      "pointTo": "Point pour",
       "scoreA": "Points A",
       "scoreB": "Points B",
       "playerNumber": "Joueur n°",
-      "in": "Entre",
-      "out": "Sort",
       "duration": "Durée",
+      "start": "Début",
+      "end": "Fin",
       "subsA": "Rempl. A",
       "subsB": "Rempl. B",
       "timeoutsA": "TM A",
       "timeoutsB": "TM B",
-      "winner": "Vainqueur",
       "member": "Membre"
     },
-    "timeouts": "Temps morts",
-    "signatureNote": "Les signatures se font sur papier : les capitaines signent après le match, puis les entraîneurs et les arbitres."
+    "timeouts": "Temps morts"
   },
   "submit": {
-    "title": "Transmettre le résultat",
     "noApi": {
       "title": "Pas de transmission directe",
       "body": "{{name}} publie le calendrier, les équipes et les effectifs mais n'accepte aucune feuille de match via son API : le résultat ne peut donc pas être transmis d'ici. Recopiez le récapitulatif ci-dessous dans le système de la fédération et remettez la feuille papier à l'arbitre comme d'habitude."
@@ -369,7 +317,6 @@
     "checklist": "Avant de rendre la feuille",
     "check": {
       "totals": "Le total de points par set correspond au score continu.",
-      "signatures": "Les deux capitaines, les deux entraîneurs et les deux arbitres ont signé.",
       "durations": "La durée de chaque set et celle du match sont inscrites.",
       "sanctions": "Chaque sanction figure dans la case des sanctions avec son score."
     }

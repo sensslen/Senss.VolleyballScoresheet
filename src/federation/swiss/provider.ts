@@ -116,6 +116,7 @@ export function createSwissVolleyProvider(): FederationProvider {
     name: 'Swiss Volley (Volley Manager)',
     country: { code: 'CH', nameKey: 'provider.swiss.country', flag: '🇨🇭' },
     infoUrl: 'https://swissvolley.docs.apiary.io/',
+    licence: { labelKey: 'teams.col.birthDate', inputType: 'date' },
     // Swiss Volley publishes fixtures, teams and squads but accepts no scoresheet,
     // so the result is reported by hand in Volley Manager.
     resultPortalUrl: 'https://volleymanager.volleyball.ch/',

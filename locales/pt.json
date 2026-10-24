@@ -1,7 +1,4 @@
 {
-  "language": {
-    "name": "Português"
-  },
   "common": {
     "teamSide": "Equipe {{side}}",
     "unnamed": "(sem nome)",
@@ -10,10 +7,7 @@
     "open": "Abrir",
     "delete": "Excluir",
     "remove": "Remover",
-    "back": "Voltar",
-    "next": "Avançar",
     "print": "Imprimir",
-    "copy": "Copiar como texto",
     "copied": "Copiado",
     "date": "Data",
     "score": "Placar",
@@ -30,11 +24,10 @@
   },
   "app": {
     "title": "Assistente de Súmula de Voleibol",
-    "tagline": "Conduz você pela súmula internacional e depois quadro a quadro, para copiar tudo na súmula de papel.",
+    "tagline": "Registre a partida e copie os dados da súmula preenchida para o papel.",
     "footer": "Tudo permanece neste navegador. A súmula de papel continua sendo o registro oficial; este app apenas ajuda a preenchê-la sem erros de cálculo.",
     "needSheet": "Comece ou abra uma súmula primeiro.",
-    "version": "Versão {{version}}",
-    "loading": "Carregando..."
+    "version": "Versão {{version}}"
   },
   "tabs": {
     "start": { "label": "Partida", "hint": "Escolha um jogo ou comece em branco" },
@@ -120,11 +113,11 @@
     "bestOf": "Melhor de {{count}}"
   },
   "teams": {
+    "staff": "Comissão técnica",
     "cardTitle": "Equipe {{side}} - {{name}}",
     "home": "Equipe mandante na tabela de jogos.",
     "away": "Equipe visitante na tabela de jogos.",
     "import": "Importar relação",
-    "addPlayer": "Adicionar atleta",
     "field": {
       "name": "Nome da equipe",
       "club": "Clube",
@@ -141,8 +134,7 @@
     "tooManyLiberos": "Mais de dois líberos marcados.",
     "tooManyPlayers": "{{count}} atletas relacionados; as regras permitem {{allowed}}.",
     "col": {
-      "lastName": "Sobrenome",
-      "firstName": "Nome",
+      "birthDate": "Data de nascimento",
       "licence": "Registro",
       "captainShort": "C",
       "liberoShort": "L"
@@ -169,10 +161,9 @@
       "firstServe": "Saca primeiro neste set",
       "decidingHint": "O set decisivo começa com um novo sorteio.",
       "locked": "O set já começou; altere a escalação apenas para corrigir um erro de transcrição.",
-      "position": "Posição {{label}}",
-      "libero": "Líbero na súmula",
-      "addLibero": "Adicionar líbero"
+      "position": "Posição {{label}}"
     },
+    "rosterRequired": "Insira pelo menos 6 jogadores com número e um treinador por equipa para ativar a pontuação.",
     "scoring": {
       "title": "Pontuação do set {{number}}",
       "serving": "sacando",
@@ -184,6 +175,8 @@
       "setFinished": "Set {{number}} terminou {{a}}:{{b}} para a equipe {{side}}. Anote a duração no quadro de resultados."
     },
     "subs": {
+      "return": "Retornar o nº {{starter}} no lugar do nº {{substitute}}",
+      "returned": "O nº {{number}} foi substituído pelo titular que retornou",
       "title": "Substituições",
       "heading": "Equipe {{side}} ({{used}}/{{max}} usadas)",
       "leaving": "Posição que sai",
@@ -216,12 +209,15 @@
     "noFirstServe": "O set {{number}} ainda não tem o primeiro saque registrado.",
     "liberoServing": "A equipe {{side}} tem um líbero na posição de saque, o que estas regras não permitem.",
     "blocker": {
+      "duplicateLineup": "A equipe {{side}} tem um jogador selecionado em mais de uma posição.",
       "noSet": "Este set não foi iniciado.",
       "noFirstServe": "Registre qual equipe saca primeiro neste set.",
+      "noLeftSide": "Registre qual equipe começa à esquerda no set decisivo.",
       "lineup": "A equipe {{side}} precisa das seis posições iniciais antes do primeiro rally.",
       "setFinished": "Este set está encerrado."
     },
     "sub": {
+      "pairing": "O titular e o suplente devem manter a mesma dupla de substituição neste set.",
       "noSet": "Esse set não existe.",
       "setFinished": "O set já está encerrado.",
       "emptySlot": "Essa posição ainda não tem atleta em quadra.",
@@ -237,67 +233,34 @@
     }
   },
   "transfer": {
+    "total": "Total",
+    "filledTitle": "Súmula preenchida",
+    "filledHint": "Use a roda para ampliar e arraste para mover. Em telas sensíveis ao toque, mova com um dedo ou amplie com dois. Escolha uma seção para ajustá-la à vista.",
+    "zoomIn": "Ampliar",
+    "zoomOut": "Reduzir",
+    "viewport": "Mostrar seção",
+    "zoom": "Zoom",
+    "fit": "Ajustar à largura",
+    "reference": "Guia Swiss Volley",
+    "homeTeam": "Equipe da casa",
+    "guestTeam": "Equipe visitante",
+    "sideSwitch": "Pontos na troca de lado",
     "title": "Transferir para a súmula de papel",
-    "subtitle": "Um quadro por vez, na ordem em que o apontador preenche a súmula.",
-    "step": "Passo {{current}} de {{total}}",
-    "progress": "{{done}} de {{total}} quadros concluídos",
-    "markDone": "Marcar como copiado",
-    "markNotDone": "Desmarcar",
-    "doneAndNext": "Copiado, próximo quadro",
-    "finish": "Concluir",
-    "restart": "Recomeçar do primeiro quadro",
-    "overview": "Todos os quadros",
-    "allDone": "Todos os quadros estão marcados como copiados. Confira os totais com a súmula de papel antes de assinar.",
-    "whatToWrite": "O que escrever",
-    "printSection": "Imprimir este quadro",
-    "copySection": "Copiar este quadro como texto",
-    "notStarted": "Set não iniciado.",
     "noPlayers": "Nenhum atleta cadastrado para a equipe {{side}} ainda.",
-    "noRallies": "Nenhum rally registrado neste set ainda.",
-    "noRounds": "Nenhuma rodada de saque ainda.",
-    "noSubstitutions": "Sem substituições.",
     "noSanctions": "Nenhuma sanção registrada."
   },
   "section": {
-    "header": {
-      "title": "Cabeçalho e oficiais",
-      "help": "Faixa superior da súmula. Copie competição, número do jogo, data, horário e ginásio, depois os nomes das duas equipes e os oficiais. Escreva os nomes exatamente como aparecem nos registros."
-    },
-    "toss": {
-      "title": "Sorteio e lados",
-      "help": "Marque qual equipe saca e qual fica à esquerda no 1º set. As equipes trocam de lado a cada set; o set decisivo tem sorteio próprio e troca de lados aos 8 pontos."
-    },
     "roster": {
-      "title": "Relação da equipe {{side}}",
-      "help": "Preencha a coluna da equipe em ordem de numeração, circule o capitão e marque cada líbero com L. O técnico e o assistente vão logo abaixo."
-    },
-    "lineup": {
-      "title": "Set {{number}}: escalações iniciais",
-      "help": "Escreva os seis titulares nas posições I a VI. Essa ordem também é a ordem de saque, então precisa bater com a ficha entregue pelo técnico."
-    },
-    "score": {
-      "title": "Set {{number}}: pontuação corrida",
-      "help": "Percorra as rodadas de saque: anote o número do sacador e depois risque cada ponto conquistado naquele saque. A lista abaixo mostra o placar após cada ponto."
-    },
-    "changes": {
-      "title": "Set {{number}}: substituições e tempos",
-      "help": "Registre cada substituição na posição em que ocorreu, com o número que entra acima do que sai e o placar ao lado. Os tempos vão nos quadrinhos como o placar em que foram pedidos."
+      "title": "Relação da equipe {{side}}"
     },
     "results": {
-      "title": "Quadro de resultados",
-      "help": "Uma linha por set: duração, os dois placares, substituições, tempos e o vencedor. Some depois os pontos totais e a duração da partida."
+      "title": "Quadro de resultados"
     },
     "sanctions": {
-      "title": "Sanções",
-      "help": "Uma linha por sanção, com a equipe, o membro, o set e o placar em que foi aplicada."
-    },
-    "remarks": {
-      "title": "Observações e assinaturas",
-      "help": "Escreva as observações e recolha as assinaturas: primeiro os capitães, depois os técnicos, o apontador e por fim os dois árbitros."
+      "title": "Sanções"
     },
     "submit": {
-      "title": "Informar o resultado",
-      "help": "A súmula de papel fica com o árbitro. O resultado ainda precisa chegar à federação, então copie o resumo abaixo no sistema dela."
+      "title": "Informar o resultado"
     }
   },
   "sheet": {
@@ -319,45 +282,30 @@
       "leftSide": "Lado esquerdo (1º set)",
       "rightSide": "Lado direito (1º set)",
       "team": "Equipe",
-      "coach": "Técnico",
-      "assistantCoach": "Técnico assistente",
       "liberos": "Líberos",
-      "servesFirstSet": "Saca primeiro",
       "setsWon": "Sets vencidos",
       "totalPoints": "Pontos totais",
       "matchWinner": "Vencedor da partida",
       "remarks": "Observações",
-      "scorer": "Apontador",
-      "captain": "Capitão {{side}}",
-      "coachSide": "Técnico {{side}}",
-      "firstReferee": "1º árbitro"
+      "captain": "Capitão {{side}}"
     },
-    "serviceRounds": "Rodadas de saque da equipe {{side}} - {{name}}",
     "rallyByRally": "Rally a rally",
     "col": {
-      "round": "Rodada",
-      "serverNumber": "Sacador nº",
-      "pointsOnService": "Pontos neste saque",
-      "fromScore": "(a partir de {{own}}:{{opponent}})",
-      "pointTo": "Ponto para",
       "scoreA": "Pontos A",
       "scoreB": "Pontos B",
       "playerNumber": "Atleta nº",
-      "in": "Entra",
-      "out": "Sai",
       "duration": "Duração",
+      "start": "Início",
+      "end": "Fim",
       "subsA": "Subs A",
       "subsB": "Subs B",
       "timeoutsA": "Tempos A",
       "timeoutsB": "Tempos B",
-      "winner": "Vencedor",
       "member": "Membro"
     },
-    "timeouts": "Tempos técnicos",
-    "signatureNote": "As assinaturas vão no papel: os capitães assinam após a partida, depois os técnicos e os árbitros."
+    "timeouts": "Tempos técnicos"
   },
   "submit": {
-    "title": "Informar o resultado",
     "noApi": {
       "title": "Sem envio direto",
       "body": "{{name}} publica jogos, equipes e relações, mas não recebe súmulas pela sua API, então o resultado não pode ser enviado daqui. Copie o resumo abaixo no sistema da federação e entregue a súmula de papel ao árbitro como de costume."
@@ -369,7 +317,6 @@
     "checklist": "Antes de entregar a súmula",
     "check": {
       "totals": "O total de pontos por set confere com a pontuação corrida.",
-      "signatures": "Os dois capitães, os dois técnicos e os dois árbitros assinaram.",
       "durations": "A duração de cada set e da partida está anotada.",
       "sanctions": "Cada sanção está no quadro de sanções com seu placar."
     }

@@ -12,19 +12,23 @@ export interface SheetPlayer {
   /** Stable local id; the sheet itself identifies players by number. */
   id: string
   number: number | null
-  firstName: string
-  lastName: string
+  name: string
   licence: string
   isCaptain: boolean
   isLibero: boolean
   position: string
 }
 
+export const STAFF_ROLES = ['coach', 'assistantCoach', 'assistantCoach2', 'physiotherapist', 'doctor'] as const
+export type StaffRole = typeof STAFF_ROLES[number]
+
 export interface SheetStaff {
   coach: string
   assistantCoach: string
+  assistantCoach2: string
   physiotherapist: string
   doctor: string
+  licences?: Partial<Record<StaffRole, string>>
 }
 
 export interface SheetTeam {
@@ -54,12 +58,17 @@ export interface MatchHeader {
   sourceGameId?: string
 }
 
-export interface Officials {
-  firstReferee: string
-  secondReferee: string
-  scorer: string
-  assistantScorer: string
-  lineJudges: string
+export interface MatchOfficial {
+  name: string
+  country: string
+  licence: string
+}
+
+export const MATCH_OFFICIAL_ROLES = ['firstReferee', 'secondReferee', 'scorer', 'assistantScorer'] as const
+export type MatchOfficialRole = typeof MATCH_OFFICIAL_ROLES[number]
+
+export interface Officials extends Record<MatchOfficialRole, MatchOfficial> {
+  lineJudges: string[]
 }
 
 /** The toss decides first service and which team starts on which side. */
@@ -112,8 +121,6 @@ export interface RallyEvent {
 export interface SetLineup {
   /** Player ids in positions I..VI. Null while the lineup is incomplete. */
   slots: Array<string | null>
-  /** Libero ids on the sheet for this set; liberos are outside the rotation. */
-  liberoIds: string[]
 }
 
 export interface SetRecord {
@@ -123,6 +130,7 @@ export interface SetRecord {
   /** Team serving the first rally of this set. */
   firstServe: TeamSide | null
   rallies: RallyEvent[]
+  leftSide?: TeamSide | null
   substitutions: Record<TeamSide, Substitution[]>
   timeouts: TimeoutRecord[]
   /** Set duration in minutes, written in the results box. */
@@ -149,7 +157,7 @@ export interface Scoresheet {
   /** Local id, also the storage key. */
   id: string
   /** Schema version, so stored sheets can be migrated. */
-  version: 1
+  version: 2
   createdAt: string
   updatedAt: string
   header: MatchHeader
@@ -160,8 +168,6 @@ export interface Scoresheet {
   sets: SetRecord[]
   sanctions: Sanction[]
   remarks: string
-  /** Section ids already copied onto the paper sheet. */
-  copiedSections: string[]
 }
 
 export const TEAM_SIDES: TeamSide[] = ['A', 'B']
@@ -173,9 +179,16 @@ export function otherSide(side: TeamSide): TeamSide {
 }
 
 export function playerLabel(player: SheetPlayer): string {
-  const name = [player.lastName, player.firstName].filter(Boolean).join(' ').trim()
   const number = player.number === null ? '--' : String(player.number)
-  return name ? `${number} ${name}` : number
+  return player.name.trim() ? `${number} ${player.name.trim()}` : number
+}
+
+export function isEnteredPlayer(player: SheetPlayer): boolean {
+  return player.number !== null && Number.isInteger(player.number) && player.number >= 0
+}
+
+export function hasPlayerData(player: SheetPlayer): boolean {
+  return player.number !== null || Boolean(player.name.trim() || player.licence.trim() || player.isCaptain || player.isLibero)
 }
 
 export function findPlayer(team: SheetTeam, playerId: string | null): SheetPlayer | undefined {

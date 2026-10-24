@@ -1,6 +1,8 @@
 import { localized, type LocalizedMessage } from '../localizedMessage'
 import {
   otherSide,
+  findPlayer,
+  isEnteredPlayer,
   TEAM_SIDES,
   type Scoresheet,
   type SetRecord,
@@ -189,7 +191,7 @@ export function computeSetState(sheet: Scoresheet, setIndex: number): SetState {
   for (const side of TEAM_SIDES) {
     const rounds = state.serviceRounds[side]
     const last = rounds[rounds.length - 1]
-    if (state.isComplete && last && last.pointsScored.length === 0) rounds.pop()
+    if (state.isComplete && last && last.scoreAtStart.own + last.scoreAtStart.opponent === state.progression.length) rounds.pop()
   }
 
   const lastRally = record.rallies.length - 1
@@ -288,7 +290,7 @@ export function validateSubstitution(
   }
 
   const incoming = sheet.teams[side].players.find((player) => player.id === inPlayerId)
-  if (!incoming) return localized('engine.sub.unknownPlayer')
+  if (!incoming || !isEnteredPlayer(incoming)) return localized('engine.sub.unknownPlayer')
   if (incoming.isLibero) return localized('engine.sub.libero')
 
   const history = record.substitutions[side]
@@ -308,6 +310,9 @@ export function validateSubstitution(
 
   const enteredBefore = history.some((entry) => entry.inPlayerId === inPlayerId)
   if (enteredBefore) return localized('engine.sub.substituteReturned')
+  if (!starterIds.has(outPlayerId) || history.some((entry) => entry.outPlayerId === outPlayerId)) {
+    return localized('engine.sub.pairing')
+  }
   return null
 }
 
@@ -338,9 +343,17 @@ export function rallyEntryBlocker(sheet: Scoresheet, setIndex: number): Localize
   const record = sheet.sets[setIndex]
   if (!record) return localized('engine.blocker.noSet')
   if (!record.firstServe) return localized('engine.blocker.noFirstServe')
+  if (isDecidingSet(sheet.rules, record.number) && !record.leftSide) {
+    return localized('engine.blocker.noLeftSide')
+  }
   for (const side of TEAM_SIDES) {
-    const filled = record.lineups[side].slots.filter(Boolean).length
+    const assigned = record.lineups[side].slots.filter((id) => {
+      const player = findPlayer(sheet.teams[side], id)
+      return player && isEnteredPlayer(player)
+    })
+    const filled = assigned.length
     if (filled < 6) return localized('engine.blocker.lineup', { side })
+    if (new Set(assigned).size !== filled) return localized('engine.blocker.duplicateLineup', { side })
   }
   const state = computeSetState(sheet, setIndex)
   if (state.isComplete) return localized('engine.blocker.setFinished')

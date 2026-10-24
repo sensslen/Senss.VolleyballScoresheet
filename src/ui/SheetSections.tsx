@@ -2,52 +2,22 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { providerName, type FederationProvider } from '../federation/types'
-import { computeMatchState, computeSetState, type SetState } from '../scoresheet/engine'
+import { computeMatchState, computeSetState } from '../scoresheet/engine'
 import {
-  findPlayer,
-  playerLabel,
-  POSITION_LABELS,
+  isEnteredPlayer,
+  MATCH_OFFICIAL_ROLES,
+  STAFF_ROLES,
+  otherSide,
   TEAM_SIDES,
+  type MatchOfficialRole,
   type Scoresheet,
+  type SheetPlayer,
   type TeamSide,
 } from '../scoresheet/model'
-import { ruleSetName } from '../scoresheet/rules'
-import type { SheetSection } from '../scoresheet/sections'
+import { maxSets, ruleSetName } from '../scoresheet/rules'
+import { localSetTime, paperLicence, paperSide } from '../scoresheet/paper'
 import { resultSummary } from '../scoresheet/summary'
 import { Banner, EmptyState } from './components'
-
-export function SectionBody({
-  sheet,
-  section,
-  provider,
-}: {
-  sheet: Scoresheet
-  section: SheetSection
-  provider: FederationProvider
-}) {
-  switch (section.kind) {
-    case 'header':
-      return <HeaderSection sheet={sheet} />
-    case 'toss':
-      return <TossSection sheet={sheet} />
-    case 'roster':
-      return <RosterSection sheet={sheet} side={section.side ?? 'A'} />
-    case 'lineup':
-      return <LineupSection sheet={sheet} setIndex={section.setIndex ?? 0} />
-    case 'score':
-      return <RunningScoreSection sheet={sheet} setIndex={section.setIndex ?? 0} />
-    case 'changes':
-      return <ChangesSection sheet={sheet} setIndex={section.setIndex ?? 0} />
-    case 'results':
-      return <ResultsSection sheet={sheet} />
-    case 'sanctions':
-      return <SanctionsSection sheet={sheet} />
-    case 'remarks':
-      return <RemarksSection sheet={sheet} />
-    case 'submit':
-      return <SubmitSection sheet={sheet} provider={provider} />
-  }
-}
 
 function Row({ label, value }: { label: string; value: string }) {
   const { t } = useTranslation()
@@ -59,10 +29,17 @@ function Row({ label, value }: { label: string; value: string }) {
   )
 }
 
-function HeaderSection({ sheet }: { sheet: Scoresheet }) {
+export function HeaderSection({ sheet }: { sheet: Scoresheet }) {
   const { t } = useTranslation()
-  const { header, officials } = sheet
+  const { header } = sheet
   return (
+    <>
+    <div className="grid-2">
+      {TEAM_SIDES.map((side) => <Row key={side}
+        label={`${t(side === 'A' ? 'transfer.homeTeam' : 'transfer.guestTeam')}${sheet.toss.leftSide ? ` (${paperSide(sheet, side)})` : ''}`}
+        value={sheet.teams[side].name}
+      />)}
+    </div>
     <div className="grid-2">
       <div>
         <Row label={t('sheet.row.competition')} value={header.competition} />
@@ -72,24 +49,53 @@ function HeaderSection({ sheet }: { sheet: Scoresheet }) {
         <Row label={t('sheet.row.category')} value={header.category} />
         <Row label={t('sheet.row.date')} value={header.date} />
         <Row label={t('sheet.row.time')} value={header.time} />
-        <Row label={t('sheet.row.hall')} value={header.hall} />
-        <Row label={t('sheet.row.city')} value={header.city} />
       </div>
       <div>
-        <Row label={t('sheet.row.teamA')} value={sheet.teams.A.name} />
-        <Row label={t('sheet.row.teamB')} value={sheet.teams.B.name} />
-        <Row label={t('match.officials.first')} value={officials.firstReferee} />
-        <Row label={t('match.officials.second')} value={officials.secondReferee} />
-        <Row label={t('match.officials.scorer')} value={officials.scorer} />
-        <Row label={t('match.officials.assistantScorer')} value={officials.assistantScorer} />
-        <Row label={t('match.officials.lineJudges')} value={officials.lineJudges} />
+        <Row label={t('sheet.row.hall')} value={header.hall} />
+        <Row label={t('sheet.row.city')} value={header.city} />
         <Row label={t('sheet.row.rules')} value={ruleSetName(sheet.rules, t)} />
       </div>
     </div>
+    </>
   )
 }
 
-function TossSection({ sheet }: { sheet: Scoresheet }) {
+export function OfficialsSection({ sheet, provider }: { sheet: Scoresheet; provider: FederationProvider }) {
+  const { t } = useTranslation()
+  const { officials } = sheet
+  const labels: Record<MatchOfficialRole, string> = {
+    firstReferee: t('match.officials.first'),
+    secondReferee: t('match.officials.second'),
+    scorer: t('match.officials.scorer'),
+    assistantScorer: t('match.officials.assistantScorer'),
+  }
+  const isDate = provider.licence?.inputType === 'date'
+  return <>
+    <div className="table-scroll">
+      <table className="table">
+        <thead><tr><th>{t('common.position')}</th><th>{t('common.name')}</th><th>{t('settings.country')}</th><th>{t(provider.licence?.labelKey ?? 'teams.col.licence')}</th></tr></thead>
+        <tbody>{MATCH_OFFICIAL_ROLES.map((role) => (
+          <tr key={role}>
+            <th scope="row">{labels[role]}</th>
+            <td>{officials[role].name || t('common.blank')}</td>
+            <td>{officials[role].country || t('common.blank')}</td>
+            <td className="mono">{paperLicence(officials[role].licence, isDate) || t('common.blank')}</td>
+          </tr>
+        ))}</tbody>
+      </table>
+    </div>
+    <h3>{t('match.officials.lineJudges')}</h3>
+    <div className="table-scroll">
+      <table className="table">
+        <tbody>{officials.lineJudges.map((name, index) => (
+          <tr key={index}><th scope="row">{index + 1}</th><td>{name || t('common.blank')}</td></tr>
+        ))}</tbody>
+      </table>
+    </div>
+  </>
+}
+
+export function TossSection({ sheet }: { sheet: Scoresheet }) {
   const { t } = useTranslation()
   const first = sheet.toss.firstServe
   const left = sheet.toss.leftSide
@@ -111,299 +117,139 @@ function TossSection({ sheet }: { sheet: Scoresheet }) {
   )
 }
 
-function RosterSection({ sheet, side }: { sheet: Scoresheet; side: TeamSide }) {
+export function RosterSection({ sheet, side, provider }: { sheet: Scoresheet; side: TeamSide; provider?: FederationProvider }) {
   const { t } = useTranslation()
   const team = sheet.teams[side]
-  if (team.players.length === 0) return <EmptyState>{t('transfer.noPlayers', { side })}</EmptyState>
+  const players = team.players.filter(isEnteredPlayer)
+    .sort((a, b) => Number(b.isCaptain) - Number(a.isCaptain) || Number(b.isLibero) - Number(a.isLibero) || (a.number ?? 999) - (b.number ?? 999))
+  const liberos = players.filter((player) => player.isLibero)
+  const staff = STAFF_ROLES.filter((role) => team.staff[role].trim() || team.staff.licences?.[role]?.trim())
+  const staffCodes = { coach: 'C', assistantCoach: 'AC1', assistantCoach2: 'AC2', physiotherapist: 'P', doctor: 'M' }
+  const isDate = provider?.licence?.inputType === 'date'
+  const playerRow = (player: SheetPlayer) => (
+    <tr key={player.id}>
+      <td className="mono">{paperLicence(player.licence, isDate) || t('common.blank')}</td>
+      <td className="mono big"><span className={player.isCaptain ? 'paper-captain' : undefined} aria-label={player.isCaptain ? `${t('sheet.row.captain', { side })}: ${player.number}` : undefined}>{player.number}</span></td>
+      <td>{player.name}</td>
+    </tr>
+  )
 
   return (
     <>
-      <Row label={t('sheet.row.team')} value={team.name} />
-      <Row label={t('sheet.row.coach')} value={team.staff.coach} />
-      <Row label={t('sheet.row.assistantCoach')} value={team.staff.assistantCoach} />
-      <div className="table-scroll">
+      {team.name.trim() && <Row label={t('sheet.row.team')} value={team.name} />}
+      {players.length === 0 && <EmptyState>{t('transfer.noPlayers', { side })}</EmptyState>}
+      {(players.length > 0 || staff.length > 0) && <div className="table-scroll">
         <table className="table">
           <thead>
             <tr>
+              <th>{t(provider?.licence?.labelKey ?? 'teams.col.licence')}</th>
               <th>{t('common.number')}</th>
               <th>{t('common.name')}</th>
-              <th>{t('teams.col.licence')}</th>
-              <th>{t('teams.col.captainShort')}</th>
-              <th>{t('teams.col.liberoShort')}</th>
             </tr>
           </thead>
           <tbody>
-            {[...team.players]
-              .sort((a, b) => (a.number ?? 999) - (b.number ?? 999))
-              .map((player) => (
-                <tr key={player.id}>
-                  <td className="mono big">{player.number ?? t('common.blank')}</td>
-                  <td>
-                    {player.lastName} {player.firstName}
-                  </td>
-                  <td className="mono">{player.licence || t('common.blank')}</td>
-                  <td>{player.isCaptain ? t('teams.col.captainShort') : ''}</td>
-                  <td>{player.isLibero ? t('teams.col.liberoShort') : ''}</td>
-                </tr>
-              ))}
+            {players.map(playerRow)}
           </tbody>
+          {liberos.length > 0 && <tbody aria-label={t('sheet.row.liberos')}>
+            <tr><th colSpan={3}>{t('sheet.row.liberos')}</th></tr>
+            {liberos.map(playerRow)}
+          </tbody>}
+          {staff.length > 0 && <tbody aria-label={t('teams.staff')}>
+            <tr><th colSpan={3}>{t('teams.staff')}</th></tr>
+            {staff.map((role) => <tr key={role}>
+              <td className="mono">{paperLicence(team.staff.licences?.[role] ?? '', isDate) || t('common.blank')}</td>
+              <th scope="row" title={t(`teams.field.${role}`)}>{staffCodes[role]}</th>
+              <td>{team.staff[role] || t('common.blank')}</td>
+            </tr>)}
+          </tbody>}
         </table>
-      </div>
+      </div>}
     </>
   )
 }
 
-function LineupSection({ sheet, setIndex }: { sheet: Scoresheet; setIndex: number }) {
-  const { t } = useTranslation()
-  const record = sheet.sets[setIndex]
-  if (!record) return <EmptyState>{t('transfer.notStarted')}</EmptyState>
 
-  return (
-    <div className="grid-2">
-      {TEAM_SIDES.map((side) => (
-        <div key={side}>
-          <h3>
-            {t('common.teamSide', { side })} - {sheet.teams[side].name}
-          </h3>
-          <div className="table-scroll">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>{t('common.position')}</th>
-                  <th>{t('sheet.col.playerNumber')}</th>
-                  <th>{t('common.name')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {POSITION_LABELS.map((label, slot) => {
-                  const player = findPlayer(sheet.teams[side], record.lineups[side].slots[slot] ?? null)
-                  return (
-                    <tr key={label}>
-                      <td className="mono">{label}</td>
-                      <td className="mono big">{player?.number ?? t('common.blank')}</td>
-                      <td>{player ? `${player.lastName} ${player.firstName}` : ''}</td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          </div>
-          <Row
-            label={t('sheet.row.liberos')}
-            value={record.lineups[side].liberoIds
-              .map((id) => findPlayer(sheet.teams[side], id))
-              .map((player) => (player ? String(player.number ?? t('common.blank')) : ''))
-              .join(', ')}
-          />
-        </div>
-      ))}
-      <Row
-        label={t('sheet.row.servesFirstSet')}
-        value={record.firstServe ? t('common.teamSide', { side: record.firstServe }) : ''}
-      />
-    </div>
-  )
-}
-
-function RunningScoreSection({ sheet, setIndex }: { sheet: Scoresheet; setIndex: number }) {
-  const { t } = useTranslation()
-  const record = sheet.sets[setIndex]
-  if (!record) return <EmptyState>{t('transfer.notStarted')}</EmptyState>
-  const state = computeSetState(sheet, setIndex)
-
-  return (
-    <>
-      <div className="grid-2">
-        {TEAM_SIDES.map((side) => (
-          <ServiceRoundTable key={side} side={side} state={state} sheet={sheet} />
-        ))}
-      </div>
-
-      <h3>{t('sheet.rallyByRally')}</h3>
-      <div className="table-scroll">
-        <table className="table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>{t('sheet.col.pointTo')}</th>
-              <th>{t('sheet.col.scoreA')}</th>
-              <th>{t('sheet.col.scoreB')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {state.progression.map((entry, index) => (
-              <tr key={index}>
-                <td className="mono">{index + 1}</td>
-                <td className="mono">{entry.winner}</td>
-                <td className="mono">{entry.A}</td>
-                <td className="mono">{entry.B}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      {state.progression.length === 0 && <EmptyState>{t('transfer.noRallies')}</EmptyState>}
-    </>
-  )
-}
-
-function ServiceRoundTable({ side, state, sheet }: { side: TeamSide; state: SetState; sheet: Scoresheet }) {
-  const { t } = useTranslation()
-  const rounds = state.serviceRounds[side]
-
-  return (
-    <div>
-      <h3>{t('sheet.serviceRounds', { side, name: sheet.teams[side].name })}</h3>
-      <div className="table-scroll">
-        <table className="table">
-          <thead>
-            <tr>
-              <th>{t('sheet.col.round')}</th>
-              <th>{t('sheet.col.serverNumber')}</th>
-              <th>{t('common.position')}</th>
-              <th>{t('sheet.col.pointsOnService')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rounds.map((round, index) => (
-              <tr key={index}>
-                <td className="mono">{index + 1}</td>
-                <td className="mono big">{round.server.number ?? t('common.blank')}</td>
-                <td className="mono">{POSITION_LABELS[round.server.slot]}</td>
-                <td className="mono">
-                  {round.pointsScored.length > 0 ? round.pointsScored.join(' ') : '-'}{' '}
-                  <span className="muted">
-                    {t('sheet.col.fromScore', {
-                      own: round.scoreAtStart.own,
-                      opponent: round.scoreAtStart.opponent,
-                    })}
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      {rounds.length === 0 && <EmptyState>{t('transfer.noRounds')}</EmptyState>}
-    </div>
-  )
-}
-
-function ChangesSection({ sheet, setIndex }: { sheet: Scoresheet; setIndex: number }) {
-  const { t } = useTranslation()
-  const record = sheet.sets[setIndex]
-  if (!record) return <EmptyState>{t('transfer.notStarted')}</EmptyState>
-
-  return (
-    <div className="grid-2">
-      {TEAM_SIDES.map((side) => (
-        <div key={side}>
-          <h3>{t('common.teamSide', { side })}</h3>
-          <div className="table-scroll">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>{t('common.position')}</th>
-                  <th>{t('sheet.col.in')}</th>
-                  <th>{t('sheet.col.out')}</th>
-                  <th>{t('common.score')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {record.substitutions[side].map((entry, index) => {
-                  const inbound = findPlayer(sheet.teams[side], entry.inPlayerId)
-                  const out = findPlayer(sheet.teams[side], entry.outPlayerId)
-                  return (
-                    <tr key={index}>
-                      <td className="mono">{POSITION_LABELS[entry.slot]}</td>
-                      <td className="mono big">{inbound?.number ?? t('common.blank')}</td>
-                      <td className="mono">{out?.number ?? t('common.blank')}</td>
-                      <td className="mono">
-                        {entry.scoreA}:{entry.scoreB}
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          </div>
-          {record.substitutions[side].length === 0 && <EmptyState>{t('transfer.noSubstitutions')}</EmptyState>}
-
-          <h3>{t('sheet.timeouts')}</h3>
-          <p className="mono">
-            {record.timeouts
-              .filter((timeout) => timeout.team === side)
-              .map((timeout) => `${timeout.scoreA}:${timeout.scoreB}`)
-              .join('   ') || t('common.blank')}
-          </p>
-        </div>
-      ))}
-    </div>
-  )
-}
-
-function ResultsSection({ sheet }: { sheet: Scoresheet }) {
+export function ResultsSection({ sheet }: { sheet: Scoresheet }) {
   const { t } = useTranslation()
   const match = computeMatchState(sheet)
+  const completed = sheet.sets.flatMap((record, index) => {
+    const state = computeSetState(sheet, index)
+    return state.isComplete ? [{ record, state }] : []
+  })
+  const start = sheet.sets[0]?.startTime ?? ''
+  const end = match.isComplete ? sheet.sets.at(-1)?.endTime ?? '' : ''
+  const elapsed = start && end ? Math.round((Date.parse(end) - Date.parse(start)) / 60_000) : null
+  const duration = elapsed !== null && Number.isFinite(elapsed) && elapsed >= 0
+    ? `${Math.floor(elapsed / 60)}:${String(elapsed % 60).padStart(2, '0')}`
+    : '--'
+  const minutes = completed.length && completed.every(({ record }) => record.durationMinutes !== null)
+    ? completed.reduce((sum, { record }) => sum + record.durationMinutes!, 0)
+    : null
+  const total = (side: TeamSide, field: 'score' | 'timeoutsUsed' | 'substitutionsUsed') =>
+    completed.reduce((sum, { state }) => sum + state[field][side], 0)
 
-  return (
-    <>
-      <div className="table-scroll">
-        <table className="table">
-          <thead>
-            <tr>
-              <th>{t('common.set')}</th>
-              <th>{t('sheet.col.duration')}</th>
-              <th>{t('sheet.row.teamA')}</th>
-              <th>{t('sheet.row.teamB')}</th>
-              <th>{t('sheet.col.subsA')}</th>
-              <th>{t('sheet.col.subsB')}</th>
-              <th>{t('sheet.col.timeoutsA')}</th>
-              <th>{t('sheet.col.timeoutsB')}</th>
-              <th>{t('sheet.col.winner')}</th>
+  return <>
+    <div className="table-scroll">
+      <table className="table paper-results">
+        <thead>
+          <tr>
+            <th colSpan={4}><span className="paper-team-letter">A</span> {sheet.teams.A.name || t('sheet.row.teamA')}</th>
+            <th rowSpan={2}>{t('common.set')} ({t('sheet.col.duration')})</th>
+            <th colSpan={4}><span className="paper-team-letter">B</span> {sheet.teams.B.name || t('sheet.row.teamB')}</th>
+          </tr>
+          <tr>
+            <th scope="col" aria-label={t('sheet.col.timeoutsA')}>T</th>
+            <th scope="col" aria-label={t('sheet.col.subsA')}>S</th>
+            <th scope="col" aria-label={`${t('sheet.row.setsWon')} A`}>W</th>
+            <th scope="col" aria-label={t('sheet.col.scoreA')}>P</th>
+            <th scope="col" aria-label={t('sheet.col.scoreB')}>P</th>
+            <th scope="col" aria-label={`${t('sheet.row.setsWon')} B`}>W</th>
+            <th scope="col" aria-label={t('sheet.col.subsB')}>S</th>
+            <th scope="col" aria-label={t('sheet.col.timeoutsB')}>T</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Array.from({ length: maxSets(sheet.rules) }, (_, index) => {
+            const result = completed.find(({ record }) => record.number === index + 1)
+            const state = result?.state
+            return <tr key={index}>
+              <td>{state?.timeoutsUsed.A ?? ''}</td>
+              <td>{state?.substitutionsUsed.A ?? ''}</td>
+              <td>{state ? Number(state.winner === 'A') : ''}</td>
+              <td>{state?.score.A ?? ''}</td>
+              <th scope="row">{index + 1}.{result ? ` (${result.record.durationMinutes ?? '--'})` : ''}</th>
+              <td>{state?.score.B ?? ''}</td>
+              <td>{state ? Number(state.winner === 'B') : ''}</td>
+              <td>{state?.substitutionsUsed.B ?? ''}</td>
+              <td>{state?.timeoutsUsed.B ?? ''}</td>
             </tr>
-          </thead>
-          <tbody>
-            {sheet.sets.map((record, index) => {
-              const state = computeSetState(sheet, index)
-              return (
-                <tr key={record.number}>
-                  <td className="mono">{record.number}</td>
-                  <td className="mono">{record.durationMinutes ?? t('common.blank')}</td>
-                  <td className="mono big">{state.score.A}</td>
-                  <td className="mono big">{state.score.B}</td>
-                  <td className="mono">{state.substitutionsUsed.A}</td>
-                  <td className="mono">{state.substitutionsUsed.B}</td>
-                  <td className="mono">{state.timeoutsUsed.A}</td>
-                  <td className="mono">{state.timeoutsUsed.B}</td>
-                  <td className="mono">{state.winner ?? t('common.blank')}</td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
-      </div>
-      <Row label={t('sheet.row.setsWon')} value={`${match.setsWon.A} : ${match.setsWon.B}`} />
-      <Row
-        label={t('sheet.row.totalPoints')}
-        value={`${match.setResults.reduce((sum, set) => sum + set.A, 0)} : ${match.setResults.reduce(
-          (sum, set) => sum + set.B,
-          0,
-        )}`}
-      />
-      <Row
-        label={t('sheet.row.matchWinner')}
-        value={
-          match.winner
-            ? `${t('common.teamSide', { side: match.winner })} - ${sheet.teams[match.winner].name}`
-            : t('common.notDecided')
-        }
-      />
-    </>
-  )
+          })}
+          <tr>
+            <td>{total('A', 'timeoutsUsed')}</td>
+            <td>{total('A', 'substitutionsUsed')}</td>
+            <td>{match.setsWon.A}</td>
+            <td>{total('A', 'score')}</td>
+            <th scope="row">{t('transfer.total')} ({minutes ?? '--'})</th>
+            <td>{total('B', 'score')}</td>
+            <td>{match.setsWon.B}</td>
+            <td>{total('B', 'substitutionsUsed')}</td>
+            <td>{total('B', 'timeoutsUsed')}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div className="paper-match-times">
+      <div><span>{t('sheet.col.start')}</span><b>{localSetTime(start) || '--'}</b></div>
+      <div><span>{t('sheet.col.end')}</span><b>{localSetTime(end) || '--'}</b></div>
+      <div><span>{t('sheet.col.duration')}</span><b>{duration}</b></div>
+    </div>
+    <Row label={t('sheet.row.matchWinner')} value={match.winner
+      ? `${sheet.teams[match.winner].name || t('common.teamSide', { side: match.winner })} ${match.setsWon[match.winner]}:${match.setsWon[otherSide(match.winner)]}`
+      : t('common.notDecided')} />
+  </>
 }
 
-function SanctionsSection({ sheet }: { sheet: Scoresheet }) {
+export function SanctionsSection({ sheet }: { sheet: Scoresheet }) {
   const { t } = useTranslation()
   if (sheet.sanctions.length === 0) return <EmptyState>{t('transfer.noSanctions')}</EmptyState>
 
@@ -427,7 +273,7 @@ function SanctionsSection({ sheet }: { sheet: Scoresheet }) {
               <td className="mono">{sanction.member || t('common.blank')}</td>
               <td className="mono">{sanction.set}</td>
               <td className="mono">
-                {sanction.scoreA}:{sanction.scoreB}
+                {sanction.team === 'A' ? `${sanction.scoreA}:${sanction.scoreB}` : `${sanction.scoreB}:${sanction.scoreA}`}
               </td>
             </tr>
           ))}
@@ -437,30 +283,12 @@ function SanctionsSection({ sheet }: { sheet: Scoresheet }) {
   )
 }
 
-function RemarksSection({ sheet }: { sheet: Scoresheet }) {
+export function RemarksSection({ sheet }: { sheet: Scoresheet }) {
   const { t } = useTranslation()
-  return (
-    <>
-      <Row label={t('sheet.row.remarks')} value={sheet.remarks} />
-      <Row label={t('sheet.row.scorer')} value={sheet.officials.scorer} />
-      {TEAM_SIDES.map((side) => (
-        <Row key={side} label={t('sheet.row.captain', { side })} value={captainName(sheet, side)} />
-      ))}
-      {TEAM_SIDES.map((side) => (
-        <Row key={side} label={t('sheet.row.coachSide', { side })} value={sheet.teams[side].staff.coach} />
-      ))}
-      <Row label={t('sheet.row.firstReferee')} value={sheet.officials.firstReferee} />
-      <p className="muted mt-3">{t('sheet.signatureNote')}</p>
-    </>
-  )
+  return <Row label={t('sheet.row.remarks')} value={sheet.remarks} />
 }
 
-function captainName(sheet: Scoresheet, side: TeamSide): string {
-  const captain = sheet.teams[side].players.find((player) => player.isCaptain)
-  return captain ? playerLabel(captain) : ''
-}
-
-function SubmitSection({ sheet, provider }: { sheet: Scoresheet; provider: FederationProvider }) {
+export function SubmitSection({ sheet, provider }: { sheet: Scoresheet; provider: FederationProvider }) {
   const { t } = useTranslation()
   const [copied, setCopied] = useState(false)
   const name = providerName(provider, t)
@@ -503,7 +331,6 @@ function SubmitSection({ sheet, provider }: { sheet: Scoresheet; provider: Feder
       <h3>{t('submit.checklist')}</h3>
       <ul className="list">
         <li>{t('submit.check.totals')}</li>
-        <li>{t('submit.check.signatures')}</li>
         <li>{t('submit.check.durations')}</li>
         <li>{t('submit.check.sanctions')}</li>
       </ul>

@@ -40,12 +40,10 @@ export function createExampleProvider(): FederationProvider {
     country: { code: 'XX', nameKey: 'provider.example.country', flag: '🏐' },
     resultPortalUrl: 'https://example-volley.example/results',
     capabilities: {
-      browseCompetitions: true,
       browseGames: true,
       gameDetail: true,
       rosters: false,       // no squad endpoint: the UI stops offering roster import
       officials: true,
-      seasons: false,
       submitResult: false,  // no federation accepts a scoresheet over its API
     },
     auth: {
@@ -54,7 +52,6 @@ export function createExampleProvider(): FederationProvider {
       helpTextKey: 'provider.example.tokenHelp',
     },
     isReady: () => api.hasToken(),
-    listCompetitions: async () => /* ... */,
     listGames: async (query) => /* ... */,
     getGame: async (id) => /* ... */,
   }
@@ -86,7 +83,7 @@ Rules that matter:
   reader's language; leave the second argument off for text the API produced, which
   cannot be translated.
 - **`submitResult` is almost certainly `false`.** See
-  [reporting-a-result.md](reporting-a-result.md) for what the transfer wizard does
+  [reporting-a-result.md](reporting-a-result.md) for what the reporting panel does
   with that, and set `resultPortalUrl` to wherever a human files the score.
 
 ## 3. Register it

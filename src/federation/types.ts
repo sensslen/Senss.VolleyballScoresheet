@@ -40,6 +40,9 @@ export interface Official {
   lastName: string
   /** first / second referee, line judges, scorer... as labelled by the federation. */
   role?: string
+  country?: string
+  licence?: string
+  birthDate?: string
 }
 
 export interface ImportedPlayer {
@@ -99,7 +102,7 @@ export interface ProviderCapabilities {
   officials: boolean
   /**
    * Whether the federation accepts a finished scoresheet over its API. No known
-   * federation does, so the transfer wizard ends by helping a human file it instead.
+   * federation does, so the reporting panel helps a human file it instead.
    */
   submitResult: boolean
 }
@@ -130,6 +133,7 @@ export interface FederationProvider {
   readonly nameKey?: string
   readonly country: Country
   readonly capabilities: ProviderCapabilities
+  readonly licence?: { labelKey: string; inputType: 'text' | 'date' }
   /** Undefined when the source needs no credential. */
   readonly auth?: AuthDescriptor
   /** Homepage or API docs, linked from settings. */

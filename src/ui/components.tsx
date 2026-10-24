@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { createElement, type ReactNode } from 'react'
 
 export function Card({
   title,
@@ -56,6 +56,8 @@ export function TextField({
   placeholder,
   type = 'text',
   hint,
+  required,
+  invalid,
 }: {
   label: string
   value: string
@@ -63,11 +65,15 @@ export function TextField({
   placeholder?: string
   type?: 'text' | 'date' | 'time' | 'number' | 'password'
   hint?: string
+  required?: boolean
+  invalid?: boolean
 }) {
   return (
     <Field label={label} hint={hint}>
       <input
         type={type}
+        required={required}
+        aria-invalid={invalid || undefined}
         value={value}
         placeholder={placeholder}
         onChange={(event) => onChange(event.target.value)}
@@ -85,7 +91,9 @@ export function SelectField<T extends string>({
   placeholder = '--',
   required,
   disabled,
+  invalid,
   hint,
+  renderOption,
 }: {
   label: string
   value: T | ''
@@ -95,19 +103,25 @@ export function SelectField<T extends string>({
   /** Set where something is always chosen, so there is no empty row to fall back to. */
   required?: boolean
   disabled?: boolean
+  invalid?: boolean
   hint?: string
+  renderOption?: (option: { value: T; label: string }) => ReactNode
 }) {
+  const styled = Boolean(renderOption && typeof CSS !== 'undefined' && CSS.supports('appearance', 'base-select'))
   return (
     <Field label={label} hint={hint}>
       <select
+        className={styled ? 'styled-select' : undefined}
         value={value}
         disabled={disabled || options.length === 0}
+        aria-invalid={invalid || undefined}
         onChange={(event) => onChange(event.target.value as T | '')}
       >
+        {styled && <button type="button">{createElement('selectedcontent')}</button>}
         {!required && <option value="">{placeholder}</option>}
         {options.map((option) => (
           <option key={option.value} value={option.value}>
-            {option.label}
+            {styled ? renderOption?.(option) : option.label}
           </option>
         ))}
       </select>

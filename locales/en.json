@@ -1,7 +1,4 @@
 {
-  "language": {
-    "name": "English"
-  },
   "common": {
     "teamSide": "Team {{side}}",
     "unnamed": "(unnamed)",
@@ -10,10 +7,7 @@
     "open": "Open",
     "delete": "Delete",
     "remove": "Remove",
-    "back": "Back",
-    "next": "Next",
     "print": "Print",
-    "copy": "Copy as text",
     "copied": "Copied",
     "date": "Date",
     "score": "Score",
@@ -30,11 +24,10 @@
   },
   "app": {
     "title": "Volleyball Scoresheet Assistant",
-    "tagline": "Guides you through an international scoresheet, then walks you box by box so you can copy it onto the paper sheet.",
+    "tagline": "Score the match, then use the filled sheet to copy the entries onto paper.",
     "footer": "Everything stays in this browser. The paper sheet remains the official record; this only helps you fill it in without arithmetic mistakes.",
     "needSheet": "Start or open a sheet first.",
-    "version": "Version {{version}}",
-    "loading": "Loading..."
+    "version": "Version {{version}}"
   },
   "tabs": {
     "start": { "label": "Match", "hint": "Pick a fixture or start blank" },
@@ -120,11 +113,11 @@
     "bestOf": "Best of {{count}}"
   },
   "teams": {
+    "staff": "Staff",
     "cardTitle": "Team {{side}} - {{name}}",
     "home": "Home team on the fixture list.",
     "away": "Visiting team on the fixture list.",
     "import": "Import roster",
-    "addPlayer": "Add player",
     "field": {
       "name": "Team name",
       "club": "Club",
@@ -141,8 +134,7 @@
     "tooManyLiberos": "More than two liberos marked.",
     "tooManyPlayers": "{{count}} players listed; the rules allow {{allowed}}.",
     "col": {
-      "lastName": "Last name",
-      "firstName": "First name",
+      "birthDate": "Date of birth",
       "licence": "Licence",
       "captainShort": "C",
       "liberoShort": "L"
@@ -169,10 +161,9 @@
       "firstServe": "Serves first in this set",
       "decidingHint": "The deciding set starts with a new toss.",
       "locked": "The set has started; change the lineup only to fix a transcription error.",
-      "position": "Position {{label}}",
-      "libero": "Libero on the sheet",
-      "addLibero": "Add libero"
+      "position": "Position {{label}}"
     },
+    "rosterRequired": "Enter at least 6 numbered players and a coach for each team to enable scoring.",
     "scoring": {
       "title": "Set {{number}} scoring",
       "serving": "serving",
@@ -184,6 +175,8 @@
       "setFinished": "Set {{number}} finished {{a}}:{{b}} to team {{side}}. Write the duration in the results box."
     },
     "subs": {
+      "return": "Return no. {{starter}} for no. {{substitute}}",
+      "returned": "No. {{number}} replaced by the returning starter",
       "title": "Substitutions",
       "heading": "Team {{side}} ({{used}}/{{max}} used)",
       "leaving": "Position leaving",
@@ -216,12 +209,15 @@
     "noFirstServe": "Set {{number}} has no first service recorded yet.",
     "liberoServing": "Team {{side}} has a libero in the service position, which these rules do not allow.",
     "blocker": {
+      "duplicateLineup": "Team {{side}} has a player selected in more than one position.",
       "noSet": "This set has not been started.",
       "noFirstServe": "Record which team serves first in this set.",
+      "noLeftSide": "Record which team starts on the left in the deciding set.",
       "lineup": "Team {{side}} needs all six starting positions before the first rally.",
       "setFinished": "This set is finished."
     },
     "sub": {
+      "pairing": "The starter and substitute must stay paired for this set.",
       "noSet": "That set does not exist.",
       "setFinished": "The set is already finished.",
       "emptySlot": "That position has no player on court yet.",
@@ -237,67 +233,34 @@
     }
   },
   "transfer": {
+    "total": "Total",
+    "filledTitle": "Filled scoresheet",
+    "filledHint": "Use the wheel to zoom and drag to pan. On touchscreens, drag with one finger or pinch with two. Choose a section to fit it in view.",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "viewport": "Show section",
+    "zoom": "Zoom",
+    "fit": "Fit width",
+    "reference": "Swiss Volley guide",
+    "homeTeam": "Home team",
+    "guestTeam": "Guest team",
+    "sideSwitch": "Points at the change of ends",
     "title": "Transfer to the paper sheet",
-    "subtitle": "One box at a time, in the order a scorer fills the sheet in.",
-    "step": "Step {{current}} of {{total}}",
-    "progress": "{{done}} of {{total}} boxes marked done",
-    "markDone": "Mark copied",
-    "markNotDone": "Mark not copied",
-    "doneAndNext": "Copied, next box",
-    "finish": "Finish",
-    "restart": "Start again from the first box",
-    "overview": "All boxes",
-    "allDone": "Every box is marked copied. Check the totals against the paper sheet before signing.",
-    "whatToWrite": "What to write",
-    "printSection": "Print this box",
-    "copySection": "Copy this box as text",
-    "notStarted": "Set not started.",
     "noPlayers": "No players entered for team {{side}} yet.",
-    "noRallies": "No rallies recorded in this set yet.",
-    "noRounds": "No service rounds yet.",
-    "noSubstitutions": "No substitutions.",
     "noSanctions": "No sanctions recorded."
   },
   "section": {
-    "header": {
-      "title": "Header and officials",
-      "help": "Top band of the sheet. Copy competition, match number, date, time and venue, then both team names and the officials. Write the names exactly as they appear on the licences."
-    },
-    "toss": {
-      "title": "Toss and sides",
-      "help": "Mark which team serves and which team is on the left for set 1. Teams change ends every set; the deciding set has its own toss and a change of ends at 8."
-    },
     "roster": {
-      "title": "Team {{side}} roster",
-      "help": "Fill the team column in shirt-number order, circle the captain and mark each libero with an L. Add the coach and assistant coach underneath."
-    },
-    "lineup": {
-      "title": "Set {{number}}: starting lineups",
-      "help": "Write each starting six into positions I to VI. That order is also the service order, so it must match what the coach handed in on the lineup slip."
-    },
-    "score": {
-      "title": "Set {{number}}: running score",
-      "help": "Work down the service rounds: enter the serving player number, then strike out every point won on that service. The rally list underneath shows the running score after each point."
-    },
-    "changes": {
-      "title": "Set {{number}}: substitutions and time-outs",
-      "help": "Enter each substitution in the position it happened in, with the incoming number above the outgoing one and the score alongside. Time-outs go in the small boxes as the score at which they were taken."
+      "title": "Team {{side}} roster"
     },
     "results": {
-      "title": "Results table",
-      "help": "One row per set: duration, both scores, substitutions, time-outs and the winner. Add the set durations from the clock, then total the points and the match duration."
+      "title": "Results table"
     },
     "sanctions": {
-      "title": "Sanctions",
-      "help": "One line per sanction with the team, the member, the set and the score at which it was given."
-    },
-    "remarks": {
-      "title": "Remarks and signatures",
-      "help": "Write any remarks, then collect the signatures: captains first, then the coaches, the scorer and finally both referees."
+      "title": "Sanctions"
     },
     "submit": {
-      "title": "Report the result",
-      "help": "The paper sheet stays with the referee. The result still has to reach the federation, so copy the summary below into the federation system."
+      "title": "Report the result"
     }
   },
   "sheet": {
@@ -319,45 +282,30 @@
       "leftSide": "Left side (set 1)",
       "rightSide": "Right side (set 1)",
       "team": "Team",
-      "coach": "Coach",
-      "assistantCoach": "Assistant coach",
       "liberos": "Liberos",
-      "servesFirstSet": "Serves first",
       "setsWon": "Sets won",
       "totalPoints": "Total points",
       "matchWinner": "Match winner",
       "remarks": "Remarks",
-      "scorer": "Scorer",
-      "captain": "Captain {{side}}",
-      "coachSide": "Coach {{side}}",
-      "firstReferee": "1st referee"
+      "captain": "Captain {{side}}"
     },
-    "serviceRounds": "Team {{side}} service rounds - {{name}}",
     "rallyByRally": "Rally by rally",
     "col": {
-      "round": "Round",
-      "serverNumber": "Server no.",
-      "pointsOnService": "Points scored on this service",
-      "fromScore": "(from {{own}}:{{opponent}})",
-      "pointTo": "Point to",
       "scoreA": "Score A",
       "scoreB": "Score B",
       "playerNumber": "Player no.",
-      "in": "In",
-      "out": "Out",
       "duration": "Duration",
+      "start": "Start",
+      "end": "End",
       "subsA": "Subs A",
       "subsB": "Subs B",
       "timeoutsA": "T-O A",
       "timeoutsB": "T-O B",
-      "winner": "Winner",
       "member": "Member"
     },
-    "timeouts": "Time-outs",
-    "signatureNote": "Signatures go on paper: captains sign after the match, then the coaches and referees."
+    "timeouts": "Time-outs"
   },
   "submit": {
-    "title": "Report the result",
     "noApi": {
       "title": "No direct submission",
       "body": "{{name}} publishes fixtures, teams and squads but accepts no scoresheet over its API, so the result cannot be filed from here. Copy the summary below into the federation system, and hand the paper sheet to the referee as usual."
@@ -369,7 +317,6 @@
     "checklist": "Before you hand the sheet over",
     "check": {
       "totals": "The points total per set matches the running score.",
-      "signatures": "Both captains, both coaches and both referees have signed.",
       "durations": "Every set duration and the match duration are written in.",
       "sanctions": "Every sanction is in the sanctions box with its score."
     }

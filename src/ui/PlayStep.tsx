@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState, type RefObject } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -11,6 +11,7 @@ import {
 import { emptySet } from '../scoresheet/factory'
 import {
   findPlayer,
+  isEnteredPlayer,
   otherSide,
   playerLabel,
   POSITION_LABELS,
@@ -19,7 +20,8 @@ import {
   type Scoresheet,
   type TeamSide,
 } from '../scoresheet/model'
-import { maxSets } from '../scoresheet/rules'
+import { paperParams, paperSide } from '../scoresheet/paper'
+import { isDecidingSet, maxSets } from '../scoresheet/rules'
 import { Banner, Card, EmptyState, SelectField } from './components'
 import type { SheetUpdater } from './updater'
 
@@ -41,7 +43,7 @@ export function PlayStep({
   const total = maxSets(sheet.rules)
   const index = Math.min(activeSetIndex, sheet.sets.length - 1)
   const setNumber = index + 1
-  const canStartNextSet = !match.isComplete && sheet.sets.length < total && isSetFinished(sheet, sheet.sets.length - 1)
+  const canStartNextSet = !match.isComplete && sheet.sets.length < total && computeSetState(sheet, sheet.sets.length - 1).isComplete
 
   return (
     <>
@@ -51,23 +53,26 @@ export function PlayStep({
         title={t('play.sets.title')}
         subtitle={
           match.isComplete && match.winner
-            ? t('play.sets.wins', { a: match.setsWon.A, b: match.setsWon.B, side: match.winner })
-            : t('play.sets.subtitle', { a: match.setsWon.A, b: match.setsWon.B })
+            ? t('play.sets.wins', { a: match.setsWon[sheet.toss.leftSide ?? 'A'], b: match.setsWon[otherSide(sheet.toss.leftSide ?? 'A')], side: paperSide(sheet, match.winner) })
+            : t('play.sets.subtitle', { a: match.setsWon[sheet.toss.leftSide ?? 'A'], b: match.setsWon[otherSide(sheet.toss.leftSide ?? 'A')] })
         }
         actions={
           canStartNextSet ? (
             <button
               type="button"
               className="primary"
-              onClick={() =>
+              onClick={() => {
                 update((draft) => {
                   const next = emptySet(draft.sets.length + 1)
                   const previous = draft.sets[draft.sets.length - 1]
-                  // Service alternates each set; the deciding set gets a fresh toss.
-                  next.firstServe = previous?.firstServe ? otherSide(previous.firstServe) : null
+                  next.firstServe = !isDecidingSet(draft.rules, next.number) && previous?.firstServe
+                    ? otherSide(previous.firstServe)
+                    : null
+                  if (previous) next.lineups = structuredClone(previous.lineups)
                   draft.sets.push(next)
                 })
-              }
+                onActiveSetChange(sheet.sets.length)
+              }}
             >
               {t('play.sets.start', { number: sheet.sets.length + 1 })}
             </button>
@@ -86,7 +91,7 @@ export function PlayStep({
               >
                 {t('play.sets.tab', { number: record.number })}
                 <span className="mono opacity-80">
-                  {state.score.A}:{state.score.B}
+                  {state.score[sheet.toss.leftSide ?? 'A']}:{state.score[otherSide(sheet.toss.leftSide ?? 'A')]}
                 </span>
               </button>
             )
@@ -99,16 +104,11 @@ export function PlayStep({
   )
 }
 
-function isSetFinished(sheet: Scoresheet, index: number): boolean {
-  if (index < 0) return false
-  return computeSetState(sheet, index).isComplete
-}
-
 function useSideOptions(sheet: Scoresheet) {
   const { t } = useTranslation()
   return TEAM_SIDES.map((side) => ({
     value: side,
-    label: `${t('common.teamSide', { side })} - ${sheet.teams[side].name || t('common.unnamed')}`,
+    label: `${t('common.teamSide', { side: paperSide(sheet, side) })} - ${sheet.teams[side].name || t('common.unnamed')}`,
   }))
 }
 
@@ -144,43 +144,65 @@ function TossCard({ sheet, update }: { sheet: Scoresheet; update: SheetUpdater }
 
 function SetPanel({ sheet, update, setIndex }: { sheet: Scoresheet; update: SheetUpdater; setIndex: number }) {
   const { t } = useTranslation()
+  const lineupPositions = useRef<HTMLDivElement>(null)
   const sideOptions = useSideOptions(sheet)
   const record = sheet.sets[setIndex]
   if (!record) return <EmptyState>{t('play.setNotStarted')}</EmptyState>
 
   const state = computeSetState(sheet, setIndex)
   const blocker = rallyEntryBlocker(sheet, setIndex)
+  const startingLeft = state.isDeciding
+    ? record.leftSide
+    : setIndex % 2 === 0
+      ? sheet.toss.leftSide
+      : sheet.toss.leftSide && otherSide(sheet.toss.leftSide)
+  const switched = state.isDeciding && Math.max(state.score.A, state.score.B) >= 8
+  const left = startingLeft && switched ? otherSide(startingLeft) : startingLeft
+  const courtSides = left ? [left, otherSide(left)] : TEAM_SIDES
 
   return (
     <>
       <Card title={t('play.lineups.title', { number: record.number })} subtitle={t('play.lineups.subtitle')}>
         <div className="grid-2">
-          <SelectField
-            label={t('play.lineups.firstServe')}
-            value={record.firstServe ?? ''}
-            options={sideOptions}
-            onChange={(value) =>
-              update((draft) => {
+          {state.isDeciding && (
+            <SelectField
+              label={t('play.lineups.firstServe')}
+              value={record.firstServe ?? ''}
+              options={sideOptions}
+              onChange={(value) =>
+                update((draft) => {
+                  const target = draft.sets[setIndex]
+                  if (target) target.firstServe = (value || null) as TeamSide | null
+                })
+              }
+              hint={t('play.lineups.decidingHint')}
+            />
+          )}
+          {state.isDeciding && (
+            <SelectField
+              label={t('play.toss.leftSide')}
+              value={startingLeft ?? ''}
+              options={sideOptions}
+              onChange={(value) => update((draft) => {
                 const target = draft.sets[setIndex]
-                if (target) target.firstServe = (value || null) as TeamSide | null
-              })
-            }
-            hint={state.isDeciding ? t('play.lineups.decidingHint') : undefined}
-          />
+                if (target) target.leftSide = (value || null) as TeamSide | null
+              })}
+            />
+          )}
         </div>
-        <div className="grid-2">
-          {TEAM_SIDES.map((side) => (
-            <LineupEditor key={side} sheet={sheet} update={update} setIndex={setIndex} side={side} />
+        <div className="grid-2" ref={lineupPositions}>
+          {courtSides.map((side, teamIndex) => (
+            <LineupEditor key={side} sheet={sheet} update={update} setIndex={setIndex} side={side} teamIndex={teamIndex} positions={lineupPositions} />
           ))}
         </div>
       </Card>
 
       <Card title={t('play.scoring.title', { number: record.number })}>
         <div className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-3">
-          {TEAM_SIDES.map((side) => (
+          {courtSides.map((side) => (
             <div key={side} className={state.servingSide === side ? 'score-box serving' : 'score-box'}>
               <span className="score-team">
-                {t('common.teamSide', { side })}
+                {t('common.teamSide', { side: paperSide(sheet, side) })}
                 {state.servingSide === side ? ` (${t('play.scoring.serving')})` : ''}
               </span>
               <span className="score-value">{state.score[side]}</span>
@@ -192,44 +214,86 @@ function SetPanel({ sheet, update, setIndex }: { sheet: Scoresheet; update: Shee
                     })}`
                   : ''}
               </span>
+              <div
+                className="mt-3 grid grid-cols-6 gap-1"
+                role="group"
+                aria-label={`${t('common.position')} - ${t('common.teamSide', { side: paperSide(sheet, side) })}`}
+              >
+                {POSITION_LABELS.map((position, slot) => {
+                  const player = findPlayer(sheet.teams[side], state.courtSlots[side][slot] ?? null)
+                  const isNextServer = state.nextServer[side]?.slot === slot
+                  return (
+                    <div
+                      key={position}
+                      className={`rounded-lg px-1 py-1 ${isNextServer ? 'bg-indigo-100 ring-1 ring-indigo-500 dark:bg-indigo-950' : 'bg-white/70 dark:bg-slate-900'}`}
+                      aria-label={`${t('play.lineups.position', { label: position })}: ${player?.number ?? t('common.blank')}`}
+                    >
+                      <span className="block text-[10px] text-slate-500">{position}</span>
+                      <span className="block font-semibold tabular-nums">{player?.number ?? t('common.blank')}</span>
+                    </div>
+                  )
+                })}
+              </div>
             </div>
           ))}
         </div>
 
-        {blocker && <Banner kind="info">{t(blocker.key, blocker.params)}</Banner>}
+        {blocker && <Banner kind="info">{t(blocker.key, paperParams(sheet, blocker.params))}</Banner>}
         {state.issues.map((issue, position) => (
           <Banner key={`${issue.key}-${position}`} kind="warn">
-            {t(issue.key, issue.params)}
+            {t(issue.key, paperParams(sheet, issue.params))}
           </Banner>
         ))}
 
-        <div className="my-4 flex flex-wrap gap-3">
-          {TEAM_SIDES.map((side) => (
+        <div className="my-4 grid grid-cols-2 gap-3">
+          {courtSides.map((side) => (
             <button
               key={side}
               type="button"
-              className="primary flex-1 basis-56 px-4 py-6 text-lg font-semibold"
+              className="primary w-full px-4 py-6 text-lg font-semibold"
               disabled={Boolean(blocker)}
               onClick={() =>
                 update((draft) => {
-                  draft.sets[setIndex]?.rallies.push({ winner: side })
+                  const target = draft.sets[setIndex]
+                  if (!target) return
+                  const now = new Date().toISOString()
+                  if (target.rallies.length === 0) target.startTime = now
+                  target.rallies.push({ winner: side })
+                  if (computeSetState(draft, setIndex).isComplete) {
+                    target.endTime = now
+                    target.durationMinutes = target.startTime
+                      ? Math.round((Date.parse(now) - Date.parse(target.startTime)) / 60_000)
+                      : null
+                  }
                 })
               }
             >
-              {t('play.scoring.point', { side })}
+              {t('play.scoring.point', { side: paperSide(sheet, side) })}
             </button>
           ))}
+        </div>
+        <div className="flex justify-end">
           <button
             type="button"
+            className="ghost"
             disabled={record.rallies.length === 0}
-            onClick={() => update((draft) => void draft.sets[setIndex]?.rallies.pop())}
+            onClick={() =>
+              update((draft) => {
+                const target = draft.sets[setIndex]
+                if (!target) return
+                target.rallies.pop()
+                target.endTime = ''
+                target.durationMinutes = null
+                if (target.rallies.length === 0) target.startTime = ''
+              })
+            }
           >
             {t('play.scoring.undoRally')}
           </button>
         </div>
 
         <div className="button-row">
-          {TEAM_SIDES.map((side) => (
+          {courtSides.map((side) => (
             <button
               key={side}
               type="button"
@@ -246,7 +310,7 @@ function SetPanel({ sheet, update, setIndex }: { sheet: Scoresheet; update: Shee
               }
             >
               {t('play.scoring.timeout', {
-                side,
+                side: paperSide(sheet, side),
                 used: state.timeoutsUsed[side],
                 max: sheet.rules.timeoutsPerSet,
               })}
@@ -267,9 +331,9 @@ function SetPanel({ sheet, update, setIndex }: { sheet: Scoresheet; update: Shee
           <Banner kind="ok">
             {t('play.scoring.setFinished', {
               number: record.number,
-              a: state.score.A,
-              b: state.score.B,
-              side: state.winner,
+              a: state.score[sheet.toss.leftSide ?? 'A'],
+              b: state.score[otherSide(sheet.toss.leftSide ?? 'A')],
+              side: paperSide(sheet, state.winner),
             })}
           </Banner>
         )}
@@ -277,7 +341,7 @@ function SetPanel({ sheet, update, setIndex }: { sheet: Scoresheet; update: Shee
 
       <Card title={t('play.subs.title')}>
         <div className="grid-2">
-          {TEAM_SIDES.map((side) => (
+          {courtSides.map((side) => (
             <SubstitutionForm key={side} sheet={sheet} update={update} setIndex={setIndex} side={side} />
           ))}
         </div>
@@ -299,11 +363,15 @@ function LineupEditor({
   update,
   setIndex,
   side,
+  teamIndex,
+  positions,
 }: {
   sheet: Scoresheet
   update: SheetUpdater
   setIndex: number
   side: TeamSide
+  teamIndex: number
+  positions: RefObject<HTMLDivElement | null>
 }) {
   const { t } = useTranslation()
   const record = sheet.sets[setIndex]
@@ -313,13 +381,13 @@ function LineupEditor({
   const slots = record.lineups[side].slots
   const locked = record.rallies.length > 0
   const options = team.players
-    .filter((player) => !player.isLibero)
+    .filter((player) => isEnteredPlayer(player) && !player.isLibero)
     .map((player) => ({ value: player.id, label: playerLabel(player) }))
 
   return (
     <div className="lineup">
       <h3>
-        {t('common.teamSide', { side })} - {team.name || t('common.unnamed')}
+        {t('common.teamSide', { side: paperSide(sheet, side) })} - {team.name || t('common.unnamed')}
       </h3>
       {locked && <p className="muted">{t('play.lineups.locked')}</p>}
       <div className="grid-3">
@@ -329,52 +397,28 @@ function LineupEditor({
             label={t('play.lineups.position', { label })}
             value={slots[slot] ?? ''}
             options={options}
-            onChange={(value) =>
+            renderOption={({ value }) => {
+              const player = findPlayer(team, value)
+              return <><strong>{player?.number}</strong>{player?.name.trim() ? ` ${player.name.trim()}` : ''}</>
+            }}
+            invalid={Boolean(slots[slot]) && slots.filter((id) => id === slots[slot]).length > 1}
+            hint={slots[slot] && slots.filter((id) => id === slots[slot]).length > 1
+              ? t('engine.blocker.duplicateLineup', { side: paperSide(sheet, side) })
+              : undefined}
+            onChange={(value) => {
               update((draft) => {
                 const target = draft.sets[setIndex]
                 if (target) target.lineups[side].slots[slot] = value || null
               })
-            }
+              if (!value) return
+              const allPositions = positions.current?.querySelectorAll('select')
+              const next = allPositions?.[teamIndex * POSITION_LABELS.length + slot + 1]
+              next?.focus()
+              if (next?.showPicker && navigator.userActivation?.isActive) next.showPicker()
+            }}
           />
         ))}
       </div>
-      <SelectField
-        label={t('play.lineups.libero')}
-        value=""
-        placeholder={t('play.lineups.addLibero')}
-        options={team.players
-          .filter((player) => player.isLibero && !record.lineups[side].liberoIds.includes(player.id))
-          .map((player) => ({ value: player.id, label: playerLabel(player) }))}
-        onChange={(value) =>
-          update((draft) => {
-            const target = draft.sets[setIndex]
-            if (target && value) target.lineups[side].liberoIds.push(value)
-          })
-        }
-      />
-      {record.lineups[side].liberoIds.length > 0 && (
-        <p className="flex flex-wrap gap-2">
-          {record.lineups[side].liberoIds.map((liberoId) => {
-            const player = findPlayer(team, liberoId)
-            return (
-              <button
-                key={liberoId}
-                type="button"
-                className="chip"
-                onClick={() =>
-                  update((draft) => {
-                    const target = draft.sets[setIndex]
-                    if (!target) return
-                    target.lineups[side].liberoIds = target.lineups[side].liberoIds.filter((id) => id !== liberoId)
-                  })
-                }
-              >
-                {t('teams.col.liberoShort')} {player ? playerLabel(player) : liberoId} ✕
-              </button>
-            )
-          })}
-        </p>
-      )}
     </div>
   )
 }
@@ -401,9 +445,9 @@ function SubstitutionForm({
   const slotIndex = slot === '' ? -1 : Number(slot)
   const problem = slotIndex >= 0 && incoming ? validateSubstitution(sheet, setIndex, side, slotIndex, incoming) : null
 
-  const recordSubstitution = () => {
-    if (slotIndex < 0 || !incoming || problem) return
-    const substitution = applySubstitution(sheet, setIndex, side, slotIndex, incoming)
+  const recordSubstitution = (position: number, playerId: string) => {
+    if (position < 0 || !playerId || validateSubstitution(sheet, setIndex, side, position, playerId)) return
+    const substitution = applySubstitution(sheet, setIndex, side, position, playerId)
     if (!substitution) return
     update((draft) => void draft.sets[setIndex]?.substitutions[side].push(substitution))
     setSlot('')
@@ -411,12 +455,16 @@ function SubstitutionForm({
   }
 
   const history = record.substitutions[side]
+  const returns = record.lineups[side].slots.flatMap((starter, position) =>
+    starter && state.courtSlots[side][position] !== starter && !validateSubstitution(sheet, setIndex, side, position, starter)
+      ? [{ position, starter, substitute: state.courtSlots[side][position] ?? null }]
+      : [])
 
   return (
     <div className="lineup">
       <h3>
         {t('play.subs.heading', {
-          side,
+          side: paperSide(sheet, side),
           used: state.substitutionsUsed[side],
           max: sheet.rules.substitutionsPerSet,
         })}
@@ -436,21 +484,25 @@ function SubstitutionForm({
           label={t('play.subs.entering')}
           value={incoming}
           options={team.players
-            .filter((player) => !player.isLibero && !state.courtSlots[side].includes(player.id))
+            .filter((player) => isEnteredPlayer(player) && !player.isLibero && !state.courtSlots[side].includes(player.id))
             .map((player) => ({ value: player.id, label: playerLabel(player) }))}
           onChange={(value) => setIncoming(value)}
         />
       </div>
-      {problem && <Banner kind="warn">{t(problem.key, problem.params)}</Banner>}
+      {problem && <Banner kind="warn">{t(problem.key, paperParams(sheet, problem.params))}</Banner>}
       <div className="button-row">
         <button
           type="button"
           className="primary"
           disabled={slotIndex < 0 || !incoming || Boolean(problem)}
-          onClick={recordSubstitution}
+          onClick={() => recordSubstitution(slotIndex, incoming)}
         >
           {t('play.subs.record')}
         </button>
+        {returns.map(({ position, starter, substitute }) => <button
+          type="button" key={position}
+          onClick={() => recordSubstitution(position, starter)}
+        >{t('play.subs.return', { starter: findPlayer(team, starter)?.number ?? '--', substitute: findPlayer(team, substitute)?.number ?? '--' })}</button>)}
         {history.length > 0 && (
           <button
             type="button"
@@ -472,8 +524,8 @@ function SubstitutionForm({
                   position: POSITION_LABELS[entry.slot] ?? '',
                   in: inbound?.number ?? t('common.blank'),
                   out: out?.number ?? t('common.blank'),
-                  a: entry.scoreA,
-                  b: entry.scoreB,
+                  a: side === 'A' ? entry.scoreA : entry.scoreB,
+                  b: side === 'A' ? entry.scoreB : entry.scoreA,
                 })}
               </li>
             )
@@ -524,7 +576,7 @@ function SanctionCard({
         <SelectField
           label={t('common.team')}
           value={side}
-          options={TEAM_SIDES.map((option) => ({ value: option, label: t('common.teamSide', { side: option }) }))}
+          options={TEAM_SIDES.map((option) => ({ value: option, label: t('common.teamSide', { side: paperSide(sheet, option) }) }))}
           onChange={(value) => setSide(value)}
         />
         <label className="field">
@@ -537,7 +589,7 @@ function SanctionCard({
         </label>
         <div className="field">
           <span className="field-label">{t('play.sanctions.atScore')}</span>
-          <p className="mono">{t('play.sanctions.atScoreValue', { a: scoreA, b: scoreB, number: setNumber })}</p>
+          <p className="mono">{t('play.sanctions.atScoreValue', { a: (side || sheet.toss.leftSide || 'A') === 'A' ? scoreA : scoreB, b: (side || sheet.toss.leftSide || 'A') === 'A' ? scoreB : scoreA, number: setNumber })}</p>
         </div>
       </div>
       <div className="button-row">
@@ -549,8 +601,8 @@ function SanctionCard({
         <ul className="list">
           {sheet.sanctions.map((sanction, index) => (
             <li key={index}>
-              {t(`sanction.${sanction.kind}`)} - {t('common.teamSide', { side: sanction.team })} {sanction.member} -{' '}
-              {t('common.set')} {sanction.set} {sanction.scoreA}:{sanction.scoreB}
+              {t(`sanction.${sanction.kind}`)} - {t('common.teamSide', { side: paperSide(sheet, sanction.team) })} {sanction.member} -{' '}
+              {t('common.set')} {sanction.set} {sanction.team === 'A' ? `${sanction.scoreA}:${sanction.scoreB}` : `${sanction.scoreB}:${sanction.scoreA}`}
               <button
                 type="button"
                 className="ghost"
