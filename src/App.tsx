@@ -1,11 +1,12 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { version as APP_VERSION } from '../package.json'
 
 import { defaultProviderId, providerById } from './federation/registry'
 import { providerName, type GameSummary } from './federation/types'
 import { computeMatchState } from './scoresheet/engine'
 import { createScoresheet, scoresheetFromGame } from './scoresheet/factory'
-import type { Scoresheet } from './scoresheet/model'
+import { isEnteredPlayer, TEAM_SIDES, type Scoresheet } from './scoresheet/model'
 import { sheetStore, settingsStore, type Settings } from './scoresheet/storage'
 import { Banner, Card, EmptyState } from './ui/components'
 import { GameBrowser } from './ui/GameBrowser'
@@ -13,13 +14,18 @@ import { MatchStep } from './ui/MatchStep'
 import { PlayStep } from './ui/PlayStep'
 import { SettingsPanel } from './ui/SettingsPanel'
 import { TeamsStep } from './ui/TeamsStep'
-import { TransferWizard } from './ui/TransferWizard'
+import { FilledScoresheet } from './ui/FilledScoresheet'
 import type { SheetUpdater } from './ui/updater'
-import { APP_VERSION } from './utils/version'
 
 type Tab = 'start' | 'match' | 'teams' | 'play' | 'sheet' | 'settings'
 
 const STEPS: Tab[] = ['start', 'match', 'teams', 'play', 'sheet']
+
+function canScore(sheet: Scoresheet): boolean {
+  return TEAM_SIDES.every((side) =>
+    sheet.teams[side].players.filter(isEnteredPlayer).length >= 6 &&
+    Boolean(sheet.teams[side].staff.coach.trim()))
+}
 
 export default function App() {
   const { t } = useTranslation()
@@ -29,7 +35,8 @@ export default function App() {
   const [activeSetIndex, setActiveSetIndex] = useState(0)
   const [savedSheets, setSavedSheets] = useState<Scoresheet[]>(() => sheetStore.all())
 
-  const provider = useMemo(() => providerById(settings.providerId || defaultProviderId()), [settings.providerId])
+  const provider = providerById(settings.providerId || defaultProviderId())
+  const scoringReady = Boolean(sheet && canScore(sheet))
 
   useEffect(() => settingsStore.write(settings), [settings])
 
@@ -45,14 +52,15 @@ export default function App() {
     })
   }, [])
 
-  const openSheet = (next: Scoresheet, target: Tab) => {
-    sheetStore.save(next)
+  const openSheet = (next: Scoresheet, target: Tab, persist = true) => {
+    if (persist) sheetStore.save(next)
     setSheet(next)
     setActiveSetIndex(0)
-    setTab(target)
+    setTab(target === 'play' && !canScore(next) ? 'teams' : target)
   }
 
   const showTab = (next: Tab) => {
+    if (next === 'play' && !scoringReady) return
     if (next === 'start') setSavedSheets(sheetStore.all())
     setTab(next)
   }
@@ -101,9 +109,9 @@ export default function App() {
             key={id}
             type="button"
             className={tab === id ? 'tab tab-active' : 'tab'}
-            disabled={!sheet && id !== 'start'}
+            disabled={(!sheet && id !== 'start') || (id === 'play' && !scoringReady)}
             onClick={() => showTab(id)}
-            title={t(`tabs.${id}.hint`)}
+            title={id === 'play' && sheet && !scoringReady ? t('play.rosterRequired') : t(`tabs.${id}.hint`)}
             aria-current={tab === id ? 'page' : undefined}
           >
             <span aria-hidden className="mono opacity-60">
@@ -176,7 +184,7 @@ export default function App() {
                             <td className="flex gap-2">
                               <button
                                 type="button"
-                                onClick={() => openSheet(candidate, 'play')}
+                                onClick={() => openSheet(candidate, 'play', false)}
                               >
                                 {t('common.open')}
                               </button>
@@ -210,9 +218,12 @@ export default function App() {
           />
         )}
 
-        {sheet && tab === 'match' && <MatchStep sheet={sheet} update={update} />}
+        {sheet && tab === 'match' &&         <MatchStep sheet={sheet} update={update} provider={provider} />}
         {sheet && tab === 'teams' && (
-          <TeamsStep sheet={sheet} update={update} provider={provider} onReplaceSheet={setSheet} />
+          <>
+            {!scoringReady && <Banner kind="info">{t('play.rosterRequired')}</Banner>}
+            <TeamsStep sheet={sheet} update={update} provider={provider} onReplaceSheet={setSheet} />
+          </>
         )}
         {sheet && tab === 'play' && (
           <PlayStep
@@ -222,7 +233,7 @@ export default function App() {
             onActiveSetChange={setActiveSetIndex}
           />
         )}
-        {sheet && tab === 'sheet' && <TransferWizard sheet={sheet} update={update} provider={provider} />}
+        {sheet && tab === 'sheet' && <FilledScoresheet sheet={sheet} provider={provider} />}
 
         {!sheet && tab !== 'start' && tab !== 'settings' && <Banner kind="info">{t('app.needSheet')}</Banner>}
       </main>

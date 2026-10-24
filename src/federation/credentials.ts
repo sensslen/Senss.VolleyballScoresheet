@@ -1,23 +1,6 @@
-import { browserStorage } from '../browserStorage'
+import { readJson, writeJson } from '../browserStorage'
 
 const KEY = 'vbs.credentials.v1'
-
-type Store = Record<string, string>
-
-function read(): Store {
-  const storage = browserStorage()
-  if (!storage) return {}
-  try {
-    const raw = storage.getItem(KEY)
-    return raw ? (JSON.parse(raw) as Store) : {}
-  } catch {
-    return {}
-  }
-}
-
-function write(store: Store): void {
-  browserStorage()?.setItem(KEY, JSON.stringify(store))
-}
 
 /**
  * Federation credentials never leave the browser: this app is a static page with
@@ -25,13 +8,13 @@ function write(store: Store): void {
  */
 export const credentials = {
   get(providerId: string): string {
-    return read()[providerId] ?? ''
+    return readJson<Record<string, string>>(KEY, {})[providerId] ?? ''
   },
   set(providerId: string, token: string): void {
-    const store = read()
+    const store = readJson<Record<string, string>>(KEY, {})
     if (token) store[providerId] = token
     else delete store[providerId]
-    write(store)
+    writeJson(KEY, store)
   },
   clear(providerId: string): void {
     credentials.set(providerId, '')

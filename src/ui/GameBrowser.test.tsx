@@ -1,4 +1,4 @@
-import { cleanup, render, screen, waitFor } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useState } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
@@ -78,15 +78,36 @@ function filterLabels(): string[] {
 }
 
 describe('fixture filters', () => {
-  afterEach(cleanup)
+  afterEach(() => {
+    cleanup()
+    vi.useRealTimers()
+  })
 
-  it('loads the fixtures without being asked, and with no date range of its own', async () => {
+  it('defaults to the local date to exclude historical fixtures but keeps today and future games', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date(2026, 9, 25, 0, 9))
+    const fixtures = [
+      { ...NLA_W_QUALI, id: 'past', playDate: '2026-10-24T18:00:00' },
+      { ...NLA_W_PLAYOFF, playDate: '2026-10-25T09:00:00' },
+      { ...NLA_M_QUALI, playDate: '2026-10-26T18:00:00' },
+    ]
+    const listGames = vi.fn<(query: GameQuery) => Promise<GameSummary[]>>(async (query) =>
+      fixtures.filter((fixture) => !query.dateFrom || fixture.playDate.slice(0, 10) >= query.dateFrom))
+    render(<Harness provider={stubProvider({ listGames })} />)
+
+    await waitFor(() => expect(matchRows()).toEqual(['Home 2 vs Away 2', 'Home 3 vs Away 3']))
+    expect((screen.getByLabelText('From') as HTMLInputElement).value).toBe('2026-10-25')
+    expect(listGames).toHaveBeenCalledWith({ dateFrom: '2026-10-25', dateTo: undefined })
+  })
+
+  it('allows clearing the default date to load historical fixtures', async () => {
     const listGames = vi.fn<(query: GameQuery) => Promise<GameSummary[]>>(async () => [NLA_W_QUALI])
     render(<Harness provider={stubProvider({ listGames })} />)
 
     await waitFor(() => expect(matchRows()).toEqual(['Home 1 vs Away 1']))
     expect(listGames).toHaveBeenCalledTimes(1)
-    expect(listGames.mock.calls.at(0)?.at(0)).toEqual({ dateFrom: undefined, dateTo: undefined })
+    fireEvent.change(screen.getByLabelText('From'), { target: { value: '' } })
+    await waitFor(() => expect(listGames).toHaveBeenLastCalledWith({ dateFrom: undefined, dateTo: undefined }))
   })
 
   it('reloads for a date range', async () => {
@@ -95,6 +116,7 @@ describe('fixture filters', () => {
     render(<Harness provider={stubProvider({ listGames })} />)
 
     await waitFor(() => expect(listGames).toHaveBeenCalledTimes(1))
+    await user.clear(screen.getByLabelText('From'))
     await user.type(screen.getByLabelText('From'), '2026-09-01')
 
     await waitFor(() => expect(listGames.mock.calls.length).toBeGreaterThan(1))

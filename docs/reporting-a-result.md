@@ -2,7 +2,7 @@
 
 The paper sheet is the official record and stays with the referee. The score still
 has to reach the federation, and no federation this app talks to accepts a
-scoresheet over its API. That constraint shapes the last step of the app.
+scoresheet over its API. Result reporting appears below the filled sheet.
 
 ## Swiss Volley
 
@@ -27,8 +27,8 @@ to Volley Manager. Both are out of scope for a static page with no backend.
 
 ## What the app does instead
 
-`capabilities.submitResult` is `false` on every provider, and the transfer wizard
-treats that as the normal case rather than an error. Its last step:
+`capabilities.submitResult` is `false` on every provider. The reporting panel below
+the filled sheet:
 
 - says plainly that the federation takes no submission, naming the provider;
 - renders the result in the shape a result form asks for (match number, date,
@@ -40,6 +40,6 @@ treats that as the normal case rather than an error. Its last step:
 ## Adding a federation that does accept submissions
 
 If one ever appears, set `capabilities.submitResult: true` and add the submit call
-to the provider. The wizard's last step is the only place that has to change; the
+to the provider. The reporting panel is the only place that has to change; the
 summary text is already derived by `resultSummary` in
 `src/scoresheet/summary.ts` and can be posted instead of copied.

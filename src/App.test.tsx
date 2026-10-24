@@ -1,9 +1,11 @@
-import { cleanup, render, screen, within } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import App from './App'
+import { createScoresheet } from './scoresheet/factory'
 import { POSITION_LABELS } from './scoresheet/model'
+import { sheetStore } from './scoresheet/storage'
 
 type User = ReturnType<typeof userEvent.setup>
 
@@ -18,13 +20,10 @@ function step(name: string): HTMLElement {
 async function fillRoster(user: User, side: 'A' | 'B'): Promise<void> {
   const card = cardFor(new RegExp(`^Team ${side} -`))
   await user.type(within(card).getByLabelText('Team name'), `Club ${side}`)
-
-  for (let index = 0; index < 6; index += 1) {
-    await user.click(within(card).getByRole('button', { name: 'Add player' }))
-  }
+  await user.type(within(card).getByLabelText('Coach'), `Coach ${side}`)
 
   const numbers = within(card).getAllByLabelText('No.') as HTMLInputElement[]
-  for (const [index, input] of numbers.entries()) {
+  for (const [index, input] of numbers.slice(0, 6).entries()) {
     await user.type(input, String(index + 1))
   }
 }
@@ -134,6 +133,38 @@ describe('app walkthrough', () => {
     expect(within(saved).getByRole('button', { name: 'Open' })).toBeTruthy()
   })
 
+  it('requires six numbered players and a nonblank coach on both teams before scoring', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: 'Blank sheet' }))
+    const score = step('Score') as HTMLButtonElement
+    expect(score.disabled).toBe(true)
+    await user.click(step('Teams'))
+    await fillRoster(user, 'A')
+    expect(score.disabled).toBe(true)
+    await fillRoster(user, 'B')
+    expect(score.disabled).toBe(false)
+
+    const team = cardFor(/^Team B -/)
+    const coach = within(team).getByLabelText('Coach')
+    await user.clear(coach)
+    await user.type(coach, '   ')
+    expect(score.disabled).toBe(true)
+    await user.type(coach, 'Coach B')
+    expect(score.disabled).toBe(false)
+    await user.clear(within(team).getAllByLabelText('No.')[5]!)
+    expect(score.disabled).toBe(true)
+  })
+
+  it('opens an incomplete saved sheet on Teams instead of bypassing the disabled Score tab', async () => {
+    const user = userEvent.setup()
+    sheetStore.save(createScoresheet())
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: 'Open' }))
+    expect((step('Score') as HTMLButtonElement).disabled).toBe(true)
+    expect(step('Teams').getAttribute('aria-current')).toBe('page')
+  })
+
   it('translates the whole app when the language changes', async () => {
     const user = userEvent.setup()
     render(<App />)
@@ -164,53 +195,82 @@ describe('app walkthrough', () => {
   })
 })
 
-describe('transfer wizard', () => {
-  beforeEach(() => window.localStorage.clear())
-  afterEach(cleanup)
+describe('filled scoresheet', () => {
+  beforeEach(() => {
+    window.localStorage.clear()
+    vi.stubGlobal('ResizeObserver', class {
+      observe() {}
+      disconnect() {}
+    })
+  })
+  afterEach(() => {
+    cleanup()
+    vi.unstubAllGlobals()
+  })
 
-  it('opens on the first box and states what to write', async () => {
+  it('shows the complete sheet without wizard steps and allows zoom and section selection', async () => {
     const user = userEvent.setup()
     render(<App />)
     await user.click(screen.getByRole('button', { name: 'Blank sheet' }))
     await user.type(screen.getByLabelText('Match number'), 'M-42')
     await user.click(step('Transfer'))
 
-    expect(screen.getByText(/step 1 of/i)).toBeTruthy()
-    expect(screen.getByRole('heading', { name: 'Header and officials' })).toBeTruthy()
-    expect(screen.getByText(/top band of the sheet/i)).toBeTruthy()
-    expect(screen.getByText('M-42')).toBeTruthy()
+    const viewport = screen.getByRole('region', { name: 'Filled scoresheet' })
+    expect(within(viewport).getByText('M-42')).toBeTruthy()
+    expect(within(viewport).getByRole('heading', { name: 'Set 5' })).toBeTruthy()
+    expect(within(viewport).getByRole('heading', { name: 'Results table' })).toBeTruthy()
+    expect(screen.queryByRole('button', { name: 'Copied, next box' })).toBeNull()
+    expect(screen.queryByRole('progressbar')).toBeNull()
+
+    fireEvent.change(screen.getByRole('slider', { name: /Zoom/ }), { target: { value: '150' } })
+    expect((viewport.querySelector('article') as HTMLElement).style.zoom).toBe('1.5')
+    Object.defineProperties(viewport, { clientWidth: { value: 1000 }, clientHeight: { value: 600 } })
+    const fifth = viewport.querySelector<HTMLElement>('[data-box="set-5"]')!
+    vi.spyOn(fifth, 'getBoundingClientRect').mockReturnValue({ ...new DOMRect(), left: 0, top: 0, width: 800, height: 400, right: 800, bottom: 400, x: 0, y: 0, toJSON: () => ({}) })
+    await user.selectOptions(screen.getByLabelText('Show section'), 'set-5')
+    expect(Number((viewport.querySelector('article') as HTMLElement).style.zoom)).toBeCloseTo(1.815)
+    expect(viewport.querySelector('[data-box="set-5"]')?.classList.contains('paper-selected')).toBe(true)
   })
 
-  it('advances a box at a time and records what has been copied', async () => {
+  it('keeps the header in fixture order and assigns paper letters from the selected sides', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: 'Blank sheet' }))
+    await user.click(step('Teams'))
+    const names = screen.getAllByLabelText('Team name')
+    await user.type(names[0]!, 'Home Club')
+    await user.type(names[1]!, 'Guest Club')
+    for (const side of ['A', 'B']) {
+      const team = cardFor(new RegExp(`^Team ${side} -`))
+      for (const [index, input] of within(team).getAllByLabelText('No.').slice(0, 6).entries()) {
+        fireEvent.change(input, { target: { value: String(index + 1) } })
+      }
+      fireEvent.change(within(team).getByLabelText('Coach'), { target: { value: `Coach ${side}` } })
+    }
+    await user.click(step('Transfer'))
+
+    const initialViewport = screen.getByRole('region', { name: 'Filled scoresheet' })
+    expect(within(within(initialViewport).getByRole('region', { name: 'Team A roster' })).getByText('Home Club')).toBeTruthy()
+    await user.click(step('Score'))
+    await user.selectOptions(screen.getByLabelText('Starts on the left side'), 'B')
+    await user.click(step('Transfer'))
+    expect(screen.queryByLabelText('Team A on paper')).toBeNull()
+    const viewport = screen.getByRole('region', { name: 'Filled scoresheet' })
+    const header = within(viewport).getByRole('region', { name: 'Match header' })
+    const row = within(header).getByText('Home team (B)').closest('.sheet-row')!
+    expect(within(row as HTMLElement).getByText('Home Club')).toBeTruthy()
+    const roster = within(viewport).getByRole('region', { name: 'Team A roster' })
+    expect(within(roster).getByText('Guest Club')).toBeTruthy()
+  })
+
+  it('keeps result reporting available below the sheet', async () => {
     const user = userEvent.setup()
     render(<App />)
     await user.click(screen.getByRole('button', { name: 'Blank sheet' }))
     await user.click(step('Transfer'))
-
-    expect(screen.getByText(/0 of \d+ boxes marked done/i)).toBeTruthy()
-
-    await user.click(screen.getByRole('button', { name: 'Copied, next box' }))
-
-    expect(screen.getByText(/step 2 of/i)).toBeTruthy()
-    expect(screen.getByRole('heading', { name: 'Toss and sides' })).toBeTruthy()
-    expect(screen.getByText(/1 of \d+ boxes marked done/i)).toBeTruthy()
-
-    await user.click(screen.getByRole('button', { name: 'Back' }))
-    expect(screen.getByRole('heading', { name: 'Header and officials' })).toBeTruthy()
-    expect(screen.getByRole('button', { name: 'Mark not copied' })).toBeTruthy()
-  })
-
-  it('ends on reporting the result, which no federation API accepts', async () => {
-    const user = userEvent.setup()
-    render(<App />)
-    await user.click(screen.getByRole('button', { name: 'Blank sheet' }))
-    await user.click(step('Transfer'))
-
-    const overview = screen.getAllByRole('button', { name: /Report the result$/ })
-    await user.click(overview[0] as HTMLElement)
 
     expect(screen.getByText(/no direct submission/i)).toBeTruthy()
     expect(screen.getByRole('button', { name: 'Copy the summary' })).toBeTruthy()
-    expect(screen.getByRole('button', { name: 'Finish' })).toBeTruthy()
+    expect(screen.queryByRole('button', { name: 'Finish' })).toBeNull()
   })
 })

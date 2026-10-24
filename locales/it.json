@@ -1,7 +1,4 @@
 {
-  "language": {
-    "name": "Italiano"
-  },
   "common": {
     "teamSide": "Squadra {{side}}",
     "unnamed": "(senza nome)",
@@ -10,10 +7,7 @@
     "open": "Apri",
     "delete": "Elimina",
     "remove": "Rimuovi",
-    "back": "Indietro",
-    "next": "Avanti",
     "print": "Stampa",
-    "copy": "Copia come testo",
     "copied": "Copiato",
     "date": "Data",
     "score": "Punteggio",
@@ -30,11 +24,10 @@
   },
   "app": {
     "title": "Assistente Referto Pallavolo",
-    "tagline": "Ti guida attraverso il referto internazionale e poi casella per casella, così puoi ricopiarlo sul referto cartaceo.",
+    "tagline": "Registra la partita e copia i dati del referto compilato sulla carta.",
     "footer": "Tutto resta in questo browser. Il referto cartaceo rimane il documento ufficiale; questa app aiuta solo a compilarlo senza errori di calcolo.",
     "needSheet": "Prima avvia o apri un referto.",
-    "version": "Versione {{version}}",
-    "loading": "Caricamento..."
+    "version": "Versione {{version}}"
   },
   "tabs": {
     "start": { "label": "Gara", "hint": "Scegli una gara o parti da zero" },
@@ -120,11 +113,11 @@
     "bestOf": "Al meglio di {{count}}"
   },
   "teams": {
+    "staff": "Staff",
     "cardTitle": "Squadra {{side}} - {{name}}",
     "home": "Squadra di casa nel calendario.",
     "away": "Squadra ospite nel calendario.",
     "import": "Importa distinta",
-    "addPlayer": "Aggiungi atleta",
     "field": {
       "name": "Nome squadra",
       "club": "Società",
@@ -141,8 +134,7 @@
     "tooManyLiberos": "Più di due liberi indicati.",
     "tooManyPlayers": "{{count}} atleti in distinta; il regolamento ne consente {{allowed}}.",
     "col": {
-      "lastName": "Cognome",
-      "firstName": "Nome",
+      "birthDate": "Data di nascita",
       "licence": "Tesserino",
       "captainShort": "C",
       "liberoShort": "L"
@@ -169,10 +161,9 @@
       "firstServe": "Batte per primo in questo set",
       "decidingHint": "Il set decisivo comincia con un nuovo sorteggio.",
       "locked": "Il set è già iniziato; cambia la formazione solo per correggere un errore di trascrizione.",
-      "position": "Posizione {{label}}",
-      "libero": "Libero sul referto",
-      "addLibero": "Aggiungi libero"
+      "position": "Posizione {{label}}"
     },
+    "rosterRequired": "Inserisci almeno 6 giocatori con un numero e un allenatore per ogni squadra per abilitare il punteggio.",
     "scoring": {
       "title": "Punteggio del set {{number}}",
       "serving": "in battuta",
@@ -184,6 +175,8 @@
       "setFinished": "Il set {{number}} finisce {{a}}:{{b}} per la squadra {{side}}. Scrivi la durata nella tabella dei risultati."
     },
     "subs": {
+      "return": "Rientro del n. {{starter}} per il n. {{substitute}}",
+      "returned": "Il n. {{number}} è stato sostituito dal titolare rientrato",
       "title": "Sostituzioni",
       "heading": "Squadra {{side}} ({{used}}/{{max}} usate)",
       "leaving": "Posizione che esce",
@@ -216,12 +209,15 @@
     "noFirstServe": "Per il set {{number}} non è ancora registrata la prima battuta.",
     "liberoServing": "La squadra {{side}} ha un libero in posizione di battuta, cosa che questo regolamento non consente.",
     "blocker": {
+      "duplicateLineup": "La squadra {{side}} ha un giocatore selezionato in più posizioni.",
       "noSet": "Questo set non è stato avviato.",
       "noFirstServe": "Registra quale squadra batte per prima in questo set.",
+      "noLeftSide": "Registra quale squadra inizia a sinistra nel set decisivo.",
       "lineup": "La squadra {{side}} deve avere tutte e sei le posizioni prima del primo scambio.",
       "setFinished": "Questo set è concluso."
     },
     "sub": {
+      "pairing": "Il titolare e il sostituto devono mantenere la stessa coppia di cambio per questo set.",
       "noSet": "Quel set non esiste.",
       "setFinished": "Il set è già concluso.",
       "emptySlot": "In quella posizione non c'è ancora nessun atleta in campo.",
@@ -237,67 +233,34 @@
     }
   },
   "transfer": {
+    "total": "Totale",
+    "filledTitle": "Referto compilato",
+    "filledHint": "Usa la rotella per ingrandire e trascina per spostare. Su touchscreen, sposta con un dito o ingrandisci con due. Scegli una sezione per adattarla alla vista.",
+    "zoomIn": "Ingrandisci",
+    "zoomOut": "Riduci",
+    "viewport": "Mostra sezione",
+    "zoom": "Zoom",
+    "fit": "Adatta alla larghezza",
+    "reference": "Guida Swiss Volley",
+    "homeTeam": "Squadra di casa",
+    "guestTeam": "Squadra ospite",
+    "sideSwitch": "Punti al cambio di campo",
     "title": "Trasferisci sul referto cartaceo",
-    "subtitle": "Una casella alla volta, nell'ordine in cui il segnapunti compila il referto.",
-    "step": "Passo {{current}} di {{total}}",
-    "progress": "{{done}} di {{total}} caselle completate",
-    "markDone": "Segna come copiata",
-    "markNotDone": "Togli il segno",
-    "doneAndNext": "Copiata, casella successiva",
-    "finish": "Termina",
-    "restart": "Ricomincia dalla prima casella",
-    "overview": "Tutte le caselle",
-    "allDone": "Tutte le caselle sono segnate come copiate. Controlla i totali sul referto cartaceo prima di firmare.",
-    "whatToWrite": "Cosa scrivere",
-    "printSection": "Stampa questa casella",
-    "copySection": "Copia questa casella come testo",
-    "notStarted": "Set non avviato.",
     "noPlayers": "Nessun atleta inserito per la squadra {{side}}.",
-    "noRallies": "Nessuno scambio registrato in questo set.",
-    "noRounds": "Ancora nessun turno di battuta.",
-    "noSubstitutions": "Nessuna sostituzione.",
     "noSanctions": "Nessuna sanzione registrata."
   },
   "section": {
-    "header": {
-      "title": "Intestazione e ufficiali",
-      "help": "Fascia superiore del referto. Copia competizione, numero gara, data, ora e palestra, poi i nomi delle due squadre e gli ufficiali. Scrivi i nomi esattamente come figurano sui tesserini."
-    },
-    "toss": {
-      "title": "Sorteggio e lati",
-      "help": "Indica quale squadra batte e quale sta a sinistra nel 1º set. Le squadre cambiano campo a ogni set; il set decisivo ha un sorteggio proprio e il cambio campo all'8º punto."
-    },
     "roster": {
-      "title": "Distinta squadra {{side}}",
-      "help": "Compila la colonna della squadra in ordine di numero di maglia, cerchia il capitano e segna ogni libero con una L. Allenatore e vice vanno sotto."
-    },
-    "lineup": {
-      "title": "Set {{number}}: formazioni iniziali",
-      "help": "Scrivi i sei titolari nelle posizioni da I a VI. Quell'ordine è anche l'ordine di battuta, quindi deve coincidere con il tagliando consegnato dall'allenatore."
-    },
-    "score": {
-      "title": "Set {{number}}: punteggio progressivo",
-      "help": "Scorri i turni di battuta: scrivi il numero di chi serve, poi barra ogni punto conquistato su quella battuta. L'elenco sotto mostra il punteggio dopo ogni punto."
-    },
-    "changes": {
-      "title": "Set {{number}}: sostituzioni e time-out",
-      "help": "Registra ogni sostituzione nella posizione in cui è avvenuta, con il numero che entra sopra quello che esce e il punteggio accanto. I time-out vanno nelle caselle piccole come punteggio al momento della richiesta."
+      "title": "Distinta squadra {{side}}"
     },
     "results": {
-      "title": "Tabella dei risultati",
-      "help": "Una riga per set: durata, i due punteggi, sostituzioni, time-out e vincitore. Aggiungi le durate dei set e poi totalizza punti e durata della gara."
+      "title": "Tabella dei risultati"
     },
     "sanctions": {
-      "title": "Sanzioni",
-      "help": "Una riga per sanzione con squadra, tesserato, set e punteggio al momento in cui è stata comminata."
-    },
-    "remarks": {
-      "title": "Osservazioni e firme",
-      "help": "Scrivi le eventuali osservazioni, poi raccogli le firme: prima i capitani, poi gli allenatori, il segnapunti e infine i due arbitri."
+      "title": "Sanzioni"
     },
     "submit": {
-      "title": "Comunicare il risultato",
-      "help": "Il referto cartaceo resta all'arbitro. Il risultato deve comunque arrivare alla federazione, quindi copia il riepilogo qui sotto nel sistema federale."
+      "title": "Comunicare il risultato"
     }
   },
   "sheet": {
@@ -319,45 +282,30 @@
       "leftSide": "Lato sinistro (1º set)",
       "rightSide": "Lato destro (1º set)",
       "team": "Squadra",
-      "coach": "Allenatore",
-      "assistantCoach": "Vice allenatore",
       "liberos": "Liberi",
-      "servesFirstSet": "Batte per primo",
       "setsWon": "Set vinti",
       "totalPoints": "Punti totali",
       "matchWinner": "Vincitore della gara",
       "remarks": "Osservazioni",
-      "scorer": "Segnapunti",
-      "captain": "Capitano {{side}}",
-      "coachSide": "Allenatore {{side}}",
-      "firstReferee": "1º arbitro"
+      "captain": "Capitano {{side}}"
     },
-    "serviceRounds": "Turni di battuta squadra {{side}} - {{name}}",
     "rallyByRally": "Scambio per scambio",
     "col": {
-      "round": "Turno",
-      "serverNumber": "Battitore n.",
-      "pointsOnService": "Punti su questa battuta",
-      "fromScore": "(da {{own}}:{{opponent}})",
-      "pointTo": "Punto a",
       "scoreA": "Punti A",
       "scoreB": "Punti B",
       "playerNumber": "Atleta n.",
-      "in": "Entra",
-      "out": "Esce",
       "duration": "Durata",
+      "start": "Inizio",
+      "end": "Fine",
       "subsA": "Sost. A",
       "subsB": "Sost. B",
       "timeoutsA": "T-O A",
       "timeoutsB": "T-O B",
-      "winner": "Vincitore",
       "member": "Tesserato"
     },
-    "timeouts": "Time-out",
-    "signatureNote": "Le firme vanno sulla carta: i capitani firmano a fine gara, poi gli allenatori e gli arbitri."
+    "timeouts": "Time-out"
   },
   "submit": {
-    "title": "Comunicare il risultato",
     "noApi": {
       "title": "Nessun invio diretto",
       "body": "{{name}} pubblica calendario, squadre e distinte ma non accetta referti tramite la sua API, quindi il risultato non può essere trasmesso da qui. Copia il riepilogo qui sotto nel sistema federale e consegna il referto cartaceo all'arbitro come sempre."
@@ -369,7 +317,6 @@
     "checklist": "Prima di consegnare il referto",
     "check": {
       "totals": "Il totale dei punti per set coincide con il punteggio progressivo.",
-      "signatures": "Hanno firmato entrambi i capitani, entrambi gli allenatori e entrambi gli arbitri.",
       "durations": "La durata di ogni set e della gara è scritta.",
       "sanctions": "Ogni sanzione è nel riquadro sanzioni con il suo punteggio."
     }

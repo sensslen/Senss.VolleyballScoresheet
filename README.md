@@ -17,18 +17,20 @@ The published app lives at
 - **Browse fixtures** by date, then down the hierarchy the fixtures themselves
   report (competition, stage, pool, team), and pick the match you are scoring. A
   level with nothing to choose stays out of the way.
+  The date filter starts at today; clear **From** to include historical fixtures.
 - **Prefill** the header, both team names, referees and venue from the fixture, and
   pull both squads with shirt numbers.
 - **Guide the sheet** step by step: header and officials, rosters with captain and
   liberos, the toss, starting lineups per set, then rally-by-rally entry with time-outs,
   substitutions and sanctions.
+- **Enable scoring** once each team has at least six numbered players and a coach.
 - **Derive what the sheet needs**: running score, which team serves, the serving
   player's number for every service round, rotation after each side-out, substitution
   legality, set and match completion.
-- **Walk the transfer** under *Transfer*: a wizard that steps through every box of the
-  paper sheet in the order a scorer fills it, says what goes in that box, shows the
-  derived values, and remembers which boxes you have already copied. The last step
-  hands you the result summary to file with the federation.
+- **Copy the filled sheet** under *Transfer*: zoom with the wheel or pinch, drag to
+  pan, or choose a section to fit it into view. The layout follows the Swiss Volley
+  paper sheet, including the
+  deciding set's repeated team panel. The result summary appears below the sheet.
 - **Speak the reader's language**: eleven of them, picked in Settings or from the
   browser.
 
@@ -36,6 +38,9 @@ Works with or without an API token. Without one, nothing is prefilled and you ty
 match details in yourself; the guidance and derivation are identical.
 
 ## Running it
+
+Use Node.js 24 or newer. TypeScript stays on 6.0 until typescript-eslint supports 7.
+React Compiler checks come from eslint-plugin-react-hooks.
 
 ```bash
 npm install
@@ -67,7 +72,7 @@ backend. A club administrator generates a Swiss Volley token in Volley Manager u
 Swiss Volley publishes fixtures, teams and squads but not a match log, so points,
 substitutions and sanctions are always entered here. Its API is read-only, so the
 finished result cannot be filed from the app either: see
-[docs/reporting-a-result.md](docs/reporting-a-result.md) for what the transfer wizard
+[docs/reporting-a-result.md](docs/reporting-a-result.md) for what the transfer view
 does about that.
 
 Adding another country means writing one adapter: see
@@ -78,8 +83,8 @@ Adding another country means writing one adapter: see
 ```
 locales/            one JSON catalogue per language, en.json is the source of truth
 src/federation/     country-neutral provider interface, registry, Swiss Volley adapter
-src/scoresheet/     sheet model, rule sets, scoring engine, sections (no UI imports)
-src/ui/             wizard steps, fixture browser, transfer wizard
+src/scoresheet/     sheet model, rule sets, scoring engine, paper mapping (no UI imports)
+src/ui/             scoring steps, fixture browser, zoomable filled scoresheet
 ```
 
 The engine is pure and covered by tests, so rotation and substitution rules can be

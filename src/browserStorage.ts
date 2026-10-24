@@ -11,3 +11,16 @@ export function browserStorage(): Storage | null {
     return null
   }
 }
+
+export function readJson<T>(key: string, fallback: T): T {
+  try {
+    const raw = browserStorage()?.getItem(key)
+    return raw ? JSON.parse(raw) as T : fallback
+  } catch {
+    return fallback
+  }
+}
+
+export function writeJson(key: string, value: unknown): void {
+  browserStorage()?.setItem(key, JSON.stringify(value))
+}

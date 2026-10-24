@@ -1,7 +1,4 @@
 {
-  "language": {
-    "name": "Deutsch"
-  },
   "common": {
     "teamSide": "Team {{side}}",
     "unnamed": "(ohne Namen)",
@@ -10,10 +7,7 @@
     "open": "Öffnen",
     "delete": "Löschen",
     "remove": "Entfernen",
-    "back": "Zurück",
-    "next": "Weiter",
     "print": "Drucken",
-    "copy": "Als Text kopieren",
     "copied": "Kopiert",
     "date": "Datum",
     "score": "Resultat",
@@ -30,11 +24,10 @@
   },
   "app": {
     "title": "Volleyball-Matchblatt-Assistent",
-    "tagline": "Führt dich durch ein internationales Matchblatt und danach Feld für Feld, damit du alles auf das Papier übertragen kannst.",
+    "tagline": "Erfasse das Spiel und übertrage die Einträge vom ausgefüllten Matchblatt aufs Papier.",
     "footer": "Alles bleibt in diesem Browser. Das Papier-Matchblatt bleibt das offizielle Dokument; diese App hilft nur, es ohne Rechenfehler auszufüllen.",
     "needSheet": "Starte oder öffne zuerst ein Matchblatt.",
-    "version": "Version {{version}}",
-    "loading": "Wird geladen..."
+    "version": "Version {{version}}"
   },
   "tabs": {
     "start": { "label": "Spiel", "hint": "Spiel auswählen oder leer beginnen" },
@@ -120,11 +113,11 @@
     "bestOf": "Best of {{count}}"
   },
   "teams": {
+    "staff": "Betreuer",
     "cardTitle": "Team {{side}} - {{name}}",
     "home": "Heimteam gemäss Spielliste.",
     "away": "Gastteam gemäss Spielliste.",
     "import": "Aufgebot importieren",
-    "addPlayer": "Spieler hinzufügen",
     "field": {
       "name": "Teamname",
       "club": "Verein",
@@ -141,8 +134,7 @@
     "tooManyLiberos": "Mehr als zwei Liberos markiert.",
     "tooManyPlayers": "{{count}} Spieler aufgeführt; das Regelwerk erlaubt {{allowed}}.",
     "col": {
-      "lastName": "Nachname",
-      "firstName": "Vorname",
+      "birthDate": "Geburtsdatum",
       "licence": "Lizenz",
       "captainShort": "C",
       "liberoShort": "L"
@@ -169,10 +161,9 @@
       "firstServe": "Erster Aufschlag in diesem Satz",
       "decidingHint": "Der Entscheidungssatz beginnt mit einer neuen Seitenwahl.",
       "locked": "Der Satz läuft bereits; ändere die Aufstellung nur, um einen Übertragungsfehler zu korrigieren.",
-      "position": "Position {{label}}",
-      "libero": "Libero auf dem Matchblatt",
-      "addLibero": "Libero hinzufügen"
+      "position": "Position {{label}}"
     },
+    "rosterRequired": "Für jedes Team mindestens 6 Spieler mit Nummer und einen Trainer eingeben, um die Punkteingabe freizuschalten.",
     "scoring": {
       "title": "Punkte Satz {{number}}",
       "serving": "Aufschlag",
@@ -184,6 +175,8 @@
       "setFinished": "Satz {{number}} endet {{a}}:{{b}} für Team {{side}}. Trage die Spieldauer im Resultatfeld ein."
     },
     "subs": {
+      "return": "Nr. {{starter}} für Nr. {{substitute}} zurückwechseln",
+      "returned": "Nr. {{number}} wurde durch den zurückgekehrten Startspieler ersetzt",
       "title": "Auswechslungen",
       "heading": "Team {{side}} ({{used}}/{{max}} verwendet)",
       "leaving": "Position, die verlässt",
@@ -216,12 +209,15 @@
     "noFirstServe": "Für Satz {{number}} ist noch kein erster Aufschlag eingetragen.",
     "liberoServing": "Bei Team {{side}} steht ein Libero auf der Aufschlagposition, was dieses Regelwerk nicht erlaubt.",
     "blocker": {
+      "duplicateLineup": "Bei Team {{side}} ist ein Spieler auf mehreren Positionen ausgewählt.",
       "noSet": "Dieser Satz wurde noch nicht gestartet.",
       "noFirstServe": "Trage ein, welches Team in diesem Satz zuerst aufschlägt.",
+      "noLeftSide": "Trage ein, welches Team im Entscheidungssatz links beginnt.",
       "lineup": "Team {{side}} braucht alle sechs Positionen vor dem ersten Ballwechsel.",
       "setFinished": "Dieser Satz ist beendet."
     },
     "sub": {
+      "pairing": "Start- und Ersatzspieler müssen in diesem Satz ein festes Wechselpaar bleiben.",
       "noSet": "Diesen Satz gibt es nicht.",
       "setFinished": "Der Satz ist bereits beendet.",
       "emptySlot": "Auf dieser Position steht noch kein Spieler auf dem Feld.",
@@ -237,67 +233,34 @@
     }
   },
   "transfer": {
+    "total": "Total",
+    "filledTitle": "Ausgefülltes Matchblatt",
+    "filledHint": "Mit dem Mausrad zoomen und durch Ziehen verschieben. Auf Touchscreens mit einem Finger verschieben oder mit zwei Fingern zoomen. Ein gewählter Bereich wird eingepasst.",
+    "zoomIn": "Vergrössern",
+    "zoomOut": "Verkleinern",
+    "viewport": "Bereich anzeigen",
+    "zoom": "Zoom",
+    "fit": "Breite einpassen",
+    "reference": "Swiss-Volley-Anleitung",
+    "homeTeam": "Heimteam",
+    "guestTeam": "Gastteam",
+    "sideSwitch": "Punkte beim Seitenwechsel",
     "title": "Auf das Papier-Matchblatt übertragen",
-    "subtitle": "Ein Feld nach dem anderen, in der Reihenfolge, in der ein Anschreiber das Blatt ausfüllt.",
-    "step": "Schritt {{current}} von {{total}}",
-    "progress": "{{done}} von {{total}} Feldern erledigt",
-    "markDone": "Als übertragen markieren",
-    "markNotDone": "Markierung aufheben",
-    "doneAndNext": "Übertragen, nächstes Feld",
-    "finish": "Abschliessen",
-    "restart": "Wieder beim ersten Feld beginnen",
-    "overview": "Alle Felder",
-    "allDone": "Alle Felder sind als übertragen markiert. Prüfe die Summen gegen das Papier-Matchblatt, bevor unterschrieben wird.",
-    "whatToWrite": "Was einzutragen ist",
-    "printSection": "Dieses Feld drucken",
-    "copySection": "Dieses Feld als Text kopieren",
-    "notStarted": "Satz nicht gestartet.",
     "noPlayers": "Für Team {{side}} sind noch keine Spieler erfasst.",
-    "noRallies": "In diesem Satz sind noch keine Ballwechsel erfasst.",
-    "noRounds": "Noch keine Aufschlagfolgen.",
-    "noSubstitutions": "Keine Auswechslungen.",
     "noSanctions": "Keine Sanktionen erfasst."
   },
   "section": {
-    "header": {
-      "title": "Kopf und Offizielle",
-      "help": "Das obere Band des Blatts. Übertrage Wettbewerb, Spielnummer, Datum, Zeit und Halle, danach beide Teamnamen und die Offiziellen. Schreibe die Namen genau so, wie sie auf den Lizenzen stehen."
-    },
-    "toss": {
-      "title": "Seitenwahl und Seiten",
-      "help": "Trage ein, welches Team aufschlägt und welches im 1. Satz links steht. Die Teams wechseln nach jedem Satz die Seiten; der Entscheidungssatz hat eine eigene Seitenwahl und einen Seitenwechsel bei 8."
-    },
     "roster": {
-      "title": "Aufgebot Team {{side}}",
-      "help": "Fülle die Teamspalte nach Trikotnummern aus, kreise den Captain ein und markiere jeden Libero mit einem L. Trainer und Assistenztrainer kommen darunter."
-    },
-    "lineup": {
-      "title": "Satz {{number}}: Startaufstellungen",
-      "help": "Trage jede Startsechs in die Positionen I bis VI ein. Diese Reihenfolge ist zugleich die Aufschlagreihenfolge und muss dem Aufstellungszettel des Trainers entsprechen."
-    },
-    "score": {
-      "title": "Satz {{number}}: Punkteverlauf",
-      "help": "Arbeite die Aufschlagfolgen ab: zuerst die Nummer des Aufschlagenden eintragen, danach jeden auf diesen Aufschlag gewonnenen Punkt durchstreichen. Die Liste darunter zeigt den Spielstand nach jedem Punkt."
-    },
-    "changes": {
-      "title": "Satz {{number}}: Wechsel und Auszeiten",
-      "help": "Trage jeden Wechsel in der Position ein, in der er stattfand: die eingewechselte Nummer über die ausgewechselte, den Spielstand daneben. Auszeiten kommen als Spielstand in die kleinen Felder."
+      "title": "Aufgebot Team {{side}}"
     },
     "results": {
-      "title": "Resultattabelle",
-      "help": "Eine Zeile pro Satz: Dauer, beide Resultate, Wechsel, Auszeiten und Sieger. Ergänze die Satzdauern ab Uhr und addiere danach Punkte und Spieldauer."
+      "title": "Resultattabelle"
     },
     "sanctions": {
-      "title": "Sanktionen",
-      "help": "Eine Zeile pro Sanktion mit Team, Person, Satz und dem Spielstand, bei dem sie ausgesprochen wurde."
-    },
-    "remarks": {
-      "title": "Bemerkungen und Unterschriften",
-      "help": "Trage allfällige Bemerkungen ein und hole danach die Unterschriften: zuerst die Captains, dann die Trainer, der Anschreiber und zuletzt beide Schiedsrichter."
+      "title": "Sanktionen"
     },
     "submit": {
-      "title": "Resultat melden",
-      "help": "Das Papier-Matchblatt bleibt beim Schiedsrichter. Das Resultat muss trotzdem zum Verband gelangen, übertrage darum die Zusammenfassung unten ins Verbandssystem."
+      "title": "Resultat melden"
     }
   },
   "sheet": {
@@ -319,45 +282,30 @@
       "leftSide": "Linke Seite (1. Satz)",
       "rightSide": "Rechte Seite (1. Satz)",
       "team": "Team",
-      "coach": "Trainer",
-      "assistantCoach": "Assistenztrainer",
       "liberos": "Liberos",
-      "servesFirstSet": "Erster Aufschlag",
       "setsWon": "Gewonnene Sätze",
       "totalPoints": "Punkte total",
       "matchWinner": "Sieger",
       "remarks": "Bemerkungen",
-      "scorer": "Anschreiber",
-      "captain": "Captain {{side}}",
-      "coachSide": "Trainer {{side}}",
-      "firstReferee": "1. Schiedsrichter"
+      "captain": "Captain {{side}}"
     },
-    "serviceRounds": "Aufschlagfolgen Team {{side}} - {{name}}",
     "rallyByRally": "Ballwechsel für Ballwechsel",
     "col": {
-      "round": "Folge",
-      "serverNumber": "Aufschlag Nr.",
-      "pointsOnService": "Punkte auf diesen Aufschlag",
-      "fromScore": "(ab {{own}}:{{opponent}})",
-      "pointTo": "Punkt für",
       "scoreA": "Punkte A",
       "scoreB": "Punkte B",
       "playerNumber": "Spieler Nr.",
-      "in": "Ein",
-      "out": "Aus",
       "duration": "Dauer",
+      "start": "Beginn",
+      "end": "Ende",
       "subsA": "Wechsel A",
       "subsB": "Wechsel B",
       "timeoutsA": "A-Z A",
       "timeoutsB": "A-Z B",
-      "winner": "Sieger",
       "member": "Person"
     },
-    "timeouts": "Auszeiten",
-    "signatureNote": "Unterschrieben wird auf Papier: zuerst die Captains nach dem Spiel, danach Trainer und Schiedsrichter."
+    "timeouts": "Auszeiten"
   },
   "submit": {
-    "title": "Resultat melden",
     "noApi": {
       "title": "Keine direkte Übermittlung",
       "body": "{{name}} veröffentlicht Spiele, Teams und Aufgebote, nimmt über die Schnittstelle aber kein Matchblatt entgegen. Das Resultat lässt sich von hier aus also nicht melden. Übertrage die Zusammenfassung unten ins Verbandssystem und gib das Papier-Matchblatt wie gewohnt dem Schiedsrichter."
@@ -369,7 +317,6 @@
     "checklist": "Bevor du das Blatt abgibst",
     "check": {
       "totals": "Die Punktzahl pro Satz stimmt mit dem Punkteverlauf überein.",
-      "signatures": "Beide Captains, beide Trainer und beide Schiedsrichter haben unterschrieben.",
       "durations": "Jede Satzdauer und die Spieldauer sind eingetragen.",
       "sanctions": "Jede Sanktion steht mit ihrem Spielstand im Sanktionsfeld."
     }

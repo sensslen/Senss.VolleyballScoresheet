@@ -1,7 +1,4 @@
 {
-  "language": {
-    "name": "Türkçe"
-  },
   "common": {
     "teamSide": "{{side}} Takımı",
     "unnamed": "(isimsiz)",
@@ -10,10 +7,7 @@
     "open": "Aç",
     "delete": "Sil",
     "remove": "Kaldır",
-    "back": "Geri",
-    "next": "İleri",
     "print": "Yazdır",
-    "copy": "Metin olarak kopyala",
     "copied": "Kopyalandı",
     "date": "Tarih",
     "score": "Skor",
@@ -30,11 +24,10 @@
   },
   "app": {
     "title": "Voleybol Maç Cetveli Asistanı",
-    "tagline": "Uluslararası maç cetvelinde adım adım yol gösterir, sonra kutu kutu ilerleyerek kâğıt cetvele geçirmenizi sağlar.",
+    "tagline": "Maçı kaydedin, ardından doldurulmuş cetveldeki bilgileri kağıda aktarın.",
     "footer": "Her şey bu tarayıcıda kalır. Resmî kayıt kâğıt maç cetvelidir; bu uygulama yalnızca hesap hatası olmadan doldurmanıza yardım eder.",
     "needSheet": "Önce bir maç cetveli başlatın veya açın.",
-    "version": "Sürüm {{version}}",
-    "loading": "Yükleniyor..."
+    "version": "Sürüm {{version}}"
   },
   "tabs": {
     "start": { "label": "Maç", "hint": "Bir maç seçin veya boş başlayın" },
@@ -120,11 +113,11 @@
     "bestOf": "{{count}} sette"
   },
   "teams": {
+    "staff": "Teknik ekip",
     "cardTitle": "{{side}} Takımı - {{name}}",
     "home": "Fikstürdeki ev sahibi takım.",
     "away": "Fikstürdeki konuk takım.",
     "import": "Kadroyu içe aktar",
-    "addPlayer": "Oyuncu ekle",
     "field": {
       "name": "Takım adı",
       "club": "Kulüp",
@@ -141,8 +134,7 @@
     "tooManyLiberos": "İkiden fazla libero işaretlenmiş.",
     "tooManyPlayers": "{{count}} oyuncu yazılmış; kurallar {{allowed}} oyuncuya izin veriyor.",
     "col": {
-      "lastName": "Soyad",
-      "firstName": "Ad",
+      "birthDate": "Doğum tarihi",
       "licence": "Lisans",
       "captainShort": "K",
       "liberoShort": "L"
@@ -169,10 +161,9 @@
       "firstServe": "Bu sette ilk servisi kullanan",
       "decidingHint": "Karar seti yeni bir kurayla başlar.",
       "locked": "Set başladı; ilk altıyı yalnızca bir yazım hatasını düzeltmek için değiştirin.",
-      "position": "Pozisyon {{label}}",
-      "libero": "Cetveldeki libero",
-      "addLibero": "Libero ekle"
+      "position": "Pozisyon {{label}}"
     },
+    "rosterRequired": "Skor girişini etkinleştirmek için her takıma en az 6 numaralı oyuncu ve bir antrenör girin.",
     "scoring": {
       "title": "{{number}}. set sayıları",
       "serving": "serviste",
@@ -184,6 +175,8 @@
       "setFinished": "{{number}}. set {{a}}:{{b}} {{side}} takımının lehine bitti. Süreyi sonuç kutusuna yazın."
     },
     "subs": {
+      "return": "{{substitute}} numara yerine {{starter}} numarayı geri al",
+      "returned": "{{number}} numara, geri dönen başlangıç oyuncusuyla değiştirildi",
       "title": "Oyuncu değişiklikleri",
       "heading": "{{side}} Takımı ({{used}}/{{max}} kullanıldı)",
       "leaving": "Çıkan pozisyon",
@@ -216,12 +209,15 @@
     "noFirstServe": "{{number}}. set için ilk servis henüz kaydedilmedi.",
     "liberoServing": "{{side}} takımının servis pozisyonunda libero var; bu kurallar buna izin vermiyor.",
     "blocker": {
+      "duplicateLineup": "{{side}} takımında bir oyuncu birden fazla pozisyonda seçilmiş.",
       "noSet": "Bu set başlatılmadı.",
       "noFirstServe": "Bu sette hangi takımın ilk servisi kullandığını kaydedin.",
+      "noLeftSide": "Karar setinde hangi takımın solda başladığını kaydedin.",
       "lineup": "{{side}} takımının ilk sayıdan önce altı pozisyonu da dolu olmalı.",
       "setFinished": "Bu set bitti."
     },
     "sub": {
+      "pairing": "Başlangıç oyuncusu ve yedeği bu set boyunca aynı değişiklik çiftini korumalıdır.",
       "noSet": "Böyle bir set yok.",
       "setFinished": "Set zaten bitti.",
       "emptySlot": "Bu pozisyonda sahada henüz oyuncu yok.",
@@ -237,67 +233,34 @@
     }
   },
   "transfer": {
+    "total": "Toplam",
+    "filledTitle": "Doldurulmuş maç cetveli",
+    "filledHint": "Yakınlaştırmak için tekerleği kullanın, taşımak için sürükleyin. Dokunmatik ekranda tek parmakla taşıyın veya iki parmakla yakınlaştırın. Bir bölümü seçerek görünüme sığdırın.",
+    "zoomIn": "Yakınlaştır",
+    "zoomOut": "Uzaklaştır",
+    "viewport": "Bölümü göster",
+    "zoom": "Yakınlaştırma",
+    "fit": "Genişliğe sığdır",
+    "reference": "Swiss Volley kılavuzu",
+    "homeTeam": "Ev sahibi",
+    "guestTeam": "Konuk takım",
+    "sideSwitch": "Saha değişimindeki sayılar",
     "title": "Kâğıt maç cetveline aktar",
-    "subtitle": "Yazı hakeminin cetveli doldurma sırasına göre, her seferinde bir kutu.",
-    "step": "Adım {{current}} / {{total}}",
-    "progress": "{{total}} kutudan {{done}} tanesi tamamlandı",
-    "markDone": "Aktarıldı olarak işaretle",
-    "markNotDone": "İşareti kaldır",
-    "doneAndNext": "Aktarıldı, sonraki kutu",
-    "finish": "Bitir",
-    "restart": "İlk kutudan yeniden başla",
-    "overview": "Tüm kutular",
-    "allDone": "Bütün kutular aktarıldı olarak işaretli. İmzalardan önce toplamları kâğıt cetvelle karşılaştırın.",
-    "whatToWrite": "Ne yazılacak",
-    "printSection": "Bu kutuyu yazdır",
-    "copySection": "Bu kutuyu metin olarak kopyala",
-    "notStarted": "Set başlamadı.",
     "noPlayers": "{{side}} takımı için henüz oyuncu girilmedi.",
-    "noRallies": "Bu sette henüz sayı kaydedilmedi.",
-    "noRounds": "Henüz servis serisi yok.",
-    "noSubstitutions": "Oyuncu değişikliği yok.",
     "noSanctions": "Kayıtlı ceza yok."
   },
   "section": {
-    "header": {
-      "title": "Başlık ve görevliler",
-      "help": "Cetvelin en üst bandı. Organizasyon, maç numarası, tarih, saat ve salonu, ardından iki takımın adını ve görevlileri geçirin. İsimleri lisanslarda göründüğü gibi yazın."
-    },
-    "toss": {
-      "title": "Kura ve sahalar",
-      "help": "1. sette hangi takımın servis attığını ve hangisinin solda olduğunu işaretleyin. Takımlar her set saha değiştirir; karar setinin kendi kurası vardır ve 8 sayıda saha değişilir."
-    },
     "roster": {
-      "title": "{{side}} takımı kadrosu",
-      "help": "Takım sütununu forma numarası sırasına göre doldurun, kaptanı daire içine alın ve her liberoyu L ile işaretleyin. Antrenör ve yardımcısı altına yazılır."
-    },
-    "lineup": {
-      "title": "{{number}}. set: ilk altılar",
-      "help": "İlk altıyı I'den VI'ya pozisyonlara yazın. Bu sıra aynı zamanda servis sırasıdır, bu yüzden antrenörün verdiği kâğıtla birebir aynı olmalı."
-    },
-    "score": {
-      "title": "{{number}}. set: sayı akışı",
-      "help": "Servis serilerini sırayla işleyin: servis atan oyuncunun numarasını yazın, sonra o serviste kazanılan her sayının üstünü çizin. Alttaki liste her sayıdan sonraki skoru gösterir."
-    },
-    "changes": {
-      "title": "{{number}}. set: değişiklikler ve molalar",
-      "help": "Her değişikliği gerçekleştiği pozisyona yazın: giren numara çıkan numaranın üstüne, skor yanına. Molalar alındıkları skor olarak küçük kutulara yazılır."
+      "title": "{{side}} takımı kadrosu"
     },
     "results": {
-      "title": "Sonuç tablosu",
-      "help": "Her set için bir satır: süre, iki skor, değişiklikler, molalar ve kazanan. Set sürelerini ekleyin, sonra toplam sayıyı ve maç süresini toplayın."
+      "title": "Sonuç tablosu"
     },
     "sanctions": {
-      "title": "Cezalar",
-      "help": "Her ceza için bir satır: takım, kişi, set ve cezanın verildiği skor."
-    },
-    "remarks": {
-      "title": "Notlar ve imzalar",
-      "help": "Varsa notları yazın, sonra imzaları toplayın: önce kaptanlar, ardından antrenörler, yazı hakemi ve en son iki hakem."
+      "title": "Cezalar"
     },
     "submit": {
-      "title": "Sonucu bildir",
-      "help": "Kâğıt cetvel hakemde kalır. Sonucun yine de federasyona ulaşması gerekir, bu yüzden aşağıdaki özeti federasyon sistemine geçirin."
+      "title": "Sonucu bildir"
     }
   },
   "sheet": {
@@ -319,45 +282,30 @@
       "leftSide": "Sol taraf (1. set)",
       "rightSide": "Sağ taraf (1. set)",
       "team": "Takım",
-      "coach": "Antrenör",
-      "assistantCoach": "Yardımcı antrenör",
       "liberos": "Liberolar",
-      "servesFirstSet": "İlk servis",
       "setsWon": "Kazanılan set",
       "totalPoints": "Toplam sayı",
       "matchWinner": "Maçın galibi",
       "remarks": "Notlar",
-      "scorer": "Yazı hakemi",
-      "captain": "{{side}} kaptanı",
-      "coachSide": "{{side}} antrenörü",
-      "firstReferee": "1. hakem"
+      "captain": "{{side}} kaptanı"
     },
-    "serviceRounds": "{{side}} takımı servis serileri - {{name}}",
     "rallyByRally": "Sayı sayı",
     "col": {
-      "round": "Seri",
-      "serverNumber": "Servis no",
-      "pointsOnService": "Bu serviste kazanılan sayılar",
-      "fromScore": "({{own}}:{{opponent}} skorundan)",
-      "pointTo": "Sayı kime",
       "scoreA": "A sayı",
       "scoreB": "B sayı",
       "playerNumber": "Oyuncu no",
-      "in": "Giren",
-      "out": "Çıkan",
       "duration": "Süre",
+      "start": "Başlangıç",
+      "end": "Bitiş",
       "subsA": "Değişiklik A",
       "subsB": "Değişiklik B",
       "timeoutsA": "Mola A",
       "timeoutsB": "Mola B",
-      "winner": "Kazanan",
       "member": "Kişi"
     },
-    "timeouts": "Molalar",
-    "signatureNote": "İmzalar kâğıda atılır: maçtan sonra önce kaptanlar, ardından antrenörler ve hakemler."
+    "timeouts": "Molalar"
   },
   "submit": {
-    "title": "Sonucu bildir",
     "noApi": {
       "title": "Doğrudan gönderim yok",
       "body": "{{name}} fikstürü, takımları ve kadroları yayımlıyor ama API'si üzerinden maç cetveli kabul etmiyor, bu yüzden sonuç buradan gönderilemez. Aşağıdaki özeti federasyon sistemine geçirin ve kâğıt cetveli her zamanki gibi hakeme teslim edin."
@@ -369,7 +317,6 @@
     "checklist": "Cetveli teslim etmeden önce",
     "check": {
       "totals": "Set başına sayı toplamı sayı akışıyla uyuşuyor.",
-      "signatures": "İki kaptan, iki antrenör ve iki hakem imzaladı.",
       "durations": "Her setin ve maçın süresi yazıldı.",
       "sanctions": "Her ceza skoruyla birlikte ceza kutusunda."
     }

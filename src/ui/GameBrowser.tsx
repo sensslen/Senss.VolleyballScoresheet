@@ -92,7 +92,10 @@ export function GameBrowser({
   // message rather than leaving the one the fetch happened to be phrased in.
   const [failure, setFailure] = useState<unknown>(null)
   const [search, setSearch] = useState('')
-  const [dateFrom, setDateFrom] = useState('')
+  const [dateFrom, setDateFrom] = useState(() => {
+    const today = new Date()
+    return [today.getFullYear(), String(today.getMonth() + 1).padStart(2, '0'), String(today.getDate()).padStart(2, '0')].join('-')
+  })
   const [dateTo, setDateTo] = useState('')
   // Counts the manual refreshes, so that asking for the same fixtures again is a
   // different request and fetches rather than sitting on what is already held.

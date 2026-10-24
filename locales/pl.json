@@ -1,7 +1,4 @@
 {
-  "language": {
-    "name": "Polski"
-  },
   "common": {
     "teamSide": "Drużyna {{side}}",
     "unnamed": "(bez nazwy)",
@@ -10,10 +7,7 @@
     "open": "Otwórz",
     "delete": "Usuń",
     "remove": "Usuń",
-    "back": "Wstecz",
-    "next": "Dalej",
     "print": "Drukuj",
-    "copy": "Kopiuj jako tekst",
     "copied": "Skopiowano",
     "date": "Data",
     "score": "Wynik",
@@ -30,11 +24,10 @@
   },
   "app": {
     "title": "Asystent protokołu meczowego siatkówki",
-    "tagline": "Prowadzi Cię przez międzynarodowy protokół, a potem pole po polu, żebyś mógł przepisać wszystko na papierowy protokół.",
+    "tagline": "Zapisuj mecz, a potem przepisz dane z wypełnionego protokołu na papier.",
     "footer": "Wszystko zostaje w tej przeglądarce. Papierowy protokół pozostaje dokumentem oficjalnym; ta aplikacja tylko pomaga wypełnić go bez błędów rachunkowych.",
     "needSheet": "Najpierw rozpocznij lub otwórz protokół.",
-    "version": "Wersja {{version}}",
-    "loading": "Wczytywanie..."
+    "version": "Wersja {{version}}"
   },
   "tabs": {
     "start": { "label": "Mecz", "hint": "Wybierz mecz lub zacznij od pustego" },
@@ -120,11 +113,11 @@
     "bestOf": "Do {{count}} setów"
   },
   "teams": {
+    "staff": "Sztab",
     "cardTitle": "Drużyna {{side}} - {{name}}",
     "home": "Gospodarz według terminarza.",
     "away": "Gość według terminarza.",
     "import": "Importuj skład",
-    "addPlayer": "Dodaj zawodnika",
     "field": {
       "name": "Nazwa drużyny",
       "club": "Klub",
@@ -141,8 +134,7 @@
     "tooManyLiberos": "Zaznaczono więcej niż dwóch libero.",
     "tooManyPlayers": "Wpisano {{count}} zawodników; przepisy dopuszczają {{allowed}}.",
     "col": {
-      "lastName": "Nazwisko",
-      "firstName": "Imię",
+      "birthDate": "Data urodzenia",
       "licence": "Licencja",
       "captainShort": "K",
       "liberoShort": "L"
@@ -169,10 +161,9 @@
       "firstServe": "Zagrywa jako pierwsza w tym secie",
       "decidingHint": "Set decydujący zaczyna się od nowego losowania.",
       "locked": "Set już trwa; zmieniaj ustawienie tylko po to, by poprawić błąd zapisu.",
-      "position": "Pozycja {{label}}",
-      "libero": "Libero w protokole",
-      "addLibero": "Dodaj libero"
+      "position": "Pozycja {{label}}"
     },
+    "rosterRequired": "Wpisz co najmniej 6 zawodników z numerami i trenera dla każdej drużyny, aby włączyć punktację.",
     "scoring": {
       "title": "Punktacja setu {{number}}",
       "serving": "zagrywa",
@@ -184,6 +175,8 @@
       "setFinished": "Set {{number}} zakończony {{a}}:{{b}} dla drużyny {{side}}. Wpisz czas trwania w tabeli wyników."
     },
     "subs": {
+      "return": "Powrót nr {{starter}} za nr {{substitute}}",
+      "returned": "Nr {{number}} został zastąpiony przez wracającego zawodnika wyjściowego",
       "title": "Zmiany",
       "heading": "Drużyna {{side}} (wykorzystano {{used}}/{{max}})",
       "leaving": "Pozycja schodząca",
@@ -216,12 +209,15 @@
     "noFirstServe": "Dla setu {{number}} nie zapisano jeszcze pierwszej zagrywki.",
     "liberoServing": "Drużyna {{side}} ma libero na pozycji zagrywki, czego te przepisy nie dopuszczają.",
     "blocker": {
+      "duplicateLineup": "W drużynie {{side}} ten sam zawodnik jest wybrany na kilku pozycjach.",
       "noSet": "Ten set nie został rozpoczęty.",
       "noFirstServe": "Zapisz, która drużyna zagrywa pierwsza w tym secie.",
+      "noLeftSide": "Zapisz, która drużyna zaczyna po lewej stronie w secie decydującym.",
       "lineup": "Drużyna {{side}} potrzebuje wszystkich sześciu pozycji przed pierwszą akcją.",
       "setFinished": "Ten set jest zakończony."
     },
     "sub": {
+      "pairing": "Zawodnik wyjściowy i jego zmiennik muszą pozostać parą zmian w tym secie.",
       "noSet": "Taki set nie istnieje.",
       "setFinished": "Set jest już zakończony.",
       "emptySlot": "Na tej pozycji nie ma jeszcze zawodnika na boisku.",
@@ -237,67 +233,34 @@
     }
   },
   "transfer": {
+    "total": "Razem",
+    "filledTitle": "Wypełniony protokół",
+    "filledHint": "Powiększaj kółkiem myszy i przeciągaj, aby przesuwać. Na ekranie dotykowym przesuwaj jednym palcem lub skaluj dwoma. Wybierz sekcję, aby dopasować ją do widoku.",
+    "zoomIn": "Powiększ",
+    "zoomOut": "Pomniejsz",
+    "viewport": "Pokaż sekcję",
+    "zoom": "Powiększenie",
+    "fit": "Dopasuj szerokość",
+    "reference": "Poradnik Swiss Volley",
+    "homeTeam": "Gospodarze",
+    "guestTeam": "Goście",
+    "sideSwitch": "Punkty przy zmianie stron",
     "title": "Przepisz na papierowy protokół",
-    "subtitle": "Jedno pole naraz, w kolejności, w jakiej sekretarz wypełnia protokół.",
-    "step": "Krok {{current}} z {{total}}",
-    "progress": "{{done}} z {{total}} pól oznaczonych",
-    "markDone": "Oznacz jako przepisane",
-    "markNotDone": "Cofnij oznaczenie",
-    "doneAndNext": "Przepisane, następne pole",
-    "finish": "Zakończ",
-    "restart": "Zacznij od pierwszego pola",
-    "overview": "Wszystkie pola",
-    "allDone": "Wszystkie pola są oznaczone jako przepisane. Sprawdź sumy na papierowym protokole przed podpisami.",
-    "whatToWrite": "Co wpisać",
-    "printSection": "Drukuj to pole",
-    "copySection": "Kopiuj to pole jako tekst",
-    "notStarted": "Set nierozpoczęty.",
     "noPlayers": "Nie wpisano jeszcze zawodników drużyny {{side}}.",
-    "noRallies": "W tym secie nie zapisano jeszcze żadnej akcji.",
-    "noRounds": "Brak serii zagrywek.",
-    "noSubstitutions": "Brak zmian.",
     "noSanctions": "Nie zapisano sankcji."
   },
   "section": {
-    "header": {
-      "title": "Nagłówek i osoby funkcyjne",
-      "help": "Górny pas protokołu. Przepisz rozgrywki, numer meczu, datę, godzinę i halę, potem nazwy obu drużyn i osoby funkcyjne. Nazwiska zapisuj dokładnie tak, jak widnieją na licencjach."
-    },
-    "toss": {
-      "title": "Losowanie i strony",
-      "help": "Zaznacz, która drużyna zagrywa i która jest po lewej w 1. secie. Drużyny zmieniają strony po każdym secie; set decydujący ma własne losowanie i zmianę stron przy 8 punktach."
-    },
     "roster": {
-      "title": "Skład drużyny {{side}}",
-      "help": "Wypełnij kolumnę drużyny według numerów, zakreśl kapitana i oznacz każdego libero literą L. Trenera i asystenta wpisz poniżej."
-    },
-    "lineup": {
-      "title": "Set {{number}}: ustawienia wyjściowe",
-      "help": "Wpisz szóstkę wyjściową na pozycjach I do VI. Ta kolejność jest zarazem kolejnością zagrywki, więc musi się zgadzać z kartką oddaną przez trenera."
-    },
-    "score": {
-      "title": "Set {{number}}: przebieg punktowy",
-      "help": "Przechodź po seriach zagrywek: wpisz numer zagrywającego, a potem skreślaj każdy punkt zdobyty przy tej zagrywce. Lista poniżej pokazuje wynik po każdym punkcie."
-    },
-    "changes": {
-      "title": "Set {{number}}: zmiany i czasy",
-      "help": "Każdą zmianę zapisz na pozycji, na której nastąpiła: numer wchodzącego nad numerem schodzącego, wynik obok. Czasy wpisz w małe pola jako wynik, przy którym je wzięto."
+      "title": "Skład drużyny {{side}}"
     },
     "results": {
-      "title": "Tabela wyników",
-      "help": "Jeden wiersz na set: czas, oba wyniki, zmiany, czasy i zwycięzca. Dopisz czasy setów, a potem zsumuj punkty i czas meczu."
+      "title": "Tabela wyników"
     },
     "sanctions": {
-      "title": "Sankcje",
-      "help": "Jeden wiersz na sankcję z drużyną, osobą, setem i wynikiem, przy którym została udzielona."
-    },
-    "remarks": {
-      "title": "Uwagi i podpisy",
-      "help": "Wpisz ewentualne uwagi, a potem zbierz podpisy: najpierw kapitanowie, potem trenerzy, sekretarz i na końcu obaj sędziowie."
+      "title": "Sankcje"
     },
     "submit": {
-      "title": "Zgłoś wynik",
-      "help": "Papierowy protokół zostaje u sędziego. Wynik i tak musi trafić do związku, więc przepisz poniższe podsumowanie do systemu związkowego."
+      "title": "Zgłoś wynik"
     }
   },
   "sheet": {
@@ -319,45 +282,30 @@
       "leftSide": "Lewa strona (1. set)",
       "rightSide": "Prawa strona (1. set)",
       "team": "Drużyna",
-      "coach": "Trener",
-      "assistantCoach": "Asystent trenera",
       "liberos": "Libero",
-      "servesFirstSet": "Zagrywa pierwsza",
       "setsWon": "Wygrane sety",
       "totalPoints": "Punkty łącznie",
       "matchWinner": "Zwycięzca meczu",
       "remarks": "Uwagi",
-      "scorer": "Sekretarz",
-      "captain": "Kapitan {{side}}",
-      "coachSide": "Trener {{side}}",
-      "firstReferee": "Sędzia I"
+      "captain": "Kapitan {{side}}"
     },
-    "serviceRounds": "Serie zagrywek drużyny {{side}} - {{name}}",
     "rallyByRally": "Akcja po akcji",
     "col": {
-      "round": "Seria",
-      "serverNumber": "Zagrywający nr",
-      "pointsOnService": "Punkty przy tej zagrywce",
-      "fromScore": "(od {{own}}:{{opponent}})",
-      "pointTo": "Punkt dla",
       "scoreA": "Punkty A",
       "scoreB": "Punkty B",
       "playerNumber": "Zawodnik nr",
-      "in": "Wchodzi",
-      "out": "Schodzi",
       "duration": "Czas",
+      "start": "Początek",
+      "end": "Koniec",
       "subsA": "Zmiany A",
       "subsB": "Zmiany B",
       "timeoutsA": "Czasy A",
       "timeoutsB": "Czasy B",
-      "winner": "Zwycięzca",
       "member": "Osoba"
     },
-    "timeouts": "Czasy",
-    "signatureNote": "Podpisy składa się na papierze: najpierw kapitanowie po meczu, potem trenerzy i sędziowie."
+    "timeouts": "Czasy"
   },
   "submit": {
-    "title": "Zgłoś wynik",
     "noApi": {
       "title": "Brak bezpośredniego przesyłania",
       "body": "{{name}} publikuje terminarz, drużyny i składy, ale nie przyjmuje protokołu przez swoje API, więc wyniku nie da się zgłosić stąd. Przepisz poniższe podsumowanie do systemu związkowego, a papierowy protokół oddaj sędziemu jak zwykle."
@@ -369,7 +317,6 @@
     "checklist": "Zanim oddasz protokół",
     "check": {
       "totals": "Suma punktów w każdym secie zgadza się z przebiegiem punktowym.",
-      "signatures": "Podpisali się obaj kapitanowie, obaj trenerzy i obaj sędziowie.",
       "durations": "Wpisano czas każdego setu i całego meczu.",
       "sanctions": "Każda sankcja jest w rubryce sankcji wraz z wynikiem."
     }

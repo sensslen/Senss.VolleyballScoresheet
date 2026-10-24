@@ -12,8 +12,7 @@ function sheetWithLineups(): Scoresheet {
     sheet.teams[side].players = Array.from({ length: 8 }, (_, index) => ({
       id: `${side}${index + 1}`,
       number: index + 1,
-      firstName: 'First',
-      lastName: `${side}${index + 1}`,
+      name: `${side}${index + 1}`,
       licence: '',
       isCaptain: index === 0,
       isLibero: index === 7,
@@ -221,6 +220,17 @@ describe('substitutions', () => {
     )
 
     expect(validateSubstitution(sheet, 0, 'A', 3, 'A7')?.key).toBe('engine.sub.substituteReturned')
+  })
+
+  it('keeps the starter and substitute paired and prevents another replacement after the return', () => {
+    const sheet = sheetWithLineups()
+    sheet.teams.A.players[7]!.isLibero = false
+    playRallies(sheet, 0, ['A'])
+    const set = sheet.sets[0]!
+    set.substitutions.A.push({ slot: 2, outPlayerId: 'A3', inPlayerId: 'A7', atRally: 0, scoreA: 1, scoreB: 0 })
+    expect(validateSubstitution(sheet, 0, 'A', 2, 'A8')?.key).toBe('engine.sub.pairing')
+    set.substitutions.A.push({ slot: 2, outPlayerId: 'A7', inPlayerId: 'A3', atRally: 0, scoreA: 1, scoreB: 0 })
+    expect(validateSubstitution(sheet, 0, 'A', 2, 'A8')?.key).toBe('engine.sub.pairing')
   })
 
   it('refuses to exceed the allowed substitution count', () => {
