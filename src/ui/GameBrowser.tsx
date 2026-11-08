@@ -10,6 +10,13 @@ import {
 import type { Settings } from '../scoresheet/storage'
 import { Banner, Card, EmptyState, SelectField, Spinner, TextField } from './components'
 
+function formatPlayDate(playDate: string | undefined, locale: string): string {
+  if (!playDate) return ''
+  const date = new Date(playDate.replace(' ', 'T'))
+  if (Number.isNaN(date.getTime())) return playDate
+  return new Intl.DateTimeFormat(locale, { dateStyle: 'short', timeStyle: 'short' }).format(date)
+}
+
 // A whole season runs into the thousands of fixtures, and putting every row in the
 // DOM is what makes the page crawl. The filters still work on the full list.
 const ROW_LIMIT = 200
@@ -84,7 +91,7 @@ export function GameBrowser({
   onOpenSettings: () => void
   onPick: (game: GameSummary) => void
 }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   // The fixtures together with the request they answer, so that "still loading" is
   // that mismatch rather than a second flag to keep in step.
   const [loaded, setLoaded] = useState<{ forRequest: string; games: GameSummary[] } | null>(null)
@@ -297,7 +304,7 @@ export function GameBrowser({
             <tbody>
               {shown.map((game) => (
                 <tr key={game.id}>
-                  <td className="mono whitespace-nowrap">{game.playDate ?? ''}</td>
+                  <td className="mono whitespace-nowrap">{formatPlayDate(game.playDate, i18n.language)}</td>
                   <td>
                     <strong>{game.home.name}</strong> {t('common.vs')} <strong>{game.away.name}</strong>
                   </td>
